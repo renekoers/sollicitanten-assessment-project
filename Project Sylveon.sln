@@ -4,8 +4,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 16.0.29519.87
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FrontEnd", "Project Sylveon\FrontEnd.csproj", "{745C86EF-2482-48F8-A873-E5FD54AEE019}"
+	ProjectSection(ProjectDependencies) = postProject
+		{4F6C873D-00B2-4D41-B2EC-022074276A69} = {4F6C873D-00B2-4D41-B2EC-022074276A69}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTest", "UnitTest\UnitTest.csproj", "{C60B3053-9476-4433-A7F0-6B3F158375FB}"
+	ProjectSection(ProjectDependencies) = postProject
+		{4F6C873D-00B2-4D41-B2EC-022074276A69} = {4F6C873D-00B2-4D41-B2EC-022074276A69}
+		{745C86EF-2482-48F8-A873-E5FD54AEE019} = {745C86EF-2482-48F8-A873-E5FD54AEE019}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BackEnd", "BackEnd\BackEnd.csproj", "{4F6C873D-00B2-4D41-B2EC-022074276A69}"
 EndProject
