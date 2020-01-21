@@ -4,7 +4,7 @@ using System.Text;
 
 namespace BackEnd
 {
-    public enum Commands {
+    public enum Command {
         MoveForward, MoveBackward, RotateLeft, RotateRight, PickUp, Drop
     }
 }
