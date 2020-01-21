@@ -7,16 +7,22 @@ namespace BackEnd
     public class Tile
     {
         Tile[] neighbours = new Tile[4];
+        Boolean passable = true;
 
         public Tile()
         {
 
         }
 
-        public Tile getTile(Direction dir)
+        public Tile GetTile(Direction dir)
         {
             // temporary return
             return new Tile();
+        }
+
+        void SetNeighbours()
+        {
+
         }
     }
 }
