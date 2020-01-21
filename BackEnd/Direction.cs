@@ -6,10 +6,10 @@ namespace BackEnd
 {
     public enum Direction
     {
-        NORTH = 0,
-        EAST = 1,
-        SOUTH = 2,
-        WEST = 3
+        North = 0,
+        East = 1,
+        South = 2,
+        West = 3
     }
 
     public static class DirectionFunctionality

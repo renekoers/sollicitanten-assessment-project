@@ -9,31 +9,31 @@ namespace UnitTest
         [TestMethod]
         public void LeftOfNorthIsWest()
         {
-            Direction dir = Direction.NORTH;
+            Direction dir = Direction.North;
 
             Direction dirLeft = dir.Left();
 
-            Assert.AreEqual(Direction.WEST, dirLeft);
+            Assert.AreEqual(Direction.West, dirLeft);
         }
 
         [TestMethod]
         public void LeftOfEastIsNorth()
         {
-            Direction dir = Direction.EAST;
+            Direction dir = Direction.East;
 
             Direction dirLeft = dir.Left();
 
-            Assert.AreEqual(Direction.NORTH, dirLeft);
+            Assert.AreEqual(Direction.North, dirLeft);
         }
 
         [TestMethod]
         public void RightOfWestIsNorth()
         {
-            Direction dir = Direction.WEST;
+            Direction dir = Direction.West;
 
             Direction dirRight = dir.Right();
 
-            Assert.AreEqual(Direction.NORTH, dirRight);
+            Assert.AreEqual(Direction.North, dirRight);
         }
     }
 }
