@@ -2,7 +2,7 @@
 
 namespace BackEnd
 {
-    public class Class1
+    public class Puzzle
     {
     }
 }
