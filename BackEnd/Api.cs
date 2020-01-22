@@ -34,9 +34,9 @@ namespace BackEnd
             List<string[][]> states = RunListOfCommands(puzzle, input);
             if (puzzle.IsFinished())
             {
-                Console.WriteLine("User solved level " + level + " in " + CountLines(input) + " lines. Par is " + parsedLevel["Par"] + ".");
+                Console.WriteLine("User solved level " + level + " in " + CalculateScore(input) + " lines. Par is " + parsedLevel["Par"] + ".");
             }
-            return @"{'States':" + JsonConvert.SerializeObject(states) + ", 'Finished': " + JsonConvert.SerializeObject(puzzle.IsFinished()) + "}";
+            return @"{'States':" + JsonConvert.SerializeObject(states) + ", 'Finished': " + JsonConvert.SerializeObject(puzzle.IsFinished()) + ", 'Score': " + CalculateScore(input) + "}";
 
         }
 
@@ -80,7 +80,7 @@ namespace BackEnd
             }
             return commands;
         }
-        private static int CountLines(Command[] input)
+        private static int CalculateScore(Command[] input)
         {
             return input.Length;
         }
