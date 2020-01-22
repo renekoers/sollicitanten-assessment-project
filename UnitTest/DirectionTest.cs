@@ -4,7 +4,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace UnitTest
 {
     [TestClass]
-    class DirectionTest
+    public class DirectionTest
     {
         [TestMethod]
         public void LeftOfNorthIsWest()

@@ -16,7 +16,7 @@ namespace BackEnd
         public readonly int[][] Buttons;
         public readonly int[][] Doors;
         public readonly int[][] Boxes;
-        private Level(int level, int[] gridSize, int par, int[][] walls, int[] begin, int[] end, int[][] buttons, int[][] doors, int[][] boxes)
+        public Level(int level, int[] gridSize, int par, int[][] walls, int[] begin, int[] end, int[][] buttons, int[][] doors, int[][] boxes)
         {
             this.LevelNumber = level;
             this.GridSize = gridSize;
