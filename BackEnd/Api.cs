@@ -16,7 +16,7 @@ namespace BackEnd
         /// <returns>JSON consisting of State (string[][]) and RecommendedLines (int)</returns>
         public static string GetLevel(int level)
         {
-            string levelJSON = Levels.Get(level);
+            string levelJSON = Level.Get(level);
             Puzzle puzzle = new Puzzle(levelJSON);
             return @"{'State':" + JsonConvert.SerializeObject(puzzle.GetState()) + ", 'RecommendedLines': " + puzzle.GetParLines() + "}";
         }
@@ -25,17 +25,24 @@ namespace BackEnd
         /// This method runs the given commands for the given level. Returns an arraylist of all the states.
         /// </summary>
         /// <param name="level">Current level.</param> 
-        /// <param name="input">String of commands seperated by ';'.</param>
+        /// <param name="input">String array of commands.</param>
         /// <returns>Arraylist of all the states.</returns>
-        public static string RunCommands(int level, string input)
+        public static string RunCommands(int level, Command[] input)
         {
-            Puzzle puzzle = new Puzzle(Levels.Get(level));
+            Puzzle puzzle = new Puzzle(Level.Get(level));
             List<string[][]> states = RunListOfCommands(puzzle, input);
             if (puzzle.IsFinished())
             {
-                Console.WriteLine("User solved level " + level + " in " + input.Count(f => f == ';') + " lines. Par is " + puzzle.GetParLines() + ".");
+                Console.WriteLine("User solved level " + level + " in " + input.Length + " lines. Par is " + puzzle.GetParLines() + ".");
             }
             return @"{'States':" + JsonConvert.SerializeObject(states) + ", 'Finished': " + JsonConvert.SerializeObject(puzzle.IsFinished()) + "}";
+
+        }
+
+        public static string RunCommands(int level, string[] input)
+        {
+            Command[] commands = ConvertStringToCommands(input);
+            return RunCommands(level, commands);
 
         }
         /// <summary>
@@ -44,14 +51,13 @@ namespace BackEnd
         /// <param name="level">Current level.</param> 
         /// <param name="input">String of commands seperated by ';'.</param>
         /// <returns>Arraylist of all the states.</returns>
-        private static List<string[][]> RunListOfCommands(Puzzle puzzle, string input)
+        private static List<string[][]> RunListOfCommands(Puzzle puzzle, Command[] input)
         {
             ICharacter character = puzzle.GetCharacter();
 
-            Command[] commands = ConvertStringToCommands(input.Trim());
             List<string[][]> states = new List<string[][]>();
 
-            foreach (Command command in commands)
+            foreach (Command command in input)
             {
                 character.RunCommand(command);
                 states.Add(puzzle.GetState());
@@ -64,17 +70,12 @@ namespace BackEnd
         /// <param name="input">String of commands seperated by ';'.</param>
         /// <returns>Array of commands.</returns>
         /// <exception cref="ArgumentException">Throws exception if the string is not a command.</exception>
-        private static Command[] ConvertStringToCommands(string input)
+        private static Command[] ConvertStringToCommands(string[] input)
         {
-            string[] inputArray = input.Split(';');
-            if (inputArray[inputArray.Length - 1] != "")
+            Command[] commands = new Command[input.Length];
+            for(int index=0; index< input.Length; index++)
             {
-                throw new ArgumentException("Last command did not end with ';'");
-            }
-            Command[] commands = new Command[inputArray.Length-1];
-            for(int index=0; index<inputArray.Length-1; index++)
-            {
-                commands[index] = (Command)Enum.Parse(typeof(Command), inputArray[index].Trim());
+                commands[index] = (Command)Enum.Parse(typeof(Command), input[index].Trim());
             }
             return commands;
         }
