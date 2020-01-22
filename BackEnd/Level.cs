@@ -30,9 +30,14 @@ namespace BackEnd
             this.Boxes = boxes;
         }
 
-        private static Level[] levels = new Level[]{new Level(1,new int[] { 3, 3 }, 8, new int[][] { new int[] { 1, 0 }, new int[] { 1, 2 } }, 
+        private static Level[] levels = new Level[]{new Level(1,new int[] { 3, 3 }, 8, new int[][] { new int[] { 1, 0 }, new int[] { 1, 2 } },
                                         new int[] { 2, 1 }, new int[] { 0, 1 }, new int[][]{new int[] { 1, 2, 0 } },
-                                        new int[][]{new int[] { 1, 1, 1 } }, new int[][]{new int[] { 2, 2 } })};
+                                        new int[][]{new int[] { 1, 1, 1 } }, new int[][]{new int[] { 2, 2 } }),
+
+                                        new Level(2,new int[] { 5, 5 }, 8, new int[][] { new int[] { 1, 0 }, new int[] { 1, 2 } },
+                                        new int[] { 2, 1 }, new int[] { 0, 1 }, new int[][]{new int[] { 1, 2, 0 } },
+                                        new int[][]{new int[] { 1, 1, 1 } }, new int[][]{new int[] { 2, 2 } }),
+                                        };
         public static string Get(int level)
         {
             return JsonConvert.SerializeObject(levels[level - 1]);
