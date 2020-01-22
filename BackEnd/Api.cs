@@ -30,6 +30,7 @@ namespace BackEnd
         public static string RunCommands(int level, Command[] input)
         {
             Puzzle puzzle = new Puzzle(Level.Get(level));
+            Console.WriteLine(JsonConvert.DeserializeObject(Level.Get(level)));
             List<string[][]> states = RunListOfCommands(puzzle, input);
             if (puzzle.IsFinished())
             {
