@@ -4,7 +4,7 @@ using System.Text;
 
 namespace BackEnd
 {
-    public class WallTile : ImpassableTile
+    public abstract class Movable
     {
     }
 }

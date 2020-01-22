@@ -6,23 +6,58 @@ namespace BackEnd
 {
     public class Tile
     {
-        Tile[] neighbours = new Tile[4];
-        Boolean passable = true;
+        private readonly Tile[] neighbours = new Tile[4];
+        public bool Passable { get; protected set; }
+        protected Movable _containedItem;
+        public virtual Movable ContainedItem
+        {
+            get => _containedItem;
+            set => _containedItem = value;
+        }
+        public bool ContainsMoveable
+        { 
+            get
+            {
+                return ContainedItem != null;
+            }
+        }
 
         public Tile()
         {
-
+            Passable = true;
+            _containedItem = null;
         }
 
         public Tile GetTile(Direction dir)
         {
-            // temporary return
-            return new Tile();
+            return neighbours[(int)dir];
         }
 
-        void SetNeighbours()
+        public Tile GetNeighbor(Direction dir)
         {
+            return neighbours[(int)dir];
+        }
 
+        public void SetNeighbour(Tile neighbour, Direction dir)
+        {
+            neighbours[(int)dir] = neighbour;
+        }
+
+        public virtual Movable Retrieve()
+        {
+            Movable item = ContainedItem;
+            ContainedItem = null;
+            return item;
+        }
+
+        public virtual bool DropOnto(Movable item)
+        {
+            if (!ContainsMoveable)
+            {
+                ContainedItem = item;
+                return true;
+            }
+            return false;
         }
     }
 }
