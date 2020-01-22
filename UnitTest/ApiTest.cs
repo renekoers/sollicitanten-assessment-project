@@ -9,6 +9,12 @@ namespace UnitTest
     public class ApiTest
     {
         [TestMethod]
+        public void GetLevelTest()
+        {
+            Assert.AreEqual(2, 1 * 2);
+        }
+
+        [TestMethod]
         public void RunSingleCommandTest()
         {
             dynamic result = JObject.Parse(Api.RunCommands(1, new string[] { "RotateLeft" }));

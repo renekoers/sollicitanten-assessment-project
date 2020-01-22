@@ -4,6 +4,7 @@ using System.Text;
 using System.Collections;
 using Newtonsoft.Json;
 using System.Linq;
+using Newtonsoft.Json.Linq;
 
 namespace BackEnd
 {
@@ -13,12 +14,10 @@ namespace BackEnd
         /// Gives the state of the given level and the recommended numbers of lines to use.
         /// </summary>
         /// <param name="level"></param>
-        /// <returns>JSON consisting of State (string[][]) and RecommendedLines (int)</returns>
+        /// <returns>JSON consisting of the state</returns>
         public static string GetLevel(int level)
         {
-            string levelJSON = Level.Get(level);
-            Puzzle puzzle = new Puzzle(levelJSON);
-            return @"{'State':" + JsonConvert.SerializeObject(puzzle.GetState()) + ", 'RecommendedLines': " + puzzle.GetParLines() + "}";
+            return Level.Get(level);
         }
 
         /// <summary>
@@ -29,12 +28,13 @@ namespace BackEnd
         /// <returns>Arraylist of all the states.</returns>
         public static string RunCommands(int level, Command[] input)
         {
-            Puzzle puzzle = new Puzzle(Level.Get(level));
-            Console.WriteLine(JsonConvert.DeserializeObject(Level.Get(level)));
+            string currentLevel = Level.Get(level);
+            Puzzle puzzle = new Puzzle(currentLevel);
+            JObject parsedLevel = JObject.Parse(currentLevel);
             List<string[][]> states = RunListOfCommands(puzzle, input);
             if (puzzle.IsFinished())
             {
-                Console.WriteLine("User solved level " + level + " in " + input.Length + " lines. Par is " + puzzle.GetParLines() + ".");
+                Console.WriteLine("User solved level " + level + " in " + CountLines(input) + " lines. Par is " + parsedLevel["Par"] + ".");
             }
             return @"{'States':" + JsonConvert.SerializeObject(states) + ", 'Finished': " + JsonConvert.SerializeObject(puzzle.IsFinished()) + "}";
 
@@ -79,6 +79,10 @@ namespace BackEnd
                 commands[index] = (Command)Enum.Parse(typeof(Command), input[index].Trim());
             }
             return commands;
+        }
+        private static int CountLines(Command[] input)
+        {
+            return input.Length;
         }
     }
 }
