@@ -2,6 +2,7 @@
     "compilerOptions":
     {
         "rootDir": "",
-        "outDir": "../wwwroot/ts"
+        "outDir": "../wwwroot/ts",
+        "target": "ES6"
     }
 }
