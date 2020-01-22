@@ -8,7 +8,7 @@ namespace BackEnd
     {
         public Direction Direction { get; private set; }
         public Tile Position { get; private set; }
-        public Moveable HeldItem { get; private set; }
+        public Movable HeldItem { get; set; }
 
         public Character(Tile position, Direction direction)
         {
@@ -53,7 +53,7 @@ namespace BackEnd
         protected virtual bool MoveForward()
         {
             Tile tileInFront = Position.GetTile(Direction);
-            if (tileInFront.IsPassable)
+            if (tileInFront.Passable)
             {
                 Position = tileInFront;
                 return true;
@@ -75,7 +75,7 @@ namespace BackEnd
         protected virtual bool Drop()
         {
             Tile tileInFront = Position.GetTile(Direction);
-            if (HeldItem != null && tileInFront.IsPassabe)
+            if (HeldItem != null && tileInFront.Passable)
             {
                 if (tileInFront.DropOnto(HeldItem))
                 {
