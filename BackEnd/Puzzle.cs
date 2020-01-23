@@ -8,8 +8,9 @@ namespace BackEnd
     public class Puzzle
     {
         private Tile[,] AllTiles;
-        private ICharacter Character;
+        public ICharacter Character { get; private set; }
         private Tile Finish;
+        public bool Finished => Character.Position == Finish;
 
         public Puzzle(string info)
         {
