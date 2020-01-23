@@ -12,10 +12,10 @@ namespace BackEnd.Statements
             this._command = command;
         }
 
-        public override List<string[][]> ExecuteCommand(Puzzle puzzle, ICharacter character)
+        public override List<State> ExecuteCommand(Puzzle puzzle, ICharacter character)
         {
             character.ExecuteCommand(_command);
-            return new List<string[][]> { puzzle.GetState() };
+            return new List<State> { new State(puzzle) };
 
         }
 

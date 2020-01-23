@@ -17,9 +17,9 @@ namespace BackEnd.Statements
             this._isTrue = isTrue;
             this._statements = statements;
         }
-        public override List<string[][]> ExecuteCommand(Puzzle puzzle, ICharacter character)
+        public override List<State> ExecuteCommand(Puzzle puzzle, ICharacter character)
         {
-            List<string[][]> states = new List<string[][]>();
+            List<State> states = new List<State>();
             while(character.CheckCondition(_parameter, _value) == _isTrue)
             {
                 foreach(Statement statement in _statements)

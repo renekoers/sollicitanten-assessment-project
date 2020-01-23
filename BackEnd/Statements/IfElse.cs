@@ -23,9 +23,9 @@ namespace BackEnd.Statements
             this._statementsTrue = statementsTrue;
             this._statementsFalse = statementsFalse;
         }
-        public override List<string[][]> ExecuteCommand(Puzzle puzzle, ICharacter character)
+        public override List<State> ExecuteCommand(Puzzle puzzle, ICharacter character)
         {
-            List<string[][]> states = new List<string[][]>();
+            List<State> states = new List<State>();
             Statement[] statements;
             if (character.CheckCondition(_parameter, _value) == _isTrue)
             {

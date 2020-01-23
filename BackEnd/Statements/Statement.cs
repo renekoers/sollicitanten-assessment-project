@@ -6,7 +6,7 @@ namespace BackEnd.Statements
 {
     public abstract class Statement
     {
-        public abstract List<string[][]> ExecuteCommand(Puzzle puzzle, ICharacter character);
+        public abstract List<State> ExecuteCommand(Puzzle puzzle, ICharacter character);
         public abstract int GetLines();
     }
 }
