@@ -10,7 +10,7 @@ namespace UnitTest
         public void Test()
         {
             Puzzle p = new Puzzle(Level.Get(1));
-            Assert.AreEqual("", Level.Get(1));
+            Assert.AreNotEqual("", Level.Get(1));
         }
 
         
