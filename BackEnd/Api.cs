@@ -33,7 +33,7 @@ namespace BackEnd
             Puzzle puzzle = new Puzzle(currentLevel);
             JObject parsedLevel = JObject.Parse(currentLevel);
             List<State> states = RunListOfStatements(puzzle, input);
-            if (puzzle.IsFinished())
+            if (puzzle.Finished)
             {
                 Console.WriteLine("User solved level " + level + " in " + CalculateScore(input) + " lines. Par is " + parsedLevel["Par"] + ".");
             }
@@ -55,7 +55,7 @@ namespace BackEnd
         /// <returns>Arraylist of all the states.</returns>
         private static List<State> RunListOfStatements(Puzzle puzzle, Statement[] input)
         {
-            ICharacter character = puzzle.GetCharacter();
+            ICharacter character = puzzle.Character;
 
             List<State> states = new List<State>();
 

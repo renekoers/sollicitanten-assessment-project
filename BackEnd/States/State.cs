@@ -14,57 +14,54 @@ namespace BackEnd
         public int PuzzleHeight { get; }
         public State(Puzzle puzzle)
         {
-            ICharacter character = puzzle.GetCharacter();
-            Tile[][] tiles = puzzle.GetState();
+            ICharacter character = puzzle.Character;
+            Tile[,] tiles = puzzle.AllTiles;
             PuzzleTiles = new List<TileState>();
 
             Dictionary<Tile, ButtonTileState> linkedDoorsWithButtons = new Dictionary<Tile, ButtonTileState>();
 
-            PuzzleWidth = tiles[0].Length;
-            PuzzleHeight = tiles.Length;
+            PuzzleWidth = tiles.GetLength(1);
+            PuzzleHeight = tiles.GetLength(0);
 
             Tile CharacterTile = character.Position;
-            Tile EndTile = puzzle.GetEndTile();
+            Tile EndTile = puzzle.Finish;
             Character = new CharacterState(character.Direction);
 
-            foreach(Tile[] row in tiles)
+            foreach(Tile tile in tiles)
             {
-                foreach(Tile tile in row)
+                TileState tileState;
+                switch (tile.GetType().Name)
                 {
-                    TileState tileState;
-                    switch (tile.GetType().Name)
-                    {
-                        case nameof(DoorTile):
-                            tileState = new DoorTileState(StateOfTile.Door, tile.Passable);
-                            break;
-                        case nameof(ButtonTile):
-                            tileState = new ButtonTileState(StateOfTile.Button);
-                            linkedDoorsWithButtons.Add(((ButtonTile)tile).door, (ButtonTileState) tileState);
-                            break;
-                        case nameof(WallTile):
-                            tileState = new TileState(StateOfTile.Wall);
-                            break;
-                        default:
-                            tileState = new TileState(StateOfTile.Empty);
-                            break;
-                    }
-                    if (tile.Equals(EndTile))
-                    {
-                        tileState.State = StateOfTile.End;
-                    }
-                    if (tile.ContainsMoveable)
-                    {
-                        tileState.Movable = MovableItem.Box;
-                    }
-                    PuzzleTiles.Add(tileState);
+                    case nameof(DoorTile):
+                        tileState = new DoorTileState(StateOfTile.Door, tile.Passable);
+                        break;
+                    case nameof(ButtonTile):
+                        tileState = new ButtonTileState(StateOfTile.Button);
+                        linkedDoorsWithButtons.Add(((ButtonTile)tile).door, (ButtonTileState) tileState);
+                        break;
+                    case nameof(WallTile):
+                        tileState = new TileState(StateOfTile.Wall);
+                        break;
+                    default:
+                        tileState = new TileState(StateOfTile.Empty);
+                        break;
                 }
+                if (tile.Equals(EndTile))
+                {
+                    tileState.State = StateOfTile.End;
+                }
+                if (tile.ContainsMoveable)
+                {
+                    tileState.Movable = MovableItem.Box;
+                }
+                PuzzleTiles.Add(tileState);
             }
             ButtonTileState button;
             for (int rowIndex = 0; rowIndex<PuzzleHeight; rowIndex++)
             {
                 for (int columnIndex = 0; columnIndex < PuzzleWidth; columnIndex++)
                 {
-                    Tile tile = tiles[rowIndex][columnIndex];
+                    Tile tile = tiles[rowIndex, columnIndex];
                     if (linkedDoorsWithButtons.TryGetValue(tile, out button))
                     {
                         button.Door = (DoorTileState) PuzzleTiles[rowIndex * PuzzleWidth + columnIndex];

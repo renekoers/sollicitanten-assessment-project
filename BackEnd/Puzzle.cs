@@ -7,9 +7,9 @@ namespace BackEnd
 {
     public class Puzzle
     {
-        private Tile[,] AllTiles;
+        internal Tile[,] AllTiles { get; }
         public ICharacter Character { get; private set; }
-        private Tile Finish;
+        internal Tile Finish { get; }
         public bool Finished => Character.Position == Finish;
 
         public Puzzle(string info)
