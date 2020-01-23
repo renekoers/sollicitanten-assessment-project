@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace BackEnd.Statements
+namespace BackEnd
 {
     public abstract class Statement
     {
-        public abstract List<State> ExecuteCommand(Puzzle puzzle, ICharacter character);
-        public abstract int GetLines();
+        internal abstract List<State> ExecuteCommand(Puzzle puzzle, ICharacter character);
+        internal abstract int GetLines();
     }
 }
