@@ -6,7 +6,7 @@ namespace BackEnd
 {
     public class ButtonTile : Tile
     {
-        private readonly DoorTile door;
+        internal DoorTile door { get; }
 
         public ButtonTile(DoorTile door) : base()
         {

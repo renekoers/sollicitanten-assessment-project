@@ -9,13 +9,13 @@ namespace BackEnd
         /// <summary>
         /// Returns game's character object
         /// </summary>
-        ICharacter Character { get; }
+        CharacterState Character { get; }
 
         /// <summary>
-        /// Returns TileState[] that contains tiles with information from top-left of grid on pos 0, 
-        /// bottom-right tile on last pos. 
+        /// Returns list that contains tiles with information from top-left of grid on pos 0, 
+        /// bottom-right tile on last pos.
         /// </summary>
-        TileState[] PuzzleTiles { get; }
+        List<TileState> PuzzleTiles { get; }
 
         /// <summary>
         /// Returns int with puzzle's width
