@@ -20,9 +20,9 @@ namespace BackEnd
         internal override List<State> ExecuteCommand(Puzzle puzzle, ICharacter character)
         {
             List<State> states = new List<State>();
-            while(character.CheckCondition(_parameter, _value) == _isTrue)
+            while (character.CheckCondition(_parameter, _value) == _isTrue)
             {
-                foreach(Statement statement in _statements)
+                foreach (Statement statement in _statements)
                 {
                     states.AddRange(statement.ExecuteCommand(puzzle, character));
                 }
@@ -33,7 +33,7 @@ namespace BackEnd
         internal override int GetLines()
         {
             int lines = 1;
-            foreach(Statement statement in _statements){
+            foreach (Statement statement in _statements){
                 lines += statement.GetLines();
             }
             return lines;
