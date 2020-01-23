@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using BackEnd.Statements;
 
 namespace BackEnd
 {
@@ -89,7 +88,43 @@ namespace BackEnd
 
         public bool CheckCondition(ConditionParameter parameter, ConditionValue value)
         {
-            throw new NotImplementedException();
+            Tile tileToCheck;
+            switch (parameter)
+            {
+                case ConditionParameter.TileNorth:
+                    tileToCheck = Position.GetNeighbor(Direction.North);
+                    break;
+                case ConditionParameter.TileEast:
+                    tileToCheck = Position.GetNeighbor(Direction.East);
+                    break;
+                case ConditionParameter.TileSouth:
+                    tileToCheck = Position.GetNeighbor(Direction.South);
+                    break;
+                case ConditionParameter.TileWest:
+                    tileToCheck = Position.GetNeighbor(Direction.West);
+                    break;
+                case ConditionParameter.TileCurrent:
+                    tileToCheck = Position;
+                    break;
+                default:
+                    throw new NotImplementedException();
+            }
+
+            switch (value)
+            {
+                case ConditionValue.Passable:
+                    return tileToCheck.Passable;
+                case ConditionValue.Impassable:
+                    return !tileToCheck.Passable;
+                case ConditionValue.Button:
+                    return tileToCheck is ButtonTile;
+                case ConditionValue.HasMovable:
+                    return tileToCheck.ContainsMoveable;
+                case ConditionValue.Finish:
+                    return tileToCheck is FinishTile;
+                default:
+                    throw new NotImplementedException();
+            }
         }
     }
 }

@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace BackEnd.Statements
+namespace BackEnd
 {
-    class While : ConditionalStatement
+    public class While : ConditionalStatement
     {
         private ConditionParameter _parameter;
         private ConditionValue _value;
@@ -17,7 +17,7 @@ namespace BackEnd.Statements
             this._isTrue = isTrue;
             this._statements = statements;
         }
-        public override List<State> ExecuteCommand(Puzzle puzzle, ICharacter character)
+        internal override List<State> ExecuteCommand(Puzzle puzzle, ICharacter character)
         {
             List<State> states = new List<State>();
             while (character.CheckCondition(_parameter, _value) == _isTrue)
@@ -30,7 +30,7 @@ namespace BackEnd.Statements
             return states;
         }
 
-        public override int GetLines()
+        internal override int GetLines()
         {
             int lines = 1;
             foreach (Statement statement in _statements){
