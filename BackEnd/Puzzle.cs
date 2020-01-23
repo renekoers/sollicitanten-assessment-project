@@ -27,8 +27,8 @@ namespace BackEnd
             BuildWalls(level);
             BuildButtonsAndDoors(level);
             CreatePassableTiles(level);
-            PlaceBoxes(level);
             CreateCharacter(level);
+            PlaceBoxes(level);
             SetFinish(level);
             SetNeighbours();
         }
