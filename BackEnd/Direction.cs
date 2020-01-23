@@ -22,5 +22,22 @@ namespace BackEnd
         {
             return (Direction)(((int)dir + 3) % 4);
         }
+
+        public static (int, int) OfPosition(this Direction dir, int row, int col)
+        {
+            switch (dir)
+            {
+                case Direction.North:
+                    return (row - 1, col);
+                case Direction.West:
+                    return (row, col - 1);
+                case Direction.South:
+                    return (row + 1, col);
+                case Direction.East:
+                    return (row, col + 1);
+                default:
+                    return (row, col);
+            }
+        }
     }
 }

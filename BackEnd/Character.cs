@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using BackEnd.Statements;
 
 namespace BackEnd
 {
-    public class Character
+    public class Character : ICharacter
     {
         public Direction Direction { get; private set; }
         public Tile Position { get; private set; }
@@ -84,6 +85,11 @@ namespace BackEnd
                 }
             }
             return false;
+        }
+
+        public bool CheckCondition(ConditionParameter parameter, ConditionValue value)
+        {
+            throw new NotImplementedException();
         }
     }
 }
