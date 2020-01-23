@@ -8,7 +8,7 @@ namespace BackEnd
     public class Puzzle
     {
         Tile[][] AllTiles;
-        ICharacter character;
+        Character character;
 
         public Puzzle(string info)
         {
@@ -54,6 +54,14 @@ namespace BackEnd
         void PlaceBoxes(Level l)
         {
 
+        }
+        public string[][] GetState()
+        {
+            return new string[0][];
+        }
+        public Character GetCharacter()
+        {
+            return character;
         }
 
         internal ICharacter GetCharacter()
