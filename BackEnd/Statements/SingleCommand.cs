@@ -16,7 +16,6 @@ namespace BackEnd.Statements
         {
             character.ExecuteCommand(_command);
             return new List<State> { new State(puzzle) };
-
         }
 
         public override int GetLines()

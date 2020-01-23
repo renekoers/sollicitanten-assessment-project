@@ -30,7 +30,8 @@ namespace BackEnd.Statements
             if (character.CheckCondition(_parameter, _value) == _isTrue)
             {
                 statements = _statementsTrue;
-            } else
+            }
+            else
             {
                 statements = _statementsFalse;
             }

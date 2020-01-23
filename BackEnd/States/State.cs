@@ -27,7 +27,7 @@ namespace BackEnd
             Tile EndTile = puzzle.Finish;
             Character = new CharacterState(character.Direction);
 
-            foreach(Tile tile in tiles)
+            foreach (Tile tile in tiles)
             {
                 TileState tileState;
                 switch (tile.GetType().Name)
@@ -56,8 +56,9 @@ namespace BackEnd
                 }
                 PuzzleTiles.Add(tileState);
             }
+
             ButtonTileState button;
-            for (int rowIndex = 0; rowIndex<PuzzleHeight; rowIndex++)
+            for (int rowIndex = 0; rowIndex < PuzzleHeight; rowIndex++)
             {
                 for (int columnIndex = 0; columnIndex < PuzzleWidth; columnIndex++)
                 {
@@ -68,10 +69,6 @@ namespace BackEnd
                     }
                 }
             }
-
         }
-
-
-
     }
 }
