@@ -5,8 +5,8 @@
     <RootNamespace>Project_Sylveon</RootNamespace>
   </PropertyGroup>
 
-
   <ItemGroup>
+    <ProjectReference Include="..\BackEnd\BackEnd.csproj" />
   </ItemGroup>
 
 </Project>
