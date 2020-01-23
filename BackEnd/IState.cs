@@ -12,10 +12,10 @@ namespace BackEnd
         ICharacter Character { get; }
 
         /// <summary>
-        /// Returns list that contains tiles with information from top-left of grid on pos 0, 
-        /// bottom-right tile on last pos.
+        /// Returns TileState[] that contains tiles with information from top-left of grid on pos 0, 
+        /// bottom-right tile on last pos. 
         /// </summary>
-        List<Tile> PuzzleTiles { get; }
+        TileState[] PuzzleTiles { get; }
 
         /// <summary>
         /// Returns int with puzzle's width
