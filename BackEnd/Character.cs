@@ -104,6 +104,9 @@ namespace BackEnd
                 case ConditionParameter.TileWest:
                     tileToCheck = Position.GetNeighbor(Direction.West);
                     break;
+                case ConditionParameter.TileCurrent:
+                    tileToCheck = Position;
+                    break;
                 default:
                     throw new NotImplementedException();
             }
@@ -119,8 +122,7 @@ namespace BackEnd
                 case ConditionValue.HasMovable:
                     return tileToCheck.ContainsMoveable;
                 case ConditionValue.Finish:
-                    //TODO
-                    break;
+                    return tileToCheck is FinishTile;
                 default:
                     throw new NotImplementedException();
             }

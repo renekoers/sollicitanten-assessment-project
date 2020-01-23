@@ -6,6 +6,6 @@ namespace BackEnd.Statements
 {
     public enum ConditionParameter
     { 
-        TileNorth, TileEast, TileSouth, TileWest
+        TileNorth, TileEast, TileSouth, TileWest, TileCurrent
     }
 }
