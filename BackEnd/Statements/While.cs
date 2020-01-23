@@ -10,11 +10,11 @@ namespace BackEnd.Statements
         private ConditionValue _value;
         private bool _isTrue;
         private Statement[] _statements;
-        public While(ConditionParameter parameter, ConditionValue value, bool IsTrue, Statement[] statements)
+        public While(ConditionParameter parameter, ConditionValue value, bool isTrue, Statement[] statements)
         {
             this._parameter = parameter;
             this._value = value;
-            this._isTrue = IsTrue;
+            this._isTrue = isTrue;
             this._statements = statements;
         }
         public override List<string[][]> ExecuteCommand(Puzzle puzzle, ICharacter character)
@@ -27,11 +27,16 @@ namespace BackEnd.Statements
                     states.AddRange(statement.ExecuteCommand(puzzle, character));
                 }
             }
+            return states;
         }
 
         public override int GetLines()
         {
-            throw new NotImplementedException();
+            int lines = 1;
+            foreach(Statement statement in _statements){
+                lines += statement.GetLines();
+            }
+            return lines;
         }
     }
 }
