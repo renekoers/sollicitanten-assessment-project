@@ -6,6 +6,6 @@ namespace BackEnd.Statements
 {
     public enum ConditionValue
     { 
-        Wall, Button, End, Empty, Box
+        Passable, Impassable, Button, HasMovable, Finish
     }
 }
