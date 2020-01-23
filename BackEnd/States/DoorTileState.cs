@@ -6,7 +6,7 @@ namespace BackEnd
 {
     class DoorTileState : TileState
     {
-        public bool IsOpen {get;}
+        public bool IsOpen { get; }
         public DoorTileState(StateOfTile state, bool isOpen) : base(state)
         {
             this.IsOpen = isOpen;

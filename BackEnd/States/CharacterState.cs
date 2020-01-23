@@ -12,6 +12,5 @@ namespace BackEnd
         {
             this.DirectionCharacter = direction;
         }
-
     }
 }

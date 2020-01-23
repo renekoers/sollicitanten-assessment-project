@@ -5,6 +5,7 @@ using System.Text;
 namespace BackEnd.Statements
 {
     public enum ConditionValue
-    { Wall, Button, End, Empty, Box
+    { 
+        Wall, Button, End, Empty, Box
     }
 }

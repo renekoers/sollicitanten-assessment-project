@@ -5,6 +5,7 @@ using System.Text;
 namespace BackEnd.Statements
 {
     public enum ConditionParameter
-    { TileFront, TileLeft, TileRight, TileBehind
+    { 
+        TileNorth, TileWest, TileEast, TileSouth
     }
 }
