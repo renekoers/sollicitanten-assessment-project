@@ -5,7 +5,7 @@ using System.Text;
 namespace BackEnd
 {
     enum conditionalStatement { While, DoWhile, IfElse}
-    abstract class ConditionalStatement : Statement
+    public abstract class ConditionalStatement : Statement
     {
     }
 }
