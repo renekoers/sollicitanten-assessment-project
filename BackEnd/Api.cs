@@ -1,11 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
-using System.Collections;
-using Newtonsoft.Json;
-using System.Linq;
 using Newtonsoft.Json.Linq;
-using BackEnd.Statements;
 
 namespace BackEnd
 {

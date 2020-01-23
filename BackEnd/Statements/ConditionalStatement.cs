@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace BackEnd.Statements
+namespace BackEnd
 {
-    enum ConditionalStatementName { While, DoWhile, IfElse}
-    abstract class ConditionalStatement : Statement
+    enum conditionalStatement { While, DoWhile, IfElse}
+    public abstract class ConditionalStatement : Statement
     {
     }
 }
