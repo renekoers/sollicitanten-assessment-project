@@ -5,6 +5,7 @@ using System.Collections;
 using Newtonsoft.Json;
 using System.Linq;
 using Newtonsoft.Json.Linq;
+using BackEnd.Statements;
 
 namespace BackEnd
 {
@@ -26,12 +27,12 @@ namespace BackEnd
         /// <param name="level">Current level.</param> 
         /// <param name="input">String array of commands.</param>
         /// <returns>Arraylist of all the states.</returns>
-        public static string RunCommands(int level, Command[] input)
+        public static string RunCommands(int level, Statement[] input)
         {
             string currentLevel = Level.Get(level);
             Puzzle puzzle = new Puzzle(currentLevel);
             JObject parsedLevel = JObject.Parse(currentLevel);
-            List<string[][]> states = RunListOfCommands(puzzle, input);
+            List<string[][]> states = RunListOfStatements(puzzle, input);
             if (puzzle.IsFinished())
             {
                 Console.WriteLine("User solved level " + level + " in " + CalculateScore(input) + " lines. Par is " + parsedLevel["Par"] + ".");
@@ -42,7 +43,7 @@ namespace BackEnd
 
         public static string RunCommands(int level, string[] input)
         {
-            Command[] commands = ConvertStringToCommands(input);
+            Statement[] commands = ConvertStringToSingleCommands(input);
             return RunCommands(level, commands);
 
         }
@@ -52,16 +53,15 @@ namespace BackEnd
         /// <param name="level">Current level.</param> 
         /// <param name="input">String of commands seperated by ';'.</param>
         /// <returns>Arraylist of all the states.</returns>
-        private static List<string[][]> RunListOfCommands(Puzzle puzzle, Command[] input)
+        private static List<string[][]> RunListOfStatements(Puzzle puzzle, Statement[] input)
         {
             ICharacter character = puzzle.GetCharacter();
 
             List<string[][]> states = new List<string[][]>();
 
-            foreach (Command command in input)
+            foreach (Statement statement in input)
             {
-                character.RunCommand(command);
-                states.Add(puzzle.GetState());
+                states.AddRange(statement.ExecuteCommand(puzzle, character));
             }
             return states;
         }
@@ -71,18 +71,23 @@ namespace BackEnd
         /// <param name="input">String of commands seperated by ';'.</param>
         /// <returns>Array of commands.</returns>
         /// <exception cref="ArgumentException">Throws exception if the string is not a command.</exception>
-        private static Command[] ConvertStringToCommands(string[] input)
+        private static SingleCommand[] ConvertStringToSingleCommands(string[] input)
         {
-            Command[] commands = new Command[input.Length];
+            SingleCommand[] commands = new SingleCommand[input.Length];
             for(int index=0; index< input.Length; index++)
             {
-                commands[index] = (Command)Enum.Parse(typeof(Command), input[index].Trim());
+                commands[index] = new SingleCommand((Command)Enum.Parse(typeof(Command), input[index].Trim()));
             }
             return commands;
         }
-        private static int CalculateScore(Command[] input)
+        private static int CalculateScore(Statement[] input)
         {
-            return input.Length;
+            int lines = 0;
+            foreach(Statement statement in input)
+            {
+                lines += statement.GetLines();
+            }
+            return lines;
         }
     }
 }
