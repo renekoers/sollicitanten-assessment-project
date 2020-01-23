@@ -12,8 +12,8 @@ namespace BackEnd
         ICharacter Character { get; }
 
         /// <summary>
-        /// Returns list that contains tiles with information from top-left of grid on pos 0, 
-        /// bottom-right tile on last pos.
+        /// Returns &lt;Tile&gt; List that contains tiles with information from top-left of grid on pos 0, 
+        /// bottom-right tile on last pos. 
         /// </summary>
         List<Tile> PuzzleTiles { get; }
 
