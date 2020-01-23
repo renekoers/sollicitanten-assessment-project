@@ -13,31 +13,32 @@ namespace BackEnd
         public readonly int Par;
         public readonly int[][] Walls;
         public readonly int[] PositionCharacter;
+        public readonly Direction DirectionCharacter;
         public readonly int[] End;
         public readonly int[][] Buttons;
         public readonly int[][] Doors;
         public readonly int[][] Boxes;
-        public Level(int level, int[] gridSize, int par, int[][] walls, int[] positionCharacter, int[] end, int[][] buttons, int[][] doors, int[][] boxes)
+
+        [JsonConstructor]
+        private Level(int level, int[] gridSize, int par, int[][] walls, int[] positionCharacter, Direction directionCharacter, int[] end, int[][] buttons, int[][] doors, int[][] boxes)
         {
             this.LevelNumber = level;
             this.GridSize = gridSize;
             this.Par = par;
             this.Walls = walls;
             this.PositionCharacter = positionCharacter;
+            this.DirectionCharacter = directionCharacter;
             this.End = end;
             this.Buttons = buttons;
             this.Doors = doors;
             this.Boxes = boxes;
         }
 
-        private static Level[] levels = new Level[]{new Level(1,new int[] { 3, 3 }, 8, new int[][] { new int[] { 1, 0 }, new int[] { 1, 2 } },
-                                        new int[] { 2, 1 }, new int[] { 0, 1 }, new int[][]{new int[] { 1, 2, 0 } },
-                                        new int[][]{new int[] { 1, 1, 1 } }, new int[][]{new int[] { 2, 2 } }),
-
-                                        new Level(2,new int[] { 5, 5 }, 8, new int[][] { new int[] { 1, 0 }, new int[] { 1, 1 },new int[] { 1, 3 }, new int[] { 1, 4 },new int[] { 3, 0 }, new int[] { 3, 1 },new int[] { 3, 3 }, new int[] { 3, 4 } },
-                                        new int[] { 4, 2 }, new int[] { 0, 0 }, new int[][]{new int[] { 1, 4, 0 }, new int[]{2,4,4 } },
-                                        new int[][]{new int[] { 1, 1, 2 },new int[] { 2, 3, 2 } }, new int[][]{new int[] { 4, 3 }, new int[]{2,0 } }),
-                                        };
+        private static Level[] levels = new Level[] {
+            new Level(1, new int[] { 3, 3 }, 8, new int[][] { new int[] { 1, 0 }, new int[] { 1, 2 } }, 
+            new int[] { 2, 1 }, Direction.North, new int[] { 0, 1 }, new int[][] { new int[] { 1, 2, 0 } },
+            new int[][]{ new int[] { 1, 1, 1 } }, new int[][]{ new int[] { 2, 2 } })
+        };
         public static string Get(int level)
         {
             return JsonConvert.SerializeObject(levels[level - 1]);
