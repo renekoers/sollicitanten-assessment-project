@@ -7,15 +7,24 @@ namespace BackEnd
     public interface IState
     {
         /// <summary>
-        /// Retrieve game's main character
+        /// Returns game's character object
         /// </summary>
         ICharacter Character { get; }
+
         /// <summary>
-        /// Retrieves a list of the gamegrid, keeping in mind that the
-        /// grid is rendered from top-left -> bottom-right
+        /// Returns list that contains tiles with information from top-left of grid on pos 0, 
+        /// bottom-right tile on last pos.
         /// </summary>
         List<Tile> PuzzleTiles { get; }
+
+        /// <summary>
+        /// Returns int with puzzle's width
+        /// </summary>
         int PuzzleWidth { get; }
+
+        /// <summary>
+        /// Returns in with puzzle's height
+        /// </summary>
         int PuzzleHeight { get;  }
     }
 }
