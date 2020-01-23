@@ -4,7 +4,7 @@ using System.Text;
 
 namespace BackEnd
 {
-    class IfElse : ConditionalStatement
+    public class IfElse : ConditionalStatement
     {
         private ConditionParameter _parameter;
         private ConditionValue _value;
@@ -23,7 +23,7 @@ namespace BackEnd
             this._statementsTrue = statementsTrue;
             this._statementsFalse = statementsFalse;
         }
-        public override List<State> ExecuteCommand(Puzzle puzzle, ICharacter character)
+        internal override List<State> ExecuteCommand(Puzzle puzzle, ICharacter character)
         {
             List<State> states = new List<State>();
             Statement[] statements;
@@ -41,7 +41,7 @@ namespace BackEnd
             return states;
         }
 
-        public override int GetLines()
+        internal override int GetLines()
         {
             int lines = 1;
             foreach (Statement statement in _statementsTrue)

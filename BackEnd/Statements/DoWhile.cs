@@ -4,7 +4,7 @@ using System.Text;
 
 namespace BackEnd
 {
-    class DoWhile : ConditionalStatement
+    public class DoWhile : ConditionalStatement
     {
         private ConditionParameter _parameter;
         private ConditionValue _value;
@@ -17,7 +17,7 @@ namespace BackEnd
             this._isTrue = isTrue;
             this._statements = statements;
         }
-        public override List<State> ExecuteCommand(Puzzle puzzle, ICharacter character)
+        internal override List<State> ExecuteCommand(Puzzle puzzle, ICharacter character)
         {
             List<State> states = new List<State>();
             do
@@ -30,7 +30,7 @@ namespace BackEnd
             return states;
         }
 
-        public override int GetLines()
+        internal override int GetLines()
         {
             int lines = 1;
             foreach (Statement statement in _statements)
