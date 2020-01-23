@@ -8,6 +8,7 @@ namespace BackEnd
     public class Puzzle
     {
         Tile[][] AllTiles;
+        ICharacter character;
 
         public Puzzle(string info)
         {
@@ -55,5 +56,17 @@ namespace BackEnd
 
         }
 
+        internal ICharacter GetCharacter()
+        {
+            return this.character;
+        }
+        internal string[][] GetState()
+        {
+            return new string[0][];
+        }
+        internal bool IsFinished()
+        {
+            return true;
+        }
     }
 }

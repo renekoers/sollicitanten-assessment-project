@@ -84,5 +84,9 @@ namespace BackEnd
         {
             return input.Length;
         }
+        private static void GetState(Puzzle puzzle)
+        {
+            string[][] state = puzzle.GetState();
+        }
     }
 }
