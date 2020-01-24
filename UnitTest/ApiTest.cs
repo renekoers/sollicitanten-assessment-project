@@ -8,11 +8,6 @@ namespace UnitTest
     public class ApiTest
     {
         [TestMethod]
-        public void GetLevelTest()
-        {
-            Assert.AreEqual(1, Api.GetLevel(1).Count);
-        }
-        [TestMethod]
         public void RunSingleCommandTest()
         {
             List<IState> states = Api.RunCommands(1, new Statement[] { new SingleCommand(Command.RotateLeft) });

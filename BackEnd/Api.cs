@@ -11,9 +11,9 @@ namespace BackEnd
         /// </summary>
         /// <param name="level"></param>
         /// <returns>JSON consisting of the state</returns>
-        public static List<IState> GetLevel(int level)
+        public static IState GetLevel(int level)
         {
-            return new List<IState>() { new State(new Puzzle(Level.Get(level))) };
+            return new State(new Puzzle(Level.Get(level)));
         }
 
         /// <summary>
