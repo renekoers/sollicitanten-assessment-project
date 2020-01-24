@@ -1,10 +1,25 @@
 ﻿@page
 @model IndexModel
 @{
-    ViewData["Title"] = "Home page";
+    ViewData["Title"] = "It's Puzzle Time!";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+<header>
+    <partial name="GridPuzzlePartials/Header"/>
+</header>
+<main>
+    <div id="flex-container">
+        <div id="draggable-elements-menu-container">
+            <partial name="GridPuzzlePartials/DraggableElementsMenu" model="Model.DraggableElementsMenu"/>
+        </div>
+        <div id="code-container">
+            <partial name="GridPuzzlePartials/CodeMenu" model="Model.CodeMenu"/>
+        </div>
+        <div id="game-grid">
+            <partial name="GridPuzzlePartials/GameGrid" model="Model.GameGrid"/>
+        </div>
+    </div>
+    <button id="play-button">
+        F
+    </button>
+</main>

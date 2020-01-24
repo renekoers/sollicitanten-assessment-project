@@ -12,11 +12,14 @@ namespace BackEnd
         public List<TileState> PuzzleTiles { get; }
         public int PuzzleWidth { get; }
         public int PuzzleHeight { get; }
+        public int PuzzleLevel { get; }
+
         public State(Puzzle puzzle)
         {
             ICharacter character = puzzle.Character;
             Tile[,] tiles = puzzle.AllTiles;
             PuzzleTiles = new List<TileState>();
+            PuzzleLevel = puzzle.LevelNumber;
 
             Dictionary<Tile, ButtonTileState> linkedDoorsWithButtons = new Dictionary<Tile, ButtonTileState>();
 
@@ -57,15 +60,14 @@ namespace BackEnd
                 PuzzleTiles.Add(tileState);
             }
 
-            ButtonTileState button;
             for (int rowIndex = 0; rowIndex < PuzzleHeight; rowIndex++)
             {
                 for (int columnIndex = 0; columnIndex < PuzzleWidth; columnIndex++)
                 {
                     Tile tile = tiles[rowIndex, columnIndex];
-                    if (linkedDoorsWithButtons.TryGetValue(tile, out button))
+                    if (linkedDoorsWithButtons.TryGetValue(tile, out ButtonTileState button))
                     {
-                        button.Door = (DoorTileState) PuzzleTiles[rowIndex * PuzzleWidth + columnIndex];
+                        button.Door = (DoorTileState)PuzzleTiles[rowIndex * PuzzleWidth + columnIndex];
                     }
                 }
             }

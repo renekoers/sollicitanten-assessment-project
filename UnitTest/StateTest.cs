@@ -10,31 +10,31 @@ namespace UnitTest
         [TestMethod]
         public void StateHasCharacterTest()
         {
-            State level = Api.GetLevel(1)[0];
+            IState level = Api.GetLevel(1);
             Assert.AreNotEqual(null, level.Character);
         }
         [TestMethod]
         public void PuzzleWidthTest()
         {
-            State level = Api.GetLevel(1)[0];
+            IState level = Api.GetLevel(1);
             Assert.AreNotEqual(0, level.PuzzleWidth);
         }
         [TestMethod]
         public void PuzzleHeigthTest()
         {
-            State level = Api.GetLevel(1)[0];
+            IState level = Api.GetLevel(1);
             Assert.AreNotEqual(0, level.PuzzleHeight);
         }
         [TestMethod]
         public void CorrectSizeTest()
         {
-            State level = Api.GetLevel(1)[0];
+            IState level = Api.GetLevel(1);
             Assert.AreEqual(level.PuzzleHeight * level.PuzzleWidth, level.PuzzleTiles.Count);
         }
         [TestMethod]
         public void UniqueEndTest()
         {
-            State level = Api.GetLevel(1)[0];
+            IState level = Api.GetLevel(1);
             int countEnd = 0;
             foreach(TileState tile in level.PuzzleTiles)
             {
