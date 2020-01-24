@@ -13,7 +13,7 @@ namespace BackEnd
         private static readonly char[] START_BY_DIRECTION = { '^', '>', '_', '<' }; //v needs to be reserved for buttons; the order of the array matches the int values of Direction
         private const char MOVABLE_BOX = '*';
 
-        public int LevelNumber;
+        public readonly int LevelNumber;
         public readonly int[] GridSize; //height, width
         public readonly int Par;
         public readonly int[][] Walls;

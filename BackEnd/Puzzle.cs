@@ -11,6 +11,7 @@ namespace BackEnd
         public ICharacter Character { get; private set; }
         internal FinishTile Finish { get; private set; }
         public bool Finished => Character.Position == Finish;
+        public int LevelNumber { get; private set; }
 
         public Puzzle(string info)
         {
@@ -23,6 +24,7 @@ namespace BackEnd
             int height = level.GridSize[0];
             int width = level.GridSize[1];
             AllTiles = new Tile[height, width];
+            LevelNumber = level.LevelNumber;
 
             BuildWalls(level);
             BuildButtonsAndDoors(level);
