@@ -33,7 +33,8 @@ namespace BackEnd
         internal override int GetLines()
         {
             int lines = 1;
-            foreach (Statement statement in _statements){
+            foreach (Statement statement in _statements)
+            {
                 lines += statement.GetLines();
             }
             return lines;
