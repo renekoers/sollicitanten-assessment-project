@@ -54,15 +54,16 @@ namespace BackEnd
         /// Values are as the above constants. Lowercase letters represent buttons and uppercase letters doors, where button a is matched to door A, etc.
         /// The character position and direction is stated in START_BY_DIRECTION, where ^ = North, > = East, _ = South, and < = West.
         /// </summary>
-        /// <param name="data">A String representing the level. The last line should be the level number in a single integer.</param>
+        /// <param name="data">A String representing the level. The last line should be two integers separated by a comma: the first is the level number, the second is the amount of moves considered par.</param>
         /// <returns>A level object representing the provided data.</returns>
         public static Level CreateFromString(string data)
         {
             string[] lines = data.Split(new string[] { "\r\n", "\r", "\n" }, StringSplitOptions.RemoveEmptyEntries);
 
-            int level = int.Parse(lines[lines.Length - 1]);
+            int[] levelDetails = (new List<string>(lines[lines.Length - 1].Split(','))).ConvertAll<int>(s => int.Parse(s)).ToArray();
+            int level = levelDetails[0];
             int[] gridSize = new int[] { lines.Length - 1, lines[1].Length };
-            int par = 0; //no idea what par is here though
+            int par = levelDetails[1];
             
             List<int[]> walls = new List<int[]>();
             int[] positionCharacter = new int[2];
