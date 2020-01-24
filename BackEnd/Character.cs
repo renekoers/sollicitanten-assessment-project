@@ -52,7 +52,7 @@ namespace BackEnd
 
         protected virtual bool MoveForward()
         {
-            Tile tileInFront = Position.GetTile(Direction);
+            Tile tileInFront = Position.GetNeighbour(Direction);
             if (tileInFront.Passable)
             {
                 Position = tileInFront;
@@ -63,7 +63,7 @@ namespace BackEnd
 
         protected virtual bool PickUp()
         {
-            Tile tileInFront = Position.GetTile(Direction);
+            Tile tileInFront = Position.GetNeighbour(Direction);
             if (HeldItem == null && tileInFront.ContainsMoveable)
             {
                 HeldItem = tileInFront.Retrieve();
@@ -74,7 +74,7 @@ namespace BackEnd
 
         protected virtual bool Drop()
         {
-            Tile tileInFront = Position.GetTile(Direction);
+            Tile tileInFront = Position.GetNeighbour(Direction);
             if (HeldItem != null && tileInFront.Passable)
             {
                 if (tileInFront.DropOnto(HeldItem))
@@ -91,17 +91,17 @@ namespace BackEnd
             Tile tileToCheck;
             switch (parameter)
             {
-                case ConditionParameter.TileNorth:
-                    tileToCheck = Position.GetNeighbor(Direction.North);
+                case ConditionParameter.TileFront:
+                    tileToCheck = Position.GetNeighbour(Direction);
                     break;
-                case ConditionParameter.TileEast:
-                    tileToCheck = Position.GetNeighbor(Direction.East);
+                case ConditionParameter.TileLeft:
+                    tileToCheck = Position.GetNeighbour(Direction.Left());
                     break;
-                case ConditionParameter.TileSouth:
-                    tileToCheck = Position.GetNeighbor(Direction.South);
+                case ConditionParameter.TileRight:
+                    tileToCheck = Position.GetNeighbour(Direction.Right());
                     break;
-                case ConditionParameter.TileWest:
-                    tileToCheck = Position.GetNeighbor(Direction.West);
+                case ConditionParameter.TileBehind:
+                    tileToCheck = Position.GetNeighbour(Direction.Opposite());
                     break;
                 case ConditionParameter.TileCurrent:
                     tileToCheck = Position;
