@@ -28,12 +28,7 @@ namespace BackEnd
             _containedItem = null;
         }
 
-        public Tile GetTile(Direction dir)
-        {
-            return neighbours[(int)dir];
-        }
-
-        public Tile GetNeighbor(Direction dir)
+        public Tile GetNeighbour(Direction dir)
         {
             if (neighbours[(int)dir] != null)
             {
