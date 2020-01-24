@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using BackEnd.Statements;
 
 namespace BackEnd
 {
@@ -92,17 +91,14 @@ namespace BackEnd
             Tile tileToCheck;
             switch (parameter)
             {
-                case ConditionParameter.TileNorth:
-                    tileToCheck = Position.GetNeighbor(Direction.North);
+                case ConditionParameter.TileFront:
+                    tileToCheck = Position.GetTile(Direction);
                     break;
-                case ConditionParameter.TileEast:
-                    tileToCheck = Position.GetNeighbor(Direction.East);
+                case ConditionParameter.TileLeft:
+                    tileToCheck = Position.GetTile(Direction.Left());
                     break;
-                case ConditionParameter.TileSouth:
-                    tileToCheck = Position.GetNeighbor(Direction.South);
-                    break;
-                case ConditionParameter.TileWest:
-                    tileToCheck = Position.GetNeighbor(Direction.West);
+                case ConditionParameter.TileRight:
+                    tileToCheck = Position.GetTile(Direction.Right());
                     break;
                 case ConditionParameter.TileCurrent:
                     tileToCheck = Position;
