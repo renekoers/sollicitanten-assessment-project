@@ -16,11 +16,20 @@ namespace BackEnd
     {
         public static Direction Right(this Direction dir)
         {
-            return (Direction)(((int)dir + 1) % 4);
+            return dir.NthDirectionClockwise(1);
+        }
+        public static Direction Opposite(this Direction dir)
+        {
+            return dir.NthDirectionClockwise(2);
         }
         public static Direction Left(this Direction dir)
         {
-            return (Direction)(((int)dir + 3) % 4);
+            return dir.NthDirectionClockwise(3);
+        }
+
+        private static Direction NthDirectionClockwise(this Direction dir, uint n)
+        {
+            return (Direction)(((int)dir + n) % 4);
         }
 
         public static (int, int) OfPosition(this Direction dir, int row, int col)
