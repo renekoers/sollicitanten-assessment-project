@@ -52,7 +52,7 @@ namespace BackEnd
 
         protected virtual bool MoveForward()
         {
-            Tile tileInFront = Position.GetTile(Direction);
+            Tile tileInFront = Position.GetNeighbour(Direction);
             if (tileInFront.Passable)
             {
                 Position = tileInFront;
@@ -63,7 +63,7 @@ namespace BackEnd
 
         protected virtual bool PickUp()
         {
-            Tile tileInFront = Position.GetTile(Direction);
+            Tile tileInFront = Position.GetNeighbour(Direction);
             if (HeldItem == null && tileInFront.ContainsMoveable)
             {
                 HeldItem = tileInFront.Retrieve();
@@ -74,7 +74,7 @@ namespace BackEnd
 
         protected virtual bool Drop()
         {
-            Tile tileInFront = Position.GetTile(Direction);
+            Tile tileInFront = Position.GetNeighbour(Direction);
             if (HeldItem != null && tileInFront.Passable)
             {
                 if (tileInFront.DropOnto(HeldItem))
@@ -92,13 +92,16 @@ namespace BackEnd
             switch (parameter)
             {
                 case ConditionParameter.TileFront:
-                    tileToCheck = Position.GetTile(Direction);
+                    tileToCheck = Position.GetNeighbour(Direction);
                     break;
                 case ConditionParameter.TileLeft:
-                    tileToCheck = Position.GetTile(Direction.Left());
+                    tileToCheck = Position.GetNeighbour(Direction.Left());
                     break;
                 case ConditionParameter.TileRight:
-                    tileToCheck = Position.GetTile(Direction.Right());
+                    tileToCheck = Position.GetNeighbour(Direction.Right());
+                    break;
+                case ConditionParameter.TileBehind:
+                    tileToCheck = Position.GetNeighbour(Direction.Opposite());
                     break;
                 case ConditionParameter.TileCurrent:
                     tileToCheck = Position;
