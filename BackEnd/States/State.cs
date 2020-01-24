@@ -12,11 +12,14 @@ namespace BackEnd
         public List<TileState> PuzzleTiles { get; }
         public int PuzzleWidth { get; }
         public int PuzzleHeight { get; }
+        public int PuzzleLevel { get; }
+
         public State(Puzzle puzzle)
         {
             ICharacter character = puzzle.Character;
             Tile[,] tiles = puzzle.AllTiles;
             PuzzleTiles = new List<TileState>();
+            PuzzleLevel = puzzle.LevelNumber;
 
             Dictionary<Tile, ButtonTileState> linkedDoorsWithButtons = new Dictionary<Tile, ButtonTileState>();
 
