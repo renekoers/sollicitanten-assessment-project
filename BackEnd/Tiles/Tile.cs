@@ -28,14 +28,18 @@ namespace BackEnd
             _containedItem = null;
         }
 
-        public Tile GetTile(Direction dir)
+        public Tile GetNeighbour(Direction dir)
         {
-            return neighbours[(int)dir];
-        }
-
-        public Tile GetNeighbor(Direction dir)
-        {
-            return neighbours[(int)dir];
+            if (neighbours[(int)dir] != null)
+            {
+                return neighbours[(int)dir];
+            }
+            else
+            {
+                WallTile wall = new WallTile();
+                wall.SetNeighbour(this, dir.Opposite());
+                return wall;
+            }
         }
 
         public void SetNeighbour(Tile neighbour, Direction dir)
