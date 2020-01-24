@@ -29,8 +29,9 @@ namespace BackEnd
             BuildWalls(level);
             BuildButtonsAndDoors(level);
             CreateFinish(level);
-            CreatePassableTiles(level);
+            CreatePassableTiles();
             CreateCharacter(level);
+            PlaceBoxes(level);
             SetNeighbours();
         }
 
@@ -80,7 +81,7 @@ namespace BackEnd
             }
         }
 
-        void CreatePassableTiles(Level level)
+        void CreatePassableTiles()
         {
             for (int r = 0; r < AllTiles.GetLength(0); r++)
             {

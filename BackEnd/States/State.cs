@@ -60,15 +60,14 @@ namespace BackEnd
                 PuzzleTiles.Add(tileState);
             }
 
-            ButtonTileState button;
             for (int rowIndex = 0; rowIndex < PuzzleHeight; rowIndex++)
             {
                 for (int columnIndex = 0; columnIndex < PuzzleWidth; columnIndex++)
                 {
                     Tile tile = tiles[rowIndex, columnIndex];
-                    if (linkedDoorsWithButtons.TryGetValue(tile, out button))
+                    if (linkedDoorsWithButtons.TryGetValue(tile, out ButtonTileState button))
                     {
-                        button.Door = (DoorTileState) PuzzleTiles[rowIndex * PuzzleWidth + columnIndex];
+                        button.Door = (DoorTileState)PuzzleTiles[rowIndex * PuzzleWidth + columnIndex];
                     }
                 }
             }
