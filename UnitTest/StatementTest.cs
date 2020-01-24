@@ -76,5 +76,13 @@ namespace UnitTest
             List<State> states = Api.RunCommands(1, statements);
             Assert.AreEqual(1, states.Count);
         }
+        [TestMethod]
+        public void RepeatThriceTest()
+        {
+            Puzzle puzzle = new Puzzle(Level.Get(1));
+            Statement[] statements = new Statement[] { new Repeat(3, new Statement[] { new SingleCommand(Command.RotateLeft) }) };
+            List<State> states = Api.RunCommands(1, statements);
+            Assert.AreEqual(3, states.Count);
+        }
     }
 }

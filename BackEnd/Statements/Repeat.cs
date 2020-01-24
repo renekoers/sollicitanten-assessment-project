@@ -4,7 +4,7 @@ using System.Text;
 
 namespace BackEnd
 {
-    class Repeat : Statement
+    public class Repeat : Statement
     {
         private uint _amount;
         private Statement[] _statements;
@@ -20,7 +20,7 @@ namespace BackEnd
             {
                 foreach  (Statement statement in _statements)
                 {
-                    states.AddRange(statement.ExecuteCommand(puzzle, character);
+                    states.AddRange(statement.ExecuteCommand(puzzle, character));
                 }
             }
             return states;
