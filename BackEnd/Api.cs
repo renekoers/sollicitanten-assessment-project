@@ -33,7 +33,6 @@ namespace BackEnd
                 Console.WriteLine("User solved level " + level + " in " + CalculateScore(input) + " lines. Par is " + parsedLevel["Par"] + ".");
             }
             return states;
-
         }
 
         public static List<IState> RunCommands(int level, string[] input)

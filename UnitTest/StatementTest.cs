@@ -79,9 +79,12 @@ namespace UnitTest
         [TestMethod]
         public void RepeatThriceTest()
         {
+            Puzzle puzzle = new Puzzle(Level.Get(1));
+            Direction initialDir = puzzle.Character.Direction;
             Statement[] statements = new Statement[] { new Repeat(3, new Statement[] { new SingleCommand(Command.RotateLeft) }) };
             List<IState> states = Api.RunCommands(1, statements);
             Assert.AreEqual(3, states.Count);
+            Assert.AreEqual(initialDir.Right(), states[2].Character.DirectionCharacter);
         }
     }
 }
