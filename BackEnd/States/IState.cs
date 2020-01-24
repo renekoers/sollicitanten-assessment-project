@@ -26,5 +26,7 @@ namespace BackEnd
         /// Returns in with puzzle's height
         /// </summary>
         int PuzzleHeight { get;  }
+
+        int PuzzleLevel { get; }
     }
 }
