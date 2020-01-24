@@ -4,25 +4,21 @@ using System.Text;
 
 namespace BackEnd
 {
-    public class While : ConditionalStatement
+    public class Repeat : Statement
     {
-        private ConditionParameter _parameter;
-        private ConditionValue _value;
-        private bool _isTrue;
+        private uint _amount;
         private Statement[] _statements;
-        public While(ConditionParameter parameter, ConditionValue value, bool isTrue, Statement[] statements)
+        public Repeat(uint amount, Statement[] statements)
         {
-            this._parameter = parameter;
-            this._value = value;
-            this._isTrue = isTrue;
-            this._statements = statements;
+            _amount = amount;
+            _statements = statements;
         }
         internal override List<State> ExecuteCommand(Puzzle puzzle, ICharacter character)
         {
             List<State> states = new List<State>();
-            while (character.CheckCondition(_parameter, _value) == _isTrue)
+            for (int i = 0; i < _amount; i++)
             {
-                foreach (Statement statement in _statements)
+                foreach  (Statement statement in _statements)
                 {
                     states.AddRange(statement.ExecuteCommand(puzzle, character));
                 }
