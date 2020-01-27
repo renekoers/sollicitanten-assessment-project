@@ -41,6 +41,12 @@ namespace BackEnd
             return RunCommands(level, commands);
 
         }
+
+        public static long GetEpochTime()
+        {
+            return DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+        }
+
         /// <summary>
         /// This method runs the given commands for the given level. Returns an arraylist of all the states.
         /// </summary>
