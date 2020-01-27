@@ -44,9 +44,9 @@ namespace BackEnd
             new int[] { 2, 1 }, Direction.North, new int[] { 0, 1 }, new int[][] { new int[] { 1, 2, 0 } },
             new int[][]{ new int[] { 1, 1, 1 } }, new int[][]{ new int[] { 2, 2 } })
         };
-        public static string Get(int level)
+        public static Level Get(int level)
         {
-            return JsonConvert.SerializeObject(levels[level - 1]);
+            return levels[level - 1];
         }
 
         /// <summary>

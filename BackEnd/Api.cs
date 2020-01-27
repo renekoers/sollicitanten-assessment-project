@@ -24,13 +24,12 @@ namespace BackEnd
         /// <returns>Arraylist of all the states.</returns>
         public static List<IState> RunCommands(int level, Statement[] input)
         {
-            string currentLevel = Level.Get(level);
+            Level currentLevel = Level.Get(level);
             Puzzle puzzle = new Puzzle(currentLevel);
-            JObject parsedLevel = JObject.Parse(currentLevel);
             List<IState> states = RunListOfStatements(puzzle, input);
             if (puzzle.Finished)
             {
-                Console.WriteLine("User solved level " + level + " in " + CalculateScore(input) + " lines. Par is " + parsedLevel["Par"] + ".");
+                Console.WriteLine("User solved level " + level + " in " + CalculateScore(input) + " lines. Par is " + currentLevel.Par + ".");
             }
             return states;
         }
