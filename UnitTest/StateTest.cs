@@ -13,7 +13,12 @@ namespace UnitTest
             IState level = Api.GetLevel(1);
             Assert.AreNotEqual(null, level.Character);
         }
-
+        [TestMethod]
+        public void CharacterHasTileTest()
+        {
+            IState level = Api.GetLevel(1);
+            Assert.AreNotEqual(null, level.Character.Tile);
+        }
         [TestMethod]
         public void PuzzleWidthTest()
         {
