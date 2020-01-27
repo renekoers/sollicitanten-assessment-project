@@ -29,6 +29,7 @@ namespace BackEnd
             Tile CharacterTile = character.Position;
             Tile EndTile = puzzle.Finish;
             Character = new CharacterState(character.Direction);
+            Tile tileCharacter = character.Position;
 
             foreach (Tile tile in tiles)
             {
@@ -48,6 +49,10 @@ namespace BackEnd
                     default:
                         tileState = new TileState(StateOfTile.Empty);
                         break;
+                }
+                if (tile.Equals(tileCharacter))
+                {
+                    Character.Tile = tileState;
                 }
                 if (tile.Equals(EndTile))
                 {

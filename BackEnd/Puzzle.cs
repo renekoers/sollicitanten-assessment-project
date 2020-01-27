@@ -18,6 +18,10 @@ namespace BackEnd
             // {"LevelNumber":1,"GridSize":[3,3],"Par":8,"Walls":[[1,0],[1,2]],"Begin":[2,1],"End":[0,1],"Buttons":[[1,2,0]],"Doors":[[1,1,1]],"Boxes":[[2,2]]}
             ConstructPuzzle(JsonConvert.DeserializeObject<Level>(info));
         }
+        public Puzzle(Level level)
+        {
+            ConstructPuzzle(level);
+        }
 
         void ConstructPuzzle(Level level)
         {
