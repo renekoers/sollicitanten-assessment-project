@@ -19,7 +19,7 @@ namespace BackEnd
             }
         }
 
-        private List<Statement> _statements;
+        private readonly List<Statement> _statements;
         public Analysis(List<Statement> statements)
         {
             _statements = statements;
