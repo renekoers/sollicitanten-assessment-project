@@ -51,5 +51,16 @@ namespace UnitTest
             }
             Assert.AreEqual(1, countEnd);
         }
+
+        [TestMethod]
+        public void IDUniquenessTest()
+        {
+            IState level = Api.GetLevel(1);
+            HashSet<int> IDs = new HashSet<int>();
+            foreach (TileState tile in level.PuzzleTiles)
+            {
+                Assert.IsTrue(IDs.Add(tile.ID));
+            }
+        }
     }
 }
