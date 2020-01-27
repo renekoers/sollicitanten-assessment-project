@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using BackEnd.Statements;
 
 namespace BackEnd
 {
@@ -53,7 +52,7 @@ namespace BackEnd
 
         protected virtual bool MoveForward()
         {
-            Tile tileInFront = Position.GetTile(Direction);
+            Tile tileInFront = Position.GetNeighbour(Direction);
             if (tileInFront.Passable)
             {
                 Position = tileInFront;
@@ -64,7 +63,7 @@ namespace BackEnd
 
         protected virtual bool PickUp()
         {
-            Tile tileInFront = Position.GetTile(Direction);
+            Tile tileInFront = Position.GetNeighbour(Direction);
             if (HeldItem == null && tileInFront.ContainsMoveable)
             {
                 HeldItem = tileInFront.Retrieve();
@@ -75,7 +74,7 @@ namespace BackEnd
 
         protected virtual bool Drop()
         {
-            Tile tileInFront = Position.GetTile(Direction);
+            Tile tileInFront = Position.GetNeighbour(Direction);
             if (HeldItem != null && tileInFront.Passable)
             {
                 if (tileInFront.DropOnto(HeldItem))
@@ -89,7 +88,43 @@ namespace BackEnd
 
         public bool CheckCondition(ConditionParameter parameter, ConditionValue value)
         {
-            throw new NotImplementedException();
+            Tile tileToCheck;
+            switch (parameter)
+            {
+                case ConditionParameter.TileFront:
+                    tileToCheck = Position.GetNeighbour(Direction);
+                    break;
+                case ConditionParameter.TileLeft:
+                    tileToCheck = Position.GetNeighbour(Direction.Left());
+                    break;
+                case ConditionParameter.TileRight:
+                    tileToCheck = Position.GetNeighbour(Direction.Right());
+                    break;
+                case ConditionParameter.TileBehind:
+                    tileToCheck = Position.GetNeighbour(Direction.Opposite());
+                    break;
+                case ConditionParameter.TileCurrent:
+                    tileToCheck = Position;
+                    break;
+                default:
+                    throw new NotImplementedException();
+            }
+
+            switch (value)
+            {
+                case ConditionValue.Passable:
+                    return tileToCheck.Passable;
+                case ConditionValue.Impassable:
+                    return !tileToCheck.Passable;
+                case ConditionValue.Button:
+                    return tileToCheck is ButtonTile;
+                case ConditionValue.HasMovable:
+                    return tileToCheck.ContainsMoveable;
+                case ConditionValue.Finish:
+                    return tileToCheck is FinishTile;
+                default:
+                    throw new NotImplementedException();
+            }
         }
     }
 }

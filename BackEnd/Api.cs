@@ -1,11 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
-using System.Collections;
-using Newtonsoft.Json;
-using System.Linq;
 using Newtonsoft.Json.Linq;
-using BackEnd.Statements;
 
 namespace BackEnd
 {
@@ -16,9 +11,9 @@ namespace BackEnd
         /// </summary>
         /// <param name="level"></param>
         /// <returns>JSON consisting of the state</returns>
-        public static List<State> GetLevel(int level)
+        public static IState GetLevel(int level)
         {
-            return new List<State>() { new State(new Puzzle(Level.Get(level))) };
+            return new State(new Puzzle(Level.Get(level)));
         }
 
         /// <summary>
@@ -27,21 +22,20 @@ namespace BackEnd
         /// <param name="level">Current level.</param> 
         /// <param name="input">String array of commands.</param>
         /// <returns>Arraylist of all the states.</returns>
-        public static List<State> RunCommands(int level, Statement[] input)
+        public static List<IState> RunCommands(int level, Statement[] input)
         {
             string currentLevel = Level.Get(level);
             Puzzle puzzle = new Puzzle(currentLevel);
             JObject parsedLevel = JObject.Parse(currentLevel);
-            List<State> states = RunListOfStatements(puzzle, input);
+            List<IState> states = RunListOfStatements(puzzle, input);
             if (puzzle.Finished)
             {
                 Console.WriteLine("User solved level " + level + " in " + CalculateScore(input) + " lines. Par is " + parsedLevel["Par"] + ".");
             }
             return states;
-
         }
 
-        public static List<State> RunCommands(int level, string[] input)
+        public static List<IState> RunCommands(int level, string[] input)
         {
             Statement[] commands = ConvertStringToSingleCommands(input);
             return RunCommands(level, commands);
@@ -53,11 +47,11 @@ namespace BackEnd
         /// <param name="level">Current level.</param> 
         /// <param name="input">String of commands seperated by ';'.</param>
         /// <returns>Arraylist of all the states.</returns>
-        private static List<State> RunListOfStatements(Puzzle puzzle, Statement[] input)
+        private static List<IState> RunListOfStatements(Puzzle puzzle, Statement[] input)
         {
             ICharacter character = puzzle.Character;
 
-            List<State> states = new List<State>();
+            List<IState> states = new List<IState>();
 
             foreach (Statement statement in input)
             {

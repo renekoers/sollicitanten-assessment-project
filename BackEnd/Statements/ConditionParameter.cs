@@ -2,9 +2,10 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace BackEnd.Statements
+namespace BackEnd
 {
     public enum ConditionParameter
-    { TileFront, TileLeft, TileRight, TileBehind
+    { 
+        TileFront, TileLeft, TileRight, TileBehind, TileCurrent
     }
 }

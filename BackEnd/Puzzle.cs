@@ -7,10 +7,11 @@ namespace BackEnd
 {
     public class Puzzle
     {
-        internal Tile[,] AllTiles { get; }
+        internal Tile[,] AllTiles { get; private set; }
         public ICharacter Character { get; private set; }
-        internal Tile Finish { get; }
+        internal FinishTile Finish { get; private set; }
         public bool Finished => Character.Position == Finish;
+        public int LevelNumber { get; private set; }
 
         public Puzzle(string info)
         {
@@ -23,13 +24,14 @@ namespace BackEnd
             int height = level.GridSize[0];
             int width = level.GridSize[1];
             AllTiles = new Tile[height, width];
+            LevelNumber = level.LevelNumber;
 
             BuildWalls(level);
             BuildButtonsAndDoors(level);
-            CreatePassableTiles(level);
-            PlaceBoxes(level);
+            CreateFinish(level);
+            CreatePassableTiles();
             CreateCharacter(level);
-            SetFinish(level);
+            PlaceBoxes(level);
             SetNeighbours();
         }
 
@@ -79,7 +81,7 @@ namespace BackEnd
             }
         }
 
-        void CreatePassableTiles(Level level)
+        void CreatePassableTiles()
         {
             for (int r = 0; r < AllTiles.GetLength(0); r++)
             {
@@ -93,10 +95,10 @@ namespace BackEnd
             }
         }
 
-        void SetFinish(Level level)
+        void CreateFinish(Level level)
         {
             int[] finish = level.End;
-            Finish = AllTiles[finish[0], finish[1]];
+            AllTiles[finish[0], finish[1]] = Finish = new FinishTile();
         }
 
         void CreateCharacter(Level level)

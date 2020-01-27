@@ -7,11 +7,10 @@ namespace BackEnd
     public class CharacterState
     {
         public Direction DirectionCharacter { get; }
-        public TileState tile { get; internal set; }
+        public TileState Tile { get; internal set; }
         public CharacterState(Direction direction)
         {
             this.DirectionCharacter = direction;
         }
-
     }
 }

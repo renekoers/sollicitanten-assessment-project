@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace BackEnd.Statements
+namespace BackEnd
 {
-    class SingleCommand : Statement
+    public class SingleCommand : Statement
     {
         private Command _command;
         public SingleCommand(Command command)
@@ -12,14 +12,13 @@ namespace BackEnd.Statements
             this._command = command;
         }
 
-        public override List<State> ExecuteCommand(Puzzle puzzle, ICharacter character)
+        internal override List<State> ExecuteCommand(Puzzle puzzle, ICharacter character)
         {
             character.ExecuteCommand(_command);
             return new List<State> { new State(puzzle) };
-
         }
 
-        public override int GetLines()
+        internal override int GetLines()
         {
             return 1;
         }

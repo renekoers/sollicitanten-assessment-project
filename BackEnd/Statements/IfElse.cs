@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace BackEnd.Statements
+namespace BackEnd
 {
-    class IfElse : ConditionalStatement
+    public class IfElse : ConditionalStatement
     {
         private ConditionParameter _parameter;
         private ConditionValue _value;
@@ -23,14 +23,15 @@ namespace BackEnd.Statements
             this._statementsTrue = statementsTrue;
             this._statementsFalse = statementsFalse;
         }
-        public override List<State> ExecuteCommand(Puzzle puzzle, ICharacter character)
+        internal override List<State> ExecuteCommand(Puzzle puzzle, ICharacter character)
         {
             List<State> states = new List<State>();
             Statement[] statements;
             if (character.CheckCondition(_parameter, _value) == _isTrue)
             {
                 statements = _statementsTrue;
-            } else
+            }
+            else
             {
                 statements = _statementsFalse;
             }
@@ -41,7 +42,7 @@ namespace BackEnd.Statements
             return states;
         }
 
-        public override int GetLines()
+        internal override int GetLines()
         {
             int lines = 1;
             foreach (Statement statement in _statementsTrue)
