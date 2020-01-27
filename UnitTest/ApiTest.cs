@@ -8,20 +8,21 @@ namespace UnitTest
     public class ApiTest
     {
         [TestMethod]
-        public void GetLevelTest()
+        public void GetLevelNumberTest()
         {
-            Assert.AreEqual(1, Api.GetLevel(1).Count);
+            IState level = Api.GetLevel(1);
+            Assert.AreEqual(1, level.PuzzleLevel);
         }
         [TestMethod]
         public void RunSingleCommandTest()
         {
-            List<State> states = Api.RunCommands(1, new Statement[] { new SingleCommand(Command.RotateLeft) });
+            List<IState> states = Api.RunCommands(1, new Statement[] { new SingleCommand(Command.RotateLeft) });
             Assert.AreEqual(1, states.Count);
         }
         [TestMethod]
         public void RunMultipleCommandsTest()
         {
-            List<State> states = Api.RunCommands(1, new Statement[] { new SingleCommand(Command.RotateLeft), new SingleCommand(Command.MoveForward), new SingleCommand(Command.RotateRight) });
+            List<IState> states = Api.RunCommands(1, new Statement[] { new SingleCommand(Command.RotateLeft), new SingleCommand(Command.MoveForward), new SingleCommand(Command.RotateRight) });
             Assert.AreEqual(3, states.Count);
         }
     }

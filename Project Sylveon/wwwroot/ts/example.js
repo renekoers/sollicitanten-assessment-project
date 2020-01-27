@@ -1,9 +1,6 @@
-var Example = /** @class */ (function () {
-    function Example() {
-    }
-    Example.init = function () {
+class Example {
+    static init() {
         console.log("Hello World!");
-    };
-    return Example;
-}());
+    }
+}
 Example.init();

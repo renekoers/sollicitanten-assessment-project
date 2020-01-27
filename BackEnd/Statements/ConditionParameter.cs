@@ -6,6 +6,6 @@ namespace BackEnd
 {
     public enum ConditionParameter
     { 
-        TileFront, TileLeft, TileRight, TileCurrent
+        TileFront, TileLeft, TileRight, TileBehind, TileCurrent
     }
 }
