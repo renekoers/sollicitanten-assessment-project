@@ -7,7 +7,7 @@ namespace BackEnd
     class ButtonTileState : TileState
     {
         public DoorTileState Door { get; internal set; }
-        public ButtonTileState(StateOfTile state) : base(state)
+        public ButtonTileState(int ID, StateOfTile state) : base(ID, state)
         {
         }
     }

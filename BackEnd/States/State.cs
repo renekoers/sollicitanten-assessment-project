@@ -31,23 +31,24 @@ namespace BackEnd
             Character = new CharacterState(character.Direction);
             Tile tileCharacter = character.Position;
 
+            int nextID = 0;
             foreach (Tile tile in tiles)
             {
                 TileState tileState;
                 switch (tile.GetType().Name)
                 {
                     case nameof(DoorTile):
-                        tileState = new DoorTileState(StateOfTile.Door, tile.Passable);
+                        tileState = new DoorTileState(nextID++, StateOfTile.Door, tile.Passable);
                         break;
                     case nameof(ButtonTile):
-                        tileState = new ButtonTileState(StateOfTile.Button);
+                        tileState = new ButtonTileState(nextID++, StateOfTile.Button);
                         linkedDoorsWithButtons.Add(((ButtonTile)tile).door, (ButtonTileState) tileState);
                         break;
                     case nameof(WallTile):
-                        tileState = new TileState(StateOfTile.Wall);
+                        tileState = new TileState(nextID++, StateOfTile.Wall);
                         break;
                     default:
-                        tileState = new TileState(StateOfTile.Empty);
+                        tileState = new TileState(nextID++, StateOfTile.Empty);
                         break;
                 }
                 if (tile.Equals(tileCharacter))
