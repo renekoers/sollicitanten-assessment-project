@@ -10,39 +10,39 @@ namespace UnitTest
         [TestMethod]
         public void StateHasCharacterTest()
         {
-            IState level = Api.GetLevel(1);
-            Assert.AreNotEqual(null, level.Character);
+            IState level = Api.StartLevelSession(Api.StartSession(), 1);
+            Assert.IsNotNull(level.Character);
         }
         [TestMethod]
         public void CharacterHasTileTest()
         {
-            IState level = Api.GetLevel(1);
-            Assert.AreNotEqual(null, level.Character.Tile);
+            IState level = Api.StartLevelSession(Api.StartSession(), 1);
+            Assert.IsNotNull(level.Character.Tile);
         }
         [TestMethod]
         public void PuzzleWidthTest()
         {
-            IState level = Api.GetLevel(1);
+            IState level = Api.StartLevelSession(Api.StartSession(), 1);
             Assert.AreNotEqual(0, level.PuzzleWidth);
         }
         [TestMethod]
         public void PuzzleHeigthTest()
         {
-            IState level = Api.GetLevel(1);
+            IState level = Api.StartLevelSession(Api.StartSession(), 1);
             Assert.AreNotEqual(0, level.PuzzleHeight);
         }
         [TestMethod]
         public void CorrectSizeTest()
         {
-            IState level = Api.GetLevel(1);
+            IState level = Api.StartLevelSession(Api.StartSession(), 1);
             Assert.AreEqual(level.PuzzleHeight * level.PuzzleWidth, level.PuzzleTiles.Count);
         }
         [TestMethod]
         public void UniqueEndTest()
         {
-            IState level = Api.GetLevel(1);
+            IState level = Api.StartLevelSession(Api.StartSession(), 1);
             int countEnd = 0;
-            foreach(TileState tile in level.PuzzleTiles)
+            foreach (TileState tile in level.PuzzleTiles)
             {
                 if (tile.State.Equals(StateOfTile.End))
                 {
@@ -55,7 +55,7 @@ namespace UnitTest
         [TestMethod]
         public void IDUniquenessTest()
         {
-            IState level = Api.GetLevel(1);
+            IState level = Api.StartLevelSession(Api.StartSession(), 1);
             HashSet<int> IDs = new HashSet<int>();
             foreach (TileState tile in level.PuzzleTiles)
             {

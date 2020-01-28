@@ -15,7 +15,7 @@ namespace UnitTest
             bool testTrue = character.CheckCondition(ConditionParameter.TileFront, ConditionValue.Passable);
             Direction currentDirection = character.Direction;
             Statement[] statements = new Statement[] { new IfElse(ConditionParameter.TileFront, ConditionValue.Passable, testTrue, new Statement[] { new SingleCommand(Command.RotateLeft) }, new Statement[] { new SingleCommand(Command.RotateRight) }) };
-            List<IState> states = Api.RunCommands(1, statements);
+            List<IState> states = (new LevelSolution(1, statements)).States;
             IState finalState = states[states.Count - 1];
             Direction newDirection = finalState.Character.DirectionCharacter;
             Assert.AreEqual(currentDirection.Left(), newDirection);
@@ -28,7 +28,7 @@ namespace UnitTest
             bool testTrue = character.CheckCondition(ConditionParameter.TileFront, ConditionValue.Passable);
             Direction currentDirection = character.Direction;
             Statement[] statements = new Statement[] { new IfElse(ConditionParameter.TileFront, ConditionValue.Passable, testTrue, new Statement[] { new SingleCommand(Command.RotateLeft) }) };
-            List<IState> states = Api.RunCommands(1, statements);
+            List<IState> states = (new LevelSolution(1, statements)).States;
             IState finalState = states[states.Count - 1];
             Direction newDirection = finalState.Character.DirectionCharacter;
             Assert.AreEqual(currentDirection.Left(), newDirection);
@@ -41,7 +41,7 @@ namespace UnitTest
             bool testFalse = !character.CheckCondition(ConditionParameter.TileFront, ConditionValue.Passable);
             Direction currentDirection = character.Direction;
             Statement[] statements = new Statement[] { new IfElse(ConditionParameter.TileFront, ConditionValue.Passable, testFalse, new Statement[] { new SingleCommand(Command.RotateLeft) }, new Statement[] { new SingleCommand(Command.RotateRight) }) };
-            List<IState> states = Api.RunCommands(1, statements);
+            List<IState> states = (new LevelSolution(1, statements)).States;
             IState finalState = states[states.Count - 1];
             Direction newDirection = finalState.Character.DirectionCharacter;
             Assert.AreEqual(currentDirection.Right(), newDirection);
@@ -53,7 +53,7 @@ namespace UnitTest
             ICharacter character = puzzle.Character;
             bool testFalse = !character.CheckCondition(ConditionParameter.TileFront, ConditionValue.Passable);
             Statement[] statements = new Statement[] { new IfElse(ConditionParameter.TileFront, ConditionValue.Passable, testFalse, new Statement[] { new SingleCommand(Command.RotateLeft) }) };
-            List<IState> states = Api.RunCommands(1, statements);
+            List<IState> states = (new LevelSolution(1, statements)).States;
             Assert.AreEqual(0, states.Count);
         }
         [TestMethod]
@@ -63,7 +63,7 @@ namespace UnitTest
             ICharacter character = puzzle.Character;
             bool testFalse = !character.CheckCondition(ConditionParameter.TileFront, ConditionValue.Passable);
             Statement[] statements = new Statement[] { new While(ConditionParameter.TileFront, ConditionValue.Passable, testFalse, new Statement[] { new SingleCommand(Command.RotateLeft) }) };
-            List<IState> states = Api.RunCommands(1, statements);
+            List<IState> states = (new LevelSolution(1, statements)).States;
             Assert.AreEqual(0, states.Count);
         }
         [TestMethod]
@@ -73,7 +73,7 @@ namespace UnitTest
             ICharacter character = puzzle.Character;
             bool testFalse = !character.CheckCondition(ConditionParameter.TileLeft, ConditionValue.Passable);
             Statement[] statements = new Statement[] { new DoWhile(ConditionParameter.TileFront, ConditionValue.Passable, testFalse, new Statement[] { new SingleCommand(Command.RotateLeft) }) };
-            List<IState> states = Api.RunCommands(1, statements);
+            List<IState> states = (new LevelSolution(1, statements)).States;
             Assert.AreEqual(1, states.Count);
         }
         [TestMethod]
@@ -82,7 +82,7 @@ namespace UnitTest
             Puzzle puzzle = new Puzzle(Level.Get(1));
             Direction initialDir = puzzle.Character.Direction;
             Statement[] statements = new Statement[] { new Repeat(3, new Statement[] { new SingleCommand(Command.RotateLeft) }) };
-            List<IState> states = Api.RunCommands(1, statements);
+            List<IState> states = (new LevelSolution(1, statements)).States;
             Assert.AreEqual(3, states.Count);
             Assert.AreEqual(initialDir.Right(), states[2].Character.DirectionCharacter);
         }
