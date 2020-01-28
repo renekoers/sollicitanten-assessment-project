@@ -5,7 +5,7 @@ using System.Text;
 namespace BackEnd
 {
     public enum StateOfTile { Door, Wall, Empty, Button, End }
-    public enum MovableItem { Box }
+    public enum MovableItem { None, Box }
     public class State : IState
     {
         public CharacterState Character { get; }
