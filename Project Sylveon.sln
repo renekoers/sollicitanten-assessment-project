@@ -16,7 +16,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UnitTest", "UnitTest\UnitTe
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BackEnd", "BackEnd\BackEnd.csproj", "{4F6C873D-00B2-4D41-B2EC-022074276A69}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "React Frontend", "React Frontend\React Frontend.csproj", "{668B3B3C-194A-4D43-A81B-AED9D73733A2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "React Frontend", "React Frontend\React Frontend.csproj", "{668B3B3C-194A-4D43-A81B-AED9D73733A2}"
+	ProjectSection(ProjectDependencies) = postProject
+		{4F6C873D-00B2-4D41-B2EC-022074276A69} = {4F6C873D-00B2-4D41-B2EC-022074276A69}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
