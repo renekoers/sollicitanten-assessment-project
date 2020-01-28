@@ -6,10 +6,10 @@ namespace BackEnd
 {
     public class While : ConditionalStatement
     {
-        private ConditionParameter _parameter;
-        private ConditionValue _value;
-        private bool _isTrue;
-        private Statement[] _statements;
+        private readonly ConditionParameter _parameter;
+        private readonly ConditionValue _value;
+        private readonly bool _isTrue;
+        private readonly Statement[] _statements;
         public While(ConditionParameter parameter, ConditionValue value, bool isTrue, Statement[] statements)
         {
             this._parameter = parameter;
@@ -17,14 +17,14 @@ namespace BackEnd
             this._isTrue = isTrue;
             this._statements = statements;
         }
-        internal override List<State> ExecuteCommand(Puzzle puzzle, ICharacter character)
+        internal override List<State> ExecuteCommand(Puzzle puzzle)
         {
             List<State> states = new List<State>();
-            while (character.CheckCondition(_parameter, _value) == _isTrue)
+            while (puzzle.Character.CheckCondition(_parameter, _value) == _isTrue)
             {
                 foreach (Statement statement in _statements)
                 {
-                    states.AddRange(statement.ExecuteCommand(puzzle, character));
+                    states.AddRange(statement.ExecuteCommand(puzzle));
                 }
             }
             return states;

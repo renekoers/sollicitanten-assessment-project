@@ -6,21 +6,21 @@ namespace BackEnd
 {
     public class Repeat : Statement
     {
-        private uint _amount;
-        private Statement[] _statements;
+        private readonly uint _amount;
+        private readonly Statement[] _statements;
         public Repeat(uint amount, Statement[] statements)
         {
             _amount = amount;
             _statements = statements;
         }
-        internal override List<State> ExecuteCommand(Puzzle puzzle, ICharacter character)
+        internal override List<State> ExecuteCommand(Puzzle puzzle)
         {
             List<State> states = new List<State>();
             for (int i = 0; i < _amount; i++)
             {
                 foreach  (Statement statement in _statements)
                 {
-                    states.AddRange(statement.ExecuteCommand(puzzle, character));
+                    states.AddRange(statement.ExecuteCommand(puzzle));
                 }
             }
             return states;

@@ -4,7 +4,7 @@ using System.Text;
 
 namespace BackEnd
 {
-    enum conditionalStatement
+    enum ConditionalStatementName
     {
         While, DoWhile, IfElse, Repeat
     }
