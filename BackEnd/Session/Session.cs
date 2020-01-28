@@ -11,14 +11,34 @@ namespace BackEnd
         /// </summary>
         public long StartTime { get; protected set; }
         public long EndTime { get; protected set; }
-        public long Duration { get; protected set; }
+        /// <summary>
+        /// The duration of the session once it has been stopped or paused
+        /// </summary>
+        public long TotalDuration { get; protected set; }
+        /// <summary>
+        /// The current duration of the session while the session is still in progress
+        /// </summary>
+        public long CurrentDuration
+        {
+            get
+            {
+                if (InProgress)
+                {
+                    return TotalDuration + Api.GetEpochTime() - StartTime;
+                }
+                else
+                {
+                    return TotalDuration;
+                }
+            }
+        }
         public bool InProgress { get; private set; }
 
         public Session()
         {
             StartTime = Api.GetEpochTime();
             InProgress = true;
-            Duration = 0;
+            TotalDuration = 0;
         }
 
         public void Pause()
@@ -41,7 +61,7 @@ namespace BackEnd
             {
                 InProgress = false;
                 EndTime = Api.GetEpochTime();
-                Duration += EndTime - StartTime;
+                TotalDuration += EndTime - StartTime;
             }
         }
     }
