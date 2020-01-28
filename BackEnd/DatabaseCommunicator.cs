@@ -16,21 +16,21 @@ namespace BackEnd
             return _currentID++;
         }
 
-        private readonly Dictionary<int, GameSession> GameSessions = new Dictionary<int, GameSession>();
+        private static readonly Dictionary<int, GameSession> GameSessions = new Dictionary<int, GameSession>();
 
-        public int CreateSession()
+        public static int CreateSession()
         {
             int ID = CreateID();
             GameSessions.Add(ID, new GameSession());
             return ID;
         }
 
-        public GameSession GetSession(int ID)
+        public static GameSession GetSession(int ID)
         {
             return GameSessions.TryGetValue(ID, out GameSession value) ? value : null;
         }
 
-        public bool UpdateSession(int ID, GameSession session)
+        public static bool UpdateSession(int ID, GameSession session)
         {
             if (GameSessions.ContainsKey(ID))
             {
