@@ -21,15 +21,17 @@ namespace BackEnd
                 return lines;
             }
         }
+        public List<IState> States { get; private set; }
 
         public LevelSolution(int number, Statement[] statements)
         {
             LevelNumber = number;
             Code = statements;
             Puzzle puzzle = new Puzzle(Level.Get(number));
+            States = new List<IState>();
             foreach (Statement statement in Code)
             {
-                statement.ExecuteCommand(puzzle);
+                States.AddRange(statement.ExecuteCommand(puzzle));
             }
             Solved = puzzle.Finished;
         }
