@@ -27,7 +27,7 @@ namespace BackEnd
 
         public static GameSession GetSession(int ID)
         {
-            return GameSessions.TryGetValue(ID, out GameSession value) ? value : null;
+            return GameSessions.TryGetValue(ID, out GameSession session) ? session : null;
         }
 
         public static bool UpdateSession(int ID, GameSession session)
