@@ -16,7 +16,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UnitTest", "UnitTest\UnitTe
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BackEnd", "BackEnd\BackEnd.csproj", "{4F6C873D-00B2-4D41-B2EC-022074276A69}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Project Sylveon (React)", "Project Sylveon (React)\Project Sylveon (React).csproj", "{8AD44D15-7ED6-4CFD-BD33-35BBCFA76C95}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "React Frontend", "React Frontend\React Frontend.csproj", "{668B3B3C-194A-4D43-A81B-AED9D73733A2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -36,10 +36,10 @@ Global
 		{4F6C873D-00B2-4D41-B2EC-022074276A69}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4F6C873D-00B2-4D41-B2EC-022074276A69}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4F6C873D-00B2-4D41-B2EC-022074276A69}.Release|Any CPU.Build.0 = Release|Any CPU
-		{8AD44D15-7ED6-4CFD-BD33-35BBCFA76C95}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{8AD44D15-7ED6-4CFD-BD33-35BBCFA76C95}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{8AD44D15-7ED6-4CFD-BD33-35BBCFA76C95}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{8AD44D15-7ED6-4CFD-BD33-35BBCFA76C95}.Release|Any CPU.Build.0 = Release|Any CPU
+		{668B3B3C-194A-4D43-A81B-AED9D73733A2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{668B3B3C-194A-4D43-A81B-AED9D73733A2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{668B3B3C-194A-4D43-A81B-AED9D73733A2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{668B3B3C-194A-4D43-A81B-AED9D73733A2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
