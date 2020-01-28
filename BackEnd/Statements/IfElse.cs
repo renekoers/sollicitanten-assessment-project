@@ -6,11 +6,11 @@ namespace BackEnd
 {
     public class IfElse : ConditionalStatement
     {
-        private ConditionParameter _parameter;
-        private ConditionValue _value;
-        private bool _isTrue;
-        private Statement[] _statementsTrue;
-        private Statement[] _statementsFalse;
+        private readonly ConditionParameter _parameter;
+        private readonly ConditionValue _value;
+        private readonly bool _isTrue;
+        private readonly Statement[] _statementsTrue;
+        private readonly Statement[] _statementsFalse;
         public IfElse(ConditionParameter parameter, ConditionValue value, bool isTrue, Statement[] statementsTrue) : this(parameter, value, isTrue, statementsTrue, new Statement[0])
         {
             
@@ -23,11 +23,11 @@ namespace BackEnd
             this._statementsTrue = statementsTrue;
             this._statementsFalse = statementsFalse;
         }
-        internal override List<State> ExecuteCommand(Puzzle puzzle, ICharacter character)
+        internal override List<State> ExecuteCommand(Puzzle puzzle)
         {
             List<State> states = new List<State>();
             Statement[] statements;
-            if (character.CheckCondition(_parameter, _value) == _isTrue)
+            if (puzzle.Character.CheckCondition(_parameter, _value) == _isTrue)
             {
                 statements = _statementsTrue;
             }
@@ -37,7 +37,7 @@ namespace BackEnd
             }
             foreach (Statement statement in statements)
             {
-                states.AddRange(statement.ExecuteCommand(puzzle, character));
+                states.AddRange(statement.ExecuteCommand(puzzle));
             }
             return states;
         }

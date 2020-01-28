@@ -54,13 +54,11 @@ namespace BackEnd
         /// <returns>Arraylist of all the states.</returns>
         private static List<IState> RunListOfStatements(Puzzle puzzle, Statement[] input)
         {
-            ICharacter character = puzzle.Character;
-
             List<IState> states = new List<IState>();
 
             foreach (Statement statement in input)
             {
-                states.AddRange(statement.ExecuteCommand(puzzle, character));
+                states.AddRange(statement.ExecuteCommand(puzzle));
             }
             return states;
         }
@@ -73,7 +71,7 @@ namespace BackEnd
         private static SingleCommand[] ConvertStringToSingleCommands(string[] input)
         {
             SingleCommand[] commands = new SingleCommand[input.Length];
-            for(int index=0; index< input.Length; index++)
+            for (int index = 0; index < input.Length; index++)
             {
                 commands[index] = new SingleCommand((Command)Enum.Parse(typeof(Command), input[index].Trim()));
             }
@@ -82,7 +80,7 @@ namespace BackEnd
         private static int CalculateScore(Statement[] input)
         {
             int lines = 0;
-            foreach(Statement statement in input)
+            foreach (Statement statement in input)
             {
                 lines += statement.GetLines();
             }
