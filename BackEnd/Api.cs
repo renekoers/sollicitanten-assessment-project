@@ -7,10 +7,78 @@ namespace BackEnd
     public class Api
     {
         /// <summary>
+        /// Start a new session for a new candidate
+        /// </summary>
+        /// <returns>The ID of the newly created candidate used to access their session</returns>
+        public static int StartSession()
+        {
+            return Repository.CreateSession();
+        }
+
+        /// <summary>
+        /// Obtain the session from a candidate. This session should at some point be stopped, and can be used to check the duration etc.
+        /// </summary>
+        /// <param name="ID"></param>
+        /// <returns></returns>
+        public static GameSession GetSession(int ID)
+        {
+            return Repository.GetSession(ID);
+        }
+
+        /// <summary>
+        /// Begin a new level session.
+        /// </summary>
+        /// <param name="ID"></param>
+        /// <param name="levelNumber"></param>
+        /// <returns></returns>
+        public static IState StartLevelSession(int ID, int levelNumber)
+        {
+            GameSession gameSession = GetSession(ID);
+            LevelSession levelSession = new LevelSession(levelNumber);
+            gameSession.AddLevel(levelSession);
+            Repository.UpdateSession(ID, gameSession);
+
+            return new State(new Puzzle(Level.Get(levelNumber)));
+        }
+
+        /// <summary>
+        /// Submit a new solution attempt
+        /// </summary>
+        /// <param name="ID"></param>
+        /// <param name="levelNumber"></param>
+        /// <param name="statements"></param>
+        /// <returns>A LevelSolution object which contains amongst other things a list of IState objects and whether the level was solved or not</returns>
+        public static LevelSolution SubmitSolution(int ID, int levelNumber, Statement[] statements)
+        {
+            GameSession gameSession = GetSession(ID);
+            LevelSession levelSession = gameSession.GetSession(levelNumber);
+            LevelSolution solution = new LevelSolution(levelNumber, statements);
+            levelSession.Attempt(solution);
+            Repository.UpdateSession(ID, gameSession);
+            return solution;
+        }
+
+        public static void EndLevelSession(int ID, int levelNumber)
+        {
+            GameSession gameSession = GetSession(ID);
+            LevelSession levelSession = gameSession.GetSession(levelNumber);
+            levelSession.End();
+            Repository.UpdateSession(ID, gameSession);
+        }
+
+        public static void EndSession(int ID)
+        {
+            GameSession gameSession = GetSession(ID);
+            gameSession.End();
+            Repository.UpdateSession(ID, gameSession);
+        }
+
+        /// <summary>
         /// Gives the state of the given level and the recommended numbers of lines to use.
         /// </summary>
         /// <param name="level"></param>
         /// <returns>JSON consisting of the state</returns>
+        [Obsolete("Use StartLevelSession instead")]
         public static IState GetLevel(int level)
         {
             return new State(new Puzzle(Level.Get(level)));
@@ -22,6 +90,7 @@ namespace BackEnd
         /// <param name="level">Current level.</param> 
         /// <param name="input">String array of commands.</param>
         /// <returns>Arraylist of all the states.</returns>
+        [Obsolete("Use SubmitSolution instead")]
         public static List<IState> RunCommands(int level, Statement[] input)
         {
             Level currentLevel = Level.Get(level);
@@ -34,6 +103,7 @@ namespace BackEnd
             return states;
         }
 
+        [Obsolete]
         public static List<IState> RunCommands(int level, string[] input)
         {
             Statement[] commands = ConvertStringToSingleCommands(input);
@@ -52,6 +122,7 @@ namespace BackEnd
         /// <param name="level">Current level.</param> 
         /// <param name="input">String of commands seperated by ';'.</param>
         /// <returns>Arraylist of all the states.</returns>
+        [Obsolete]
         private static List<IState> RunListOfStatements(Puzzle puzzle, Statement[] input)
         {
             List<IState> states = new List<IState>();
@@ -77,6 +148,7 @@ namespace BackEnd
             }
             return commands;
         }
+        
         private static int CalculateScore(Statement[] input)
         {
             int lines = 0;
