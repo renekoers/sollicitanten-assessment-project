@@ -7,9 +7,9 @@ namespace BackEnd
     /// <summary>
     /// Currently this is a mock for keeping data in memory without any proper persistence, but this should talk to the database, once we have one
     /// </summary>
-    public class DatabaseCommunicator
+    public class Repository
     {
-        private DatabaseCommunicator() { }
+        private Repository() { }
         private static int _currentID = 0;
         private static int CreateID()
         {

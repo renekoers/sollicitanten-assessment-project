@@ -12,7 +12,7 @@ namespace BackEnd
         /// <returns>The ID of the newly created candidate used to access their session</returns>
         public static int StartSession()
         {
-            return DatabaseCommunicator.CreateSession();
+            return Repository.CreateSession();
         }
 
         /// <summary>
@@ -22,7 +22,7 @@ namespace BackEnd
         /// <returns></returns>
         public static GameSession GetSession(int ID)
         {
-            return DatabaseCommunicator.GetSession(ID);
+            return Repository.GetSession(ID);
         }
 
         /// <summary>
@@ -36,7 +36,7 @@ namespace BackEnd
             GameSession gameSession = GetSession(ID);
             LevelSession levelSession = new LevelSession(levelNumber);
             gameSession.AddLevel(levelSession);
-            DatabaseCommunicator.UpdateSession(ID, gameSession);
+            Repository.UpdateSession(ID, gameSession);
 
             return new State(new Puzzle(Level.Get(levelNumber)));
         }
@@ -54,7 +54,7 @@ namespace BackEnd
             LevelSession levelSession = gameSession.GetSession(levelNumber);
             LevelSolution solution = new LevelSolution(levelNumber, statements);
             levelSession.Attempt(solution);
-            DatabaseCommunicator.UpdateSession(ID, gameSession);
+            Repository.UpdateSession(ID, gameSession);
             return solution;
         }
 
@@ -63,14 +63,14 @@ namespace BackEnd
             GameSession gameSession = GetSession(ID);
             LevelSession levelSession = gameSession.GetSession(levelNumber);
             levelSession.End();
-            DatabaseCommunicator.UpdateSession(ID, gameSession);
+            Repository.UpdateSession(ID, gameSession);
         }
 
         public static void EndSession(int ID)
         {
             GameSession gameSession = GetSession(ID);
             gameSession.End();
-            DatabaseCommunicator.UpdateSession(ID, gameSession);
+            Repository.UpdateSession(ID, gameSession);
         }
 
         /// <summary>
