@@ -7,32 +7,20 @@ namespace BackEnd
     public class LevelSolution
     {
         public int LevelNumber { get; private set; }
-        private readonly Statement[] Code;
+        private readonly StatementBlock Code;
         public bool Solved { get; private set; }
-        public int Lines
-        {
-            get
-            {
-                int lines = 0;
-                foreach (Statement statement in Code)
-                {
-                    lines += statement.GetLines();
-                }
-                return lines;
-            }
-        }
+        public int Lines => Code.GetLines();
         public List<IState> States { get; private set; }
 
         public LevelSolution(int number, Statement[] statements)
+            : this(number, new StatementBlock(statements)) { }
+        public LevelSolution(int number, StatementBlock statements)
         {
             LevelNumber = number;
             Code = statements;
             Puzzle puzzle = new Puzzle(Level.Get(number));
             States = new List<IState>();
-            foreach (Statement statement in Code)
-            {
-                States.AddRange(statement.ExecuteCommand(puzzle));
-            }
+            States.AddRange(Code.ExecuteCommand(puzzle));
             Solved = puzzle.Finished;
         }
     }
