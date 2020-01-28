@@ -3,18 +3,20 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29519.87
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FrontEnd", "Project Sylveon\FrontEnd.csproj", "{745C86EF-2482-48F8-A873-E5FD54AEE019}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FrontEnd", "Project Sylveon\FrontEnd.csproj", "{745C86EF-2482-48F8-A873-E5FD54AEE019}"
 	ProjectSection(ProjectDependencies) = postProject
 		{4F6C873D-00B2-4D41-B2EC-022074276A69} = {4F6C873D-00B2-4D41-B2EC-022074276A69}
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTest", "UnitTest\UnitTest.csproj", "{C60B3053-9476-4433-A7F0-6B3F158375FB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UnitTest", "UnitTest\UnitTest.csproj", "{C60B3053-9476-4433-A7F0-6B3F158375FB}"
 	ProjectSection(ProjectDependencies) = postProject
 		{4F6C873D-00B2-4D41-B2EC-022074276A69} = {4F6C873D-00B2-4D41-B2EC-022074276A69}
 		{745C86EF-2482-48F8-A873-E5FD54AEE019} = {745C86EF-2482-48F8-A873-E5FD54AEE019}
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BackEnd", "BackEnd\BackEnd.csproj", "{4F6C873D-00B2-4D41-B2EC-022074276A69}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BackEnd", "BackEnd\BackEnd.csproj", "{4F6C873D-00B2-4D41-B2EC-022074276A69}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Project Sylveon (React)", "Project Sylveon (React)\Project Sylveon (React).csproj", "{8AD44D15-7ED6-4CFD-BD33-35BBCFA76C95}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -34,6 +36,10 @@ Global
 		{4F6C873D-00B2-4D41-B2EC-022074276A69}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4F6C873D-00B2-4D41-B2EC-022074276A69}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4F6C873D-00B2-4D41-B2EC-022074276A69}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8AD44D15-7ED6-4CFD-BD33-35BBCFA76C95}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8AD44D15-7ED6-4CFD-BD33-35BBCFA76C95}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8AD44D15-7ED6-4CFD-BD33-35BBCFA76C95}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8AD44D15-7ED6-4CFD-BD33-35BBCFA76C95}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
