@@ -15,7 +15,7 @@ namespace BackEnd
 
         public void AddLevel(LevelSession levelSession)
         {
-            if (InProgres)
+            if (InProgress)
             {
                 _levelSessions.Add(levelSession.LevelNumber, levelSession);
             }
