@@ -12,12 +12,12 @@ namespace BackEnd
         public long StartTime { get; protected set; }
         public long EndTime { get; protected set; }
         public long Duration { get; protected set; }
-        public bool InProgres { get; private set; }
+        public bool InProgress { get; private set; }
 
         public Session()
         {
             StartTime = Api.GetEpochTime();
-            InProgres = true;
+            InProgress = true;
             Duration = 0;
         }
 
@@ -28,18 +28,18 @@ namespace BackEnd
 
         public void Restart()
         {
-            if (!InProgres)
+            if (!InProgress)
             {
                 StartTime = Api.GetEpochTime();
-                InProgres = true;
+                InProgress = true;
             }
         }
 
         public void End()
         {
-            if (InProgres)
+            if (InProgress)
             {
-                InProgres = false;
+                InProgress = false;
                 EndTime = Api.GetEpochTime();
                 Duration += EndTime - StartTime;
             }

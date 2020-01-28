@@ -31,7 +31,7 @@ namespace BackEnd
 
         public void Attempt(LevelSolution solution)
         {
-            if (InProgres)
+            if (InProgress)
             {
                 Solutions.Add(solution);
             }
