@@ -1,6 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using BackEnd;
-using System.Collections.Generic;
 
 namespace UnitTest
 {
@@ -10,20 +9,9 @@ namespace UnitTest
         [TestMethod]
         public void GetLevelNumberTest()
         {
-            IState level = Api.GetLevel(1);
+            int ID = Api.StartSession();
+            IState level = Api.StartLevelSession(ID, 1);
             Assert.AreEqual(1, level.PuzzleLevel);
-        }
-        [TestMethod]
-        public void RunSingleCommandTest()
-        {
-            List<IState> states = Api.RunCommands(1, new Statement[] { new SingleCommand(Command.RotateLeft) });
-            Assert.AreEqual(1, states.Count);
-        }
-        [TestMethod]
-        public void RunMultipleCommandsTest()
-        {
-            List<IState> states = Api.RunCommands(1, new Statement[] { new SingleCommand(Command.RotateLeft), new SingleCommand(Command.MoveForward), new SingleCommand(Command.RotateRight) });
-            Assert.AreEqual(3, states.Count);
         }
     }
 }
