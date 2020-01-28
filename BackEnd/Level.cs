@@ -42,7 +42,13 @@ namespace BackEnd
         private readonly static Level[] levels = new Level[] {
             new Level(1, new int[] { 3, 3 }, 8, new int[][] { new int[] { 1, 0 }, new int[] { 1, 2 } }, 
             new int[] { 2, 1 }, Direction.North, new int[] { 0, 1 }, new int[][] { new int[] { 1, 2, 0 } },
-            new int[][]{ new int[] { 1, 1, 1 } }, new int[][]{ new int[] { 2, 2 } })
+            new int[][]{ new int[] { 1, 1, 1 } }, new int[][]{ new int[] { 2, 2 } }),
+            CreateFromString("" +
+                "!#ab\n" +
+                "A#.<\n" +
+                "B#**\n" +
+                "....\n" +
+                "2,15")
         };
         public static Level Get(int level)
         {
