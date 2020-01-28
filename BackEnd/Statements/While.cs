@@ -9,8 +9,10 @@ namespace BackEnd
         private readonly ConditionParameter _parameter;
         private readonly ConditionValue _value;
         private readonly bool _isTrue;
-        private readonly Statement[] _statements;
+        private readonly StatementBlock _statements;
         public While(ConditionParameter parameter, ConditionValue value, bool isTrue, Statement[] statements)
+            : this(parameter, value, isTrue, new StatementBlock(statements)) { }
+        public While(ConditionParameter parameter, ConditionValue value, bool isTrue, StatementBlock statements)
         {
             this._parameter = parameter;
             this._value = value;
@@ -22,22 +24,14 @@ namespace BackEnd
             List<State> states = new List<State>();
             while (puzzle.Character.CheckCondition(_parameter, _value) == _isTrue)
             {
-                foreach (Statement statement in _statements)
-                {
-                    states.AddRange(statement.ExecuteCommand(puzzle));
-                }
+                states.AddRange(_statements.ExecuteCommand(puzzle));
             }
             return states;
         }
 
         internal override int GetLines()
         {
-            int lines = 1;
-            foreach (Statement statement in _statements)
-            {
-                lines += statement.GetLines();
-            }
-            return lines;
+            return 1 + _statements.GetLines();
         }
     }
 }
