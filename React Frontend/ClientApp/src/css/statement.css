@@ -1,0 +1,21 @@
+﻿button {
+    width: 100%;
+}
+
+#wrapper {
+    width: 50%;
+    border: 1px solid black;
+    overflow: hidden;
+}
+
+#input {
+    width: 50%;
+    position: relative;
+    float: left;
+}
+
+#output {
+    width: 50%;
+    position: relative;
+    overflow: hidden;
+}
