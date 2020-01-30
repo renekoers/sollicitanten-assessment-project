@@ -74,6 +74,33 @@ namespace BackEnd
         }
 
         /// <summary>
+        /// Creates a dictionary containing only the solved levels of ID with tallies for the shortest code solution
+        /// </summary>
+        /// <param name="ID"></param>
+        /// <returns></returns>
+        public static Dictionary<int, Dictionary<int, int>> TallyEveryoneNumberOfLinesSolvedLevelsOf(int ID)
+        {
+            GameSession gameSession = GetSession(ID);
+            ISet<int> solvedLevels = gameSession.SolvedLevelNumbers;
+            return TallyEveryoneNumberOfLines(solvedLevels);
+        }
+
+        /// <summary>
+        /// Creates a dictionary labeled by level number with as entries the tallies for the shortest code solutions
+        /// </summary>
+        /// <param name="levelNumbers"></param>
+        /// <returns></returns>
+        public static Dictionary<int, Dictionary<int, int>> TallyEveryoneNumberOfLines(ISet<int> levelNumbers)
+        {
+            Dictionary<int, Dictionary<int, int>> talliesByLevel = new Dictionary<int, Dictionary<int, int>>();
+            foreach (int levelNumber in levelNumbers)
+            {
+                talliesByLevel.Add(levelNumber, Repository.TallyEveryoneNumberOfLines(levelNumber));
+            }
+            return talliesByLevel;
+        }
+
+        /// <summary>
         /// Gives the state of the given level and the recommended numbers of lines to use.
         /// </summary>
         /// <param name="level"></param>

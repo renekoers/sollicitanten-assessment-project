@@ -9,7 +9,7 @@ namespace BackEnd
     {
         protected Dictionary<int, LevelSession> LevelSessions;
         public int NumberOfSolvedLevels => LevelSessions.Values.ToList().FindAll(s => s.Solved).Count;
-
+        public ISet<int> SolvedLevelNumbers => new HashSet<int>(LevelSessions.Where(pair => pair.Value.Solved).Select(pair => pair.Key).ToList());
         public GameSession() : base()
         {
             LevelSessions = new Dictionary<int, LevelSession>();
