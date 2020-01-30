@@ -81,10 +81,9 @@ namespace BackEnd
         public static Dictionary<int, Dictionary<int, int>> TallyEveryoneNumberOfLinesSolvedLevelsOf(int ID)
         {
             //testing
-            int id = Repository.CreateSession();
-            LevelSession ls = new LevelSession(1);
-            Repository.GetSession(id).AddLevel(ls);
-            ls.Attempt(new LevelSolution(1, new Statement[]
+            int id = StartSession();
+            StartLevelSession(id, 1);
+            SubmitSolution(id, 1, new Statement[]
             {
                 new While(ConditionParameter.TileCurrent, ConditionValue.Finish, false, new Statement[]
                 {
@@ -96,9 +95,29 @@ namespace BackEnd
                     new SingleCommand(Command.RotateRight),
                     new SingleCommand(Command.MoveForward)
                 })
-            }));
-            ls.End();
-            Repository.GetSession(id).End();
+            });
+            EndLevelSession(id, 1);
+            EndSession(id);
+            int idOther = StartSession();
+            StartLevelSession(idOther, 1);
+            SubmitSolution(idOther, 1, new Statement[]
+            {
+                new While(ConditionParameter.TileCurrent, ConditionValue.Finish, false, new Statement[]
+                {
+                    new SingleCommand(Command.RotateRight),
+                    new SingleCommand(Command.PickUp),
+                    new SingleCommand(Command.RotateLeft),
+                    new SingleCommand(Command.RotateLeft),
+                    new SingleCommand(Command.Drop),
+                    new SingleCommand(Command.RotateRight),
+                    new SingleCommand(Command.MoveForward),
+                    new SingleCommand(Command.MoveBackward),
+                    new SingleCommand(Command.MoveForward)
+                })
+            });
+            EndLevelSession(idOther, 1);
+            EndSession(idOther);
+
             //endtesting
             GameSession gameSession = GetSession(ID);
             ISet<int> solvedLevels = gameSession.SolvedLevelNumbers;
