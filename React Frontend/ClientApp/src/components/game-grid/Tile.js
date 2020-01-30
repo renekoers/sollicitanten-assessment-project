@@ -6,7 +6,7 @@ export class Tile extends Component {
         super(props);
         this.state = { tile: props.tile };
     }
-
+    
     convertTypeToASCII() {
         switch (this.state.tile.movableString) {
             case "Box":
@@ -25,16 +25,18 @@ export class Tile extends Component {
                 if (this.state.tile.isOpen) {
                     return '.';
                 } else {
-                    return String.fromCharCode(65 + this.state.tile.iD);
+                    return String.fromCharCode(65 + this.state.tile.id);
                 }
             case "Wall":
                 return '#';
             case "Empty":
                 return '.';
             case "Button":
-                return String.fromCharCode(97 + this.state.tile.door.iD);
+                return String.fromCharCode(97 + this.state.tile.door.id);
             case "End":
                 return '!';
+            default:
+                throw "Invalid state: " + this.state.tile.stateString;
 
         }
     }
