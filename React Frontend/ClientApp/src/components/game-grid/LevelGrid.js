@@ -24,7 +24,7 @@ export class LevelGrid extends Component {
 
     }
     placeCharacter(character, allTiles) {
-        allTiles[character.tile.iD].movableString = "Character " + character.directionCharacterString;
+        allTiles[character.tile.id].movableString = "Character " + character.directionCharacterString;
     }
     showLegend() {
         document.getElementById("popupLegend").style.display = "block";
@@ -33,13 +33,13 @@ export class LevelGrid extends Component {
         document.getElementById("popupLegend").style.display = "none";
     }
     addRowOfWalls(tiles, width) {
-        const extraWall = JSON.parse('{"iD":-1,"state":1,"stateString":"Wall","movable":0,"movableString":"None"}');
+        const extraWall = JSON.parse('{"id":-1,"state":1,"stateString":"Wall","movable":0,"movableString":"None"}');
         for (var index = 0; index < width+2; index++) {
             tiles[tiles.length] = extraWall;
         }
     }
     addRowOfTiles(newTiles, originalTiles, width, startIndex) {
-        const extraWall = JSON.parse('{"iD":-1,"state":1,"stateString":"Wall","movable":0,"movableString":"None"}');
+        const extraWall = JSON.parse('{"id":-1,"state":1,"stateString":"Wall","movable":0,"movableString":"None"}');
         newTiles[newTiles.length] = extraWall;
         for (var index = 0; index < width; index++) {
             newTiles[newTiles.length] = originalTiles[startIndex+index];
