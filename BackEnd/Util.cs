@@ -14,13 +14,10 @@ namespace BackEnd
             T minT = null;
             foreach (T t in list)
             {
-                if (min.HasValue)
+                if (!min.HasValue || getValue(t) < min.Value)
                 {
-                    if (getValue(t) < min.Value)
-                    {
-                        minT = t;
-                        min = getValue(t);
-                    }
+                    minT = t;
+                    min = getValue(t);
                 }
             }
             return minT;

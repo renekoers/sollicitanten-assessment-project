@@ -30,15 +30,31 @@ const data = [
 export class Statistics extends Component {
     static displayName = Statistics.name;
 
+    componentDidMount() {
+        this.test();
+    }
+
+    render() {
+        return null;
+    }
+
+    async test() {
+        const response = await fetch("api/statistics/tallylines/0");
+        console.log(await response.json());
+    }
+}
+
+class LevelBarChart extends Component {
+    static displayName = LevelBarChart.name;
+    constructor(props) {}
+
     render() {
         return (
             <BarChart
-                width={500}
-                height={300}
+                width={300}
+                height={200}
                 data={data}
-                margin={{
-                    top: 5, right: 30, left: 20, bottom: 5,
-                }}
+                margin={5}
             >
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="name" />
