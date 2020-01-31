@@ -79,16 +79,6 @@ namespace BackEnd
             return totalLevels;
         }
 
-
-
-
-
-
-
-
-
-
-
         /// <summary>
         /// Gets the number of lines that a candidate needed to solve a specific level
         /// </summary>
