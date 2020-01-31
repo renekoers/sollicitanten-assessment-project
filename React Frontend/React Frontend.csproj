@@ -26,6 +26,7 @@
 
   <ItemGroup>
     <None Remove="ClientApp\src\components\Statistics.js" />
+    <None Remove="ClientApp\src\css\Statistics.ts" />
   </ItemGroup>
 
   <ItemGroup>
