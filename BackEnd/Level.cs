@@ -23,6 +23,7 @@ namespace BackEnd
         public readonly int[][] Buttons;
         public readonly int[][] Doors;
         public readonly int[][] Boxes;
+        public static int TotalLevels => levels.Length;
 
         [JsonConstructor]
         private Level(int level, int[] gridSize, int par, int[][] walls, int[] positionCharacter, Direction directionCharacter, int[] end, int[][] buttons, int[][] doors, int[][] boxes)
@@ -72,7 +73,7 @@ namespace BackEnd
             int level = levelDetails[0];
             int[] gridSize = new int[] { lines.Length - 1, lines[1].Length };
             int par = levelDetails[1];
-            
+
             List<int[]> walls = new List<int[]>();
             int[] positionCharacter = new int[2];
             Direction directionCharacter = Direction.North;
@@ -98,16 +99,16 @@ namespace BackEnd
                             boxes.Add(new int[] { r, c });
                             break;
                         default:
-                            if(char.IsLower(label))
+                            if (char.IsLower(label))
                             {
                                 buttons.Add(new int[] { label - 'a', r, c });
                             }
-                            if(char.IsUpper(label))
+                            if (char.IsUpper(label))
                             {
                                 doors.Add(new int[] { label - 'A', r, c });
                             }
                             int start = Array.IndexOf(START_BY_DIRECTION, label);
-                            if(start > -1)
+                            if (start > -1)
                             {
                                 positionCharacter = new int[] { r, c };
                                 directionCharacter = (Direction)start;
