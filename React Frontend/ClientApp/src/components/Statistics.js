@@ -17,8 +17,8 @@ export class Statistics extends Component {
 
     componentDidMount() {
         (async () => {
-            const responseTally = await fetch("api/statistics/tallylines/0");// + this.props.id);
-            const responseCurrentCandidate = await fetch("api/statistics/shortestsolutions/0");// + this.props.id);
+            const responseTally = await fetch("api/statistics/tallylines/" + this.props.id);
+            const responseCurrentCandidate = await fetch("api/statistics/shortestsolutions/" + this.props.id);
             this.setState({
                 dataTally: await responseTally.json(),
                 dataCurrentCandidate: await responseCurrentCandidate.json()
@@ -33,7 +33,7 @@ export class Statistics extends Component {
                 components.push(
                     <div className="level-chart-container" key={"C" + levelNumber}>
                         <label className="level-chart-label" key={"L" + levelNumber}>Level {levelNumber}</label>
-                        <LevelBarChart className="level-chart" key={"D" + levelNumber} dataTally={results} dataCandidate={this.state.dataCurrentCandidate[levelNumber]} />
+                        <LevelBarChart className="level-chart" key={"D" + levelNumber} dataTally={results} dataCandidate={this.state.dataCurrentCandidate[levelNumber]} 
                     </div>
                 );
             }
