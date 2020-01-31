@@ -19,13 +19,12 @@ export class Timer extends Component {
 
   async updateTime() {
     let milliseconds = 0;
-
+    const id = localStorage.getItem("sessionID")
     await fetch("api/session/remainingtime", {
-      method: "POST",
+      method: "GET",
       headers: {
-        "Content-Type": "application/json", "Authorization": localStorage.getItem("sessionID")
-      },
-      body: JSON.stringify(localStorage.getItem("sessionID"))
+        "Content-Type": "application/json", "Authorization": id
+      }
     })
       .then(response => response.json())
       .then(data => {
