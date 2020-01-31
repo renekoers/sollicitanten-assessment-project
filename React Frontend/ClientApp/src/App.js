@@ -10,11 +10,11 @@ import './css/custom.css'
 export default class App extends Component {
     static displayName = App.name;
 
-  render () {
-    return (
-      <Layout>
-            <Route exact path='/' component={Home} />
-            <Route path='/gamesession' component={Game} />
+    render () {
+        return (
+            <Layout>
+                <Route exact path='/' component={Home} />
+                <Route path='/gamesession' component={Game} />
                 <Route path='/statistics' component={Statistics} />
             </Layout>
         );
