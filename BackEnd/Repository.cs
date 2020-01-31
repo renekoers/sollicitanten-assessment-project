@@ -51,6 +51,10 @@ namespace BackEnd
             foreach (GameSession gameSession in GameSessions.Values)
             {
                 LevelSession levelSession = gameSession.GetSession(levelNumber);
+                if (levelSession is null)
+                {
+                    continue;
+                }
                 LevelSolution leastLinesSolution = levelSession.GetLeastLinesOfCodeSolution();
                 if (leastLinesSolution is null)
                 {
