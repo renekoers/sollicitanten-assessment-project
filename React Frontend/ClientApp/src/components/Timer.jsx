@@ -23,7 +23,7 @@ export class Timer extends Component {
     await fetch("api/session/remainingtime", {
       method: "POST",
       headers: {
-        "Content-Type": "application/json"
+        "Content-Type": "application/json", "Authorization": localStorage.getItem("sessionID")
       },
       body: JSON.stringify(localStorage.getItem("sessionID"))
     })

@@ -23,9 +23,18 @@ namespace React_Frontend.Controllers
         [HttpPost("remainingtime")]
         public long GetRemainingTime([FromBody]string ID)
         {
-            int sessionID = int.Parse(ID);
+            int sessionID = int.Parse(Request.Headers["Authorization"]);
             GameSession session  = Api.GetSession(sessionID);
             return Math.Max(0, 1200000L - session.CurrentDuration); //20 minutes in milliseconds
         }
+
+        [HttpGet("retrieveLevel")]
+        public string GetLevel(string levelNumber)
+        {
+            int level = int.Parse(levelNumber);
+            int sessionID = int.Parse(Request.Headers["Authorization"]);
+            return JSON.Serialize(Api.StartLevelSession(sessionID, level));
+        }
     }
+
 }
