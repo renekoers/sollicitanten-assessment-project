@@ -28,5 +28,16 @@ namespace React_Frontend.Controllers
             }
             return stringTotalTally;
         }
+        [HttpGet("shortestsolutions/{id}")]
+        public Dictionary<string, int> NumberOfLinesSolvedLevelsOf(int id)
+        {
+            Dictionary<int, int> solutions = Api.NumberOfLinesSolvedLevelsOf(id);
+            Dictionary<string, int> solutionsString = new Dictionary<string, int>();
+            foreach (KeyValuePair<int, int> pair in solutions)
+            {
+                solutionsString.Add(pair.Key.ToString(), pair.Value);
+            }
+            return solutionsString;
+        }
     }
 }

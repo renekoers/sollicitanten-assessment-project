@@ -74,6 +74,28 @@ namespace BackEnd
         }
 
         /// <summary>
+        /// Gets the number of lines that a candidate needed to solve a specific level
+        /// </summary>
+        /// <param name="ID"></param>
+        /// <param name="levelNumber"></param>
+        /// <returns></returns>
+        public static int NumberOfLinesSolved(int ID, int levelNumber)
+        {
+            return GetSession(ID).GetSession(levelNumber).GetLeastLinesOfCodeSolution().Lines;
+        }
+
+        public static Dictionary<int, int> NumberOfLinesSolvedLevelsOf(int ID)
+        {
+            Dictionary<int, int> amountOfLinesByLevel = new Dictionary<int, int>();
+            GameSession gameSession = GetSession(ID);
+            foreach (int levelNumber in gameSession.SolvedLevelNumbers)
+            {
+                amountOfLinesByLevel.Add(levelNumber, gameSession.GetSession(levelNumber).GetLeastLinesOfCodeSolution().Lines);
+            }
+            return amountOfLinesByLevel;
+        }
+
+        /// <summary>
         /// Creates a dictionary containing only the solved levels of ID with tallies for the shortest code solution
         /// </summary>
         /// <param name="ID"></param>

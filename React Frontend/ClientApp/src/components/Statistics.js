@@ -1,31 +1,39 @@
 ﻿import React, { Component } from 'react';
 import {
-    BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip,
+    BarChart, Bar, XAxis, YAxis, Cell, CartesianGrid,
 } from 'recharts';
 import '../css/Statistics.css';
 
 export class Statistics extends Component {
     static displayName = Statistics.name;
+    constructor(props) { //expects props.id
+        super(props);
+    }
+
     state = {
-        data: null,
+        dataTally: null,
+        dataCurrentCandidate: null
     }
 
     componentDidMount() {
         (async () => {
-            const response = await fetch("api/statistics/tallylines/0");
-            this.setState({ data: await response.json() });
+            const responseTally = await fetch("api/statistics/tallylines/0");// + this.props.id);
+            const responseCurrentCandidate = await fetch("api/statistics/shortestsolutions/0");// + this.props.id);
+            this.setState({
+                dataTally: await responseTally.json(),
+                dataCurrentCandidate: await responseCurrentCandidate.json()
+            });
         })();
     }
 
     render() {
-        if (this.state.data) {
-            console.log(this.state.data);
+        if (this.state.dataTally) {
             const components = []
-            for (const [levelNumber, results] of Object.entries(this.state.data)) {
+            for (const [levelNumber, results] of Object.entries(this.state.dataTally)) {
                 components.push(
                     <div className="level-chart-container" key={"C" + levelNumber}>
                         <label className="level-chart-label" key={"L" + levelNumber}>Level {levelNumber}</label>
-                        <LevelBarChart classNAme="level-chart" key={"D" + levelNumber} data={results} />
+                        <LevelBarChart classNAme="level-chart" key={"D" + levelNumber} dataTally={results} dataCandidate={this.state.dataCurrentCandidate[levelNumber]} />
                     </div>
                 );
             }
@@ -52,11 +60,11 @@ class LevelBarChart extends Component {
     static displayName = LevelBarChart.name;
     constructor(props) {
         super(props);
-        const _data = [];
-        for (const [_lines, _candidates] of Object.entries(props.data)) {
-            _data.push({ lines: _lines, candidates: Number.parseInt(_candidates) });
+        const _dataTally = [];
+        for (const [_lines, _candidates] of Object.entries(props.dataTally)) {
+            _dataTally.push({ lines: _lines, candidates: Number.parseInt(_candidates) });
         }
-        this.state = ({ data: _data });
+        this.state = ({ dataTally: _dataTally });
     }
 
     render() {
@@ -64,7 +72,7 @@ class LevelBarChart extends Component {
             <BarChart
                 width={300}
                 height={200}
-                data={this.state.data}
+                data={this.state.dataTally}
                 margin={50}
             >
                 <CartesianGrid strokeDasharray="3 3" />
@@ -80,7 +88,16 @@ class LevelBarChart extends Component {
                     </AxisLabel>}
                     allowDecimals={false}
                 />
-                <Bar dataKey="candidates" fill="#008000" />
+                <Bar dataKey="candidates">
+                    {
+                        this.state.dataTally.map((entry, index) => {
+                            console.log(entry);
+                            return (
+                                <Cell key={`cell-${index}`} fill={entry.lines == this.props.dataCandidate ? "#00FF00" : "#008000"} />
+                            );
+                        })
+                    }
+                </Bar>
             </BarChart>
         );
     }
