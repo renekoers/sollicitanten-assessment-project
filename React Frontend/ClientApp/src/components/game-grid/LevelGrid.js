@@ -1,44 +1,50 @@
 ﻿import React, { Component } from 'react';
 import Tile from './Tile';
-import help from '../../img/help-icon.png';
+import helpIcon from '../../img/help-icon.png';
+import "../../styles/LevelGrid.css";
 
 export class LevelGrid extends Component {
-    constructor(props) {
-        super(props);
+
+    state = {
+        width: "",
+        tiles: [],
+    };
+
+    static getDerivedStateFromProps(props, currentState)
+    {
         var puzzleWidth = props.puzzle.puzzleWidth;
         var widthStr = "";
         for (var i = 0; i < puzzleWidth+2; i++) {
             widthStr += "auto ";
         }
         var allTiles = props.puzzle.puzzleTiles;
-        this.placeCharacter(props.puzzle.character, allTiles);
+        LevelGrid.placeCharacter(props.puzzle.character, allTiles);
 
         var startIndex = 0;
         var newTiles = [];
-        this.addRowOfWalls(newTiles, puzzleWidth);
+        LevelGrid.addRowOfWalls(newTiles, puzzleWidth);
         while (startIndex < allTiles.length) {
-            startIndex = this.addRowOfTiles(newTiles, allTiles, puzzleWidth, startIndex);
+            startIndex = LevelGrid.addRowOfTiles(newTiles, allTiles, puzzleWidth, startIndex);
         }
-        this.addRowOfWalls(newTiles, puzzleWidth);
-        this.state = { width: widthStr, tiles: newTiles };
-
+        LevelGrid.addRowOfWalls(newTiles, puzzleWidth);
+        return { 
+            width: widthStr,
+            tiles: newTiles,
+        };
     }
-    placeCharacter(character, allTiles) {
+
+    static placeCharacter(character, allTiles) {
         allTiles[character.tile.iD].movableString = "Character " + character.directionCharacterString;
     }
-    showLegend() {
-        document.getElementById("popupLegend").style.display = "block";
-    }
-    hideLegend() {
-        document.getElementById("popupLegend").style.display = "none";
-    }
-    addRowOfWalls(tiles, width) {
+
+    static addRowOfWalls(tiles, width) {
         const extraWall = JSON.parse('{"iD":-1,"state":1,"stateString":"Wall","movable":0,"movableString":"None"}');
         for (var index = 0; index < width+2; index++) {
             tiles[tiles.length] = extraWall;
         }
     }
-    addRowOfTiles(newTiles, originalTiles, width, startIndex) {
+
+    static addRowOfTiles(newTiles, originalTiles, width, startIndex) {
         const extraWall = JSON.parse('{"iD":-1,"state":1,"stateString":"Wall","movable":0,"movableString":"None"}');
         newTiles[newTiles.length] = extraWall;
         for (var index = 0; index < width; index++) {
@@ -48,10 +54,18 @@ export class LevelGrid extends Component {
         return startIndex + width;
     }
 
+    showLegend() {
+        document.getElementById("popupLegend").style.display = "block";
+    }
+    
+    hideLegend() {
+        document.getElementById("popupLegend").style.display = "none";
+    }
+
     render() {
         return (
             <div>
-                <img className="help" onClick={this.showLegend} src={help} alt="help"/>
+                <img className="help" onClick={this.showLegend} src={helpIcon} alt="help"/>
                 <div id="popupLegend" className="popup" onClick={this.hideLegend}>
                     <article className="singleBlock">
                         <div className="legend">Legend {<span className="close" onClick={this.hideLegend}>&times;</span>}</div>
@@ -65,14 +79,14 @@ export class LevelGrid extends Component {
                             <div> A lowercase letter is a button. </div>
                         </div>
                     </article>
-
                 </div>
 
                 <div className="game-grid-container" style={{'display': 'grid', 'gridTemplateColumns': this.state.width}} >
                     {this.state.tiles.map((key,index) => (
                         <Tile key={index} tile={key} />
                     ))}                    
-                    </div>
+                </div>
+                <span>Level complete: {this.props.isComplete.toString()}</span>
             </div>
         );
     }
