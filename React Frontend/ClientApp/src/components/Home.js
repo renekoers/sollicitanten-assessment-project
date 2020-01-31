@@ -1,26 +1,66 @@
 import React, { Component } from 'react';
+import LevelGrid from './game-grid/LevelGrid';
 
 export class Home extends Component {
-  static displayName = Home.name;
+    static displayName = Home.name;
 
-  render () {
-    return (
-      <div>
-        <h1>Hello, world!</h1>
-        <p>Welcome to your new single-page application, built with:</p>
-        <ul>
-          <li><a href='https://get.asp.net/'>ASP.NET Core</a> and <a href='https://msdn.microsoft.com/en-us/library/67ef8sbd.aspx'>C#</a> for cross-platform server-side code</li>
-          <li><a href='https://facebook.github.io/react/'>React</a> for client-side code</li>
-          <li><a href='http://getbootstrap.com/'>Bootstrap</a> for layout and styling</li>
-        </ul>
-        <p>To help you get started, we have also set up:</p>
-        <ul>
-          <li><strong>Client-side navigation</strong>. For example, click <em>Counter</em> then <em>Back</em> to return here.</li>
-          <li><strong>Development server integration</strong>. In development mode, the development server from <code>create-react-app</code> runs in the background automatically, so your client-side resources are dynamically built on demand and the page refreshes when you modify any file.</li>
-          <li><strong>Efficient production builds</strong>. In production mode, development-time features are disabled, and your <code>dotnet publish</code> configuration produces minified, efficiently bundled JavaScript files.</li>
-        </ul>
-        <p>The <code>ClientApp</code> subdirectory is a standard React application based on the <code>create-react-app</code> template. If you open a command prompt in that directory, you can run <code>npm</code> commands such as <code>npm test</code> or <code>npm install</code>.</p>
-      </div>
-    );
-  }
+    // Mock Data
+    static puzzle1InitialJSON = '{"character":{"directionCharacter":0,"directionCharacterString":"North","tile":{"iD":7,"state":2,"stateString":"Empty","movable":0,"movableString":"None"}},"puzzleTiles":[{"iD":0,"state":2,"stateString":"Empty","movable":0,"movableString":"None"},{"iD":1,"state":4,"stateString":"End","movable":0,"movableString":"None"},{"iD":2,"state":2,"stateString":"Empty","movable":0,"movableString":"None"},{"iD":3,"state":1,"stateString":"Wall","movable":0,"movableString":"None"},{"isOpen":false,"iD":4,"state":0,"stateString":"Door","movable":0,"movableString":"None"},{"iD":5,"state":1,"stateString":"Wall","movable":0,"movableString":"None"},{"door":{"isOpen":false,"iD":4,"state":0,"stateString":"Door","movable":0,"movableString":"None"},"iD":6,"state":3,"stateString":"Button","movable":0,"movableString":"None"},{"iD":7,"state":2,"stateString":"Empty","movable":0,"movableString":"None"},{"iD":8,"state":2,"stateString":"Empty","movable":1,"movableString":"Box"}],"puzzleWidth":3,"puzzleHeight":3,"puzzleLevel":1}';
+    static puzzle2InitialJSON = '{"character":{"directionCharacter":3,"directionCharacterString":"West","tile":{"iD":7,"state":2,"stateString":"Empty","movable":0,"movableString":"None"}},"puzzleTiles":[{"iD":0,"state":4,"stateString":"End","movable":0,"movableString":"None"},{"iD":1,"state":1,"stateString":"Wall","movable":0,"movableString":"None"},{"door":{"isOpen":false,"iD":4,"state":0,"stateString":"Door","movable":0,"movableString":"None"},"iD":2,"state":3,"stateString":"Button","movable":0,"movableString":"None"},{"door":{"isOpen":false,"iD":8,"state":0,"stateString":"Door","movable":0,"movableString":"None"},"iD":3,"state":3,"stateString":"Button","movable":0,"movableString":"None"},{"isOpen":false,"iD":4,"state":0,"stateString":"Door","movable":0,"movableString":"None"},{"iD":5,"state":1,"stateString":"Wall","movable":0,"movableString":"None"},{"iD":6,"state":2,"stateString":"Empty","movable":0,"movableString":"None"},{"iD":7,"state":2,"stateString":"Empty","movable":0,"movableString":"None"},{"isOpen":false,"iD":8,"state":0,"stateString":"Door","movable":0,"movableString":"None"},{"iD":9,"state":1,"stateString":"Wall","movable":0,"movableString":"None"},{"iD":10,"state":2,"stateString":"Empty","movable":1,"movableString":"Box"},{"iD":11,"state":2,"stateString":"Empty","movable":1,"movableString":"Box"},{"iD":12,"state":2,"stateString":"Empty","movable":0,"movableString":"None"},{"iD":13,"state":2,"stateString":"Empty","movable":0,"movableString":"None"},{"iD":14,"state":2,"stateString":"Empty","movable":0,"movableString":"None"},{"iD":15,"state":2,"stateString":"Empty","movable":0,"movableString":"None"}],"puzzleWidth":4,"puzzleHeight":4,"puzzleLevel":2}';
+    static puzzle1ResultJSON = `
+        { "levelNumber": 1, "solved": true, "lines": 1337, "states": 
+            [
+                {"character":{"directionCharacter":3,"directionCharacterString":"West","tile":{"iD":7,"state":2,"stateString":"Empty","movable":0,"movableString":"None"}},"puzzleTiles":[{"iD":0,"state":2,"stateString":"Empty","movable":0,"movableString":"None"},{"iD":1,"state":4,"stateString":"End","movable":0,"movableString":"None"},{"iD":2,"state":2,"stateString":"Empty","movable":0,"movableString":"None"},{"iD":3,"state":1,"stateString":"Wall","movable":0,"movableString":"None"},{"isOpen":false,"iD":4,"state":0,"stateString":"Door","movable":0,"movableString":"None"},{"iD":5,"state":1,"stateString":"Wall","movable":0,"movableString":"None"},{"door":{"isOpen":false,"iD":4,"state":0,"stateString":"Door","movable":0,"movableString":"None"},"iD":6,"state":3,"stateString":"Button","movable":0,"movableString":"None"},{"iD":7,"state":2,"stateString":"Empty","movable":0,"movableString":"None"},{"iD":8,"state":2,"stateString":"Empty","movable":1,"movableString":"Box"}],"puzzleWidth":3,"puzzleHeight":3,"puzzleLevel":1},
+                {"character":{"directionCharacter":3,"directionCharacterString":"West","tile":{"iD":6,"state":3,"stateString":"Button","movable":0,"movableString":"None"}},"puzzleTiles":[{"iD":0,"state":2,"stateString":"Empty","movable":0,"movableString":"None"},{"iD":1,"state":4,"stateString":"End","movable":0,"movableString":"None"},{"iD":2,"state":2,"stateString":"Empty","movable":0,"movableString":"None"},{"iD":3,"state":1,"stateString":"Wall","movable":0,"movableString":"None"},{"isOpen":false,"iD":4,"state":0,"stateString":"Door","movable":0,"movableString":"None"},{"iD":5,"state":1,"stateString":"Wall","movable":0,"movableString":"None"},{"door":{"isOpen":false,"iD":4,"state":0,"stateString":"Door","movable":0,"movableString":"None"},"iD":6,"state":3,"stateString":"Button","movable":0,"movableString":"None"},{"iD":7,"state":2,"stateString":"Empty","movable":0,"movableString":"None"},{"iD":8,"state":2,"stateString":"Empty","movable":1,"movableString":"Box"}],"puzzleWidth":3,"puzzleHeight":3,"puzzleLevel":1},
+                {"character":{"directionCharacter":2,"directionCharacterString":"South","tile":{"iD":6,"state":3,"stateString":"Button","movable":0,"movableString":"None"}},"puzzleTiles":[{"iD":0,"state":2,"stateString":"Empty","movable":0,"movableString":"None"},{"iD":1,"state":4,"stateString":"End","movable":0,"movableString":"None"},{"iD":2,"state":2,"stateString":"Empty","movable":0,"movableString":"None"},{"iD":3,"state":1,"stateString":"Wall","movable":0,"movableString":"None"},{"isOpen":false,"iD":4,"state":0,"stateString":"Door","movable":0,"movableString":"None"},{"iD":5,"state":1,"stateString":"Wall","movable":0,"movableString":"None"},{"door":{"isOpen":false,"iD":4,"state":0,"stateString":"Door","movable":0,"movableString":"None"},"iD":6,"state":3,"stateString":"Button","movable":0,"movableString":"None"},{"iD":7,"state":2,"stateString":"Empty","movable":0,"movableString":"None"},{"iD":8,"state":2,"stateString":"Empty","movable":1,"movableString":"Box"}],"puzzleWidth":3,"puzzleHeight":3,"puzzleLevel":1},
+                {"character":{"directionCharacter":1,"directionCharacterString":"East","tile":{"iD":6,"state":3,"stateString":"Button","movable":0,"movableString":"None"}},"puzzleTiles":[{"iD":0,"state":2,"stateString":"Empty","movable":0,"movableString":"None"},{"iD":1,"state":4,"stateString":"End","movable":0,"movableString":"None"},{"iD":2,"state":2,"stateString":"Empty","movable":0,"movableString":"None"},{"iD":3,"state":1,"stateString":"Wall","movable":0,"movableString":"None"},{"isOpen":false,"iD":4,"state":0,"stateString":"Door","movable":0,"movableString":"None"},{"iD":5,"state":1,"stateString":"Wall","movable":0,"movableString":"None"},{"door":{"isOpen":false,"iD":4,"state":0,"stateString":"Door","movable":0,"movableString":"None"},"iD":6,"state":3,"stateString":"Button","movable":0,"movableString":"None"},{"iD":7,"state":2,"stateString":"Empty","movable":0,"movableString":"None"},{"iD":8,"state":2,"stateString":"Empty","movable":1,"movableString":"Box"}],"puzzleWidth":3,"puzzleHeight":3,"puzzleLevel":1}
+            ]
+        }`;
+    static puzzle2ResultJSON = `
+        {  "levelNumber": 2, "solved": true, "lines": 420691337, "states": 
+            [
+                {"character":{"directionCharacter":2,"directionCharacterString":"South","tile":{"iD":7,"state":2,"stateString":"Empty","movable":0,"movableString":"None"}},"puzzleTiles":[{"iD":0,"state":4,"stateString":"End","movable":0,"movableString":"None"},{"iD":1,"state":1,"stateString":"Wall","movable":0,"movableString":"None"},{"door":{"isOpen":false,"iD":4,"state":0,"stateString":"Door","movable":0,"movableString":"None"},"iD":2,"state":3,"stateString":"Button","movable":0,"movableString":"None"},{"door":{"isOpen":false,"iD":8,"state":0,"stateString":"Door","movable":0,"movableString":"None"},"iD":3,"state":3,"stateString":"Button","movable":0,"movableString":"None"},{"isOpen":false,"iD":4,"state":0,"stateString":"Door","movable":0,"movableString":"None"},{"iD":5,"state":1,"stateString":"Wall","movable":0,"movableString":"None"},{"iD":6,"state":2,"stateString":"Empty","movable":0,"movableString":"None"},{"iD":7,"state":2,"stateString":"Empty","movable":0,"movableString":"None"},{"isOpen":false,"iD":8,"state":0,"stateString":"Door","movable":0,"movableString":"None"},{"iD":9,"state":1,"stateString":"Wall","movable":0,"movableString":"None"},{"iD":10,"state":2,"stateString":"Empty","movable":1,"movableString":"Box"},{"iD":11,"state":2,"stateString":"Empty","movable":1,"movableString":"Box"},{"iD":12,"state":2,"stateString":"Empty","movable":0,"movableString":"None"},{"iD":13,"state":2,"stateString":"Empty","movable":0,"movableString":"None"},{"iD":14,"state":2,"stateString":"Empty","movable":0,"movableString":"None"},{"iD":15,"state":2,"stateString":"Empty","movable":0,"movableString":"None"}],"puzzleWidth":4,"puzzleHeight":4,"puzzleLevel":2}
+            ]
+        }`;
+
+    constructor(props)
+    {
+        super(props);
+        this.onUpdateButtonClicked = this.onUpdateButtonClicked.bind(this);
+        this.state = {
+            puzzleState: JSON.parse(Home.puzzle1InitialJSON),
+            puzzleCompleted: false,
+        }
+    }
+
+    onUpdateButtonClicked()
+    {
+        this.onReceiveUpdateJson(Home.puzzle1ResultJSON);
+    }
+
+    onReceiveUpdateJson(updateJson)
+    {
+        let puzzleStateUpdate = JSON.parse(updateJson);
+        let puzzleFinalState = puzzleStateUpdate.states[puzzleStateUpdate.states.length - 1];
+
+        this.setState({
+            puzzleState: puzzleFinalState,
+            puzzleCompleted: puzzleStateUpdate.solved
+        });
+    }
+
+    render () {
+        return (
+            <div>
+                <div style={{ 'width': '300px' }}>
+                    <LevelGrid puzzle={this.state.puzzleState} isComplete={this.state.puzzleCompleted}/>
+                </div>
+                <hr/>
+                <div style={{ 'width': '300px' }}>
+                    <LevelGrid puzzle={JSON.parse(Home.puzzle2InitialJSON)} isComplete={false} />
+                </div>
+                <button onClick={ this.onUpdateButtonClicked }>Update!</button>
+            </div>
+        );
+    }
 }

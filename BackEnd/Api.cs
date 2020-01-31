@@ -73,6 +73,22 @@ namespace BackEnd
             Repository.UpdateSession(ID, gameSession);
         }
 
+        public static int getTotalLevelAmount()
+        {
+            int totalLevels = Level.TotalLevels;
+            return totalLevels;
+        }
+
+
+
+
+
+
+
+
+
+
+
         /// <summary>
         /// Gets the number of lines that a candidate needed to solve a specific level
         /// </summary>
@@ -200,7 +216,7 @@ namespace BackEnd
             }
             return commands;
         }
-        
+
         private static int CalculateScore(Statement[] input)
         {
             int lines = 0;
