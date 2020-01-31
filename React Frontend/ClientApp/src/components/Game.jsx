@@ -7,7 +7,7 @@ export class Game extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            gameOver: false, level: 0
+            gameOver: false, level: null, solved: false
         }
     }
 
@@ -39,8 +39,8 @@ export class Game extends Component {
 
     render() {
         let levelGrid;
-        if (this.state.level !== 0) {
-            levelGrid = <LevelGrid puzzle={this.state.level}/>
+        if (this.state.level !== null) {
+            levelGrid = <LevelGrid puzzle={this.state.level} isComplete={this.state.solved}/>
         }
         return ( 
             <div>

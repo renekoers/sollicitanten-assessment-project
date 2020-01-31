@@ -1,8 +1,6 @@
 ﻿using System;
 using BackEnd;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
 
 namespace React_Frontend.Controllers
 {
@@ -38,4 +36,5 @@ namespace React_Frontend.Controllers
             return JSON.Serialize(Api.StartLevelSession(sessionID, level));
         }
     }
+
 }

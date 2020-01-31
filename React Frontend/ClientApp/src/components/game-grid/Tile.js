@@ -3,10 +3,11 @@
 export class Tile extends Component {
     constructor(props) {
         super(props);
+        this.state={tile: this.props.tile}
     }
     
     convertTypeToASCII() {
-        switch (this.props.tile.movableString) {
+        switch (this.state.tile.movableString) {
             case "Box":
                 return '*';
             case "Character North":
@@ -18,9 +19,9 @@ export class Tile extends Component {
             case "Character West":
                 return '<';
         }
-        switch (this.props.tile.stateString) {
+        switch (this.state.tile.stateString) {
             case "Door":
-                if (this.props.tile.isOpen) {
+                if (this.state.tile.isOpen) {
                     return '.';
                 } else {
                     return String.fromCharCode(65 + this.state.tile.id);
