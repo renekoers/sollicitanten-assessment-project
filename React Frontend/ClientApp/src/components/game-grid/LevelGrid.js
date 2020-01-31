@@ -34,18 +34,18 @@ export class LevelGrid extends Component {
     }
 
     static placeCharacter(character, allTiles) {
-        allTiles[character.tile.iD].movableString = "Character " + character.directionCharacterString;
+        allTiles[character.tile.id].movableString = "Character " + character.directionCharacterString;
     }
 
     static addRowOfWalls(tiles, width) {
-        const extraWall = JSON.parse('{"iD":-1,"state":1,"stateString":"Wall","movable":0,"movableString":"None"}');
+        const extraWall = JSON.parse('{"id":-1,"state":1,"stateString":"Wall","movable":0,"movableString":"None"}');
         for (var index = 0; index < width+2; index++) {
             tiles[tiles.length] = extraWall;
         }
     }
 
     static addRowOfTiles(newTiles, originalTiles, width, startIndex) {
-        const extraWall = JSON.parse('{"iD":-1,"state":1,"stateString":"Wall","movable":0,"movableString":"None"}');
+        const extraWall = JSON.parse('{"id":-1,"state":1,"stateString":"Wall","movable":0,"movableString":"None"}');
         newTiles[newTiles.length] = extraWall;
         for (var index = 0; index < width; index++) {
             newTiles[newTiles.length] = originalTiles[startIndex+index];

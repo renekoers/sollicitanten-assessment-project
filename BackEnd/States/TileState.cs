@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Newtonsoft.Json;
 
 namespace BackEnd
 {
     public class TileState
     {
+        [JsonProperty("id")]
         public int ID { get; internal set; }
         public StateOfTile State { get;  internal set; }
         public string StateString => State.ToString();
