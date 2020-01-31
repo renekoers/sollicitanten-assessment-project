@@ -108,9 +108,6 @@ namespace BackEnd
         /// <returns></returns>
         public static Dictionary<int, Dictionary<int, int>> TallyEveryoneNumberOfLinesSolvedLevelsOf(int ID)
         {
-            //testing
-            InsertMockData();
-            //endtesting
             GameSession gameSession = GetSession(ID);
             ISet<int> solvedLevels = gameSession.SolvedLevelNumbers;
             return TallyEveryoneNumberOfLines(solvedLevels);
