@@ -73,7 +73,7 @@ namespace BackEnd
             Repository.UpdateSession(ID, gameSession);
         }
 
-        public static int getTotalLevelAmount()
+        public static int GetTotalLevelAmount()
         {
             int totalLevels = Level.TotalLevels;
             return totalLevels;
