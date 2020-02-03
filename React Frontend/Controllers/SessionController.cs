@@ -33,7 +33,23 @@ namespace React_Frontend.Controllers
         {
             int level = int.Parse(levelNumber);
             int sessionID = int.Parse(Request.Headers["Authorization"]);
-            return JSON.Serialize(Api.StartLevelSession(sessionID, level));
+            if(Api.LevelHasBeenStarted(sessionID, level)){
+                return JSON.Serialize(Api.ContinueLevelSession(sessionID, level));
+            } else {
+                return JSON.Serialize(Api.StartLevelSession(sessionID, level));
+            }
+        }
+        [HttpPost("pauseLevel")]
+        public StatusCodeResult PauseLevel([FromBody]object levelNumber)
+        {
+            int level = int.Parse(levelNumber.ToString());
+            int sessionID = int.Parse(Request.Headers["Authorization"]);
+            Api.PauseLevelSession(sessionID, level);
+            return Ok();
+        }
+        [HttpGet("totalAmountLevels")]
+        public int GetTotalAmountLevels(){
+            return Api.GetTotalLevelAmount();
         }
     }
 
