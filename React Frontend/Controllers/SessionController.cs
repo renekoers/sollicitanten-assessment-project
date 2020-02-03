@@ -24,7 +24,7 @@ namespace React_Frontend.Controllers
         public long GetRemainingTime()
         {
             int sessionID = int.Parse(Request.Headers["Authorization"]);
-            GameSession session  = Api.GetSession(sessionID);
+            GameSession session = Api.GetSession(sessionID);
             return Math.Max(0, 1200000L - session.CurrentDuration); //20 minutes in milliseconds
         }
 
@@ -58,5 +58,4 @@ namespace React_Frontend.Controllers
             return JSON.Serialize(Api.GetOverview(sessionID));
         }
     }
-
 }
