@@ -12,11 +12,7 @@ export class SkipButton extends Component {
         this.props.onClickPrevious();
     }
     nextButtonClicked(){
-        if(this.props.lastLevel){
-            return  <Redirect  to="/overview" />;
-        } else {
-            this.props.onClickNext();
-        }
+        this.props.onClickNext();
     }
     render() {
         let classNames;
@@ -25,10 +21,16 @@ export class SkipButton extends Component {
         } else {
             classNames="skipButton";
         }
+        let nextButton;
+        if(this.props.lastLevel){
+            nextButton = <Link to={'/overview'}> <button className="skipButton" onClick={ this.nextButtonClicked }> Overview</button></Link>;
+        } else {
+            nextButton = <button className="skipButton" onClick={ this.nextButtonClicked }> Next level</button>;
+        }
         return (
             <div>
                 <button disabled={this.props.disabledPrevious} className={classNames} onClick={ this.previousButtonClicked }> Previous level</button>
-                <button className="skipButton" onClick={ this.nextButtonClicked }> {this.props.lastLevel ? "Go to overview" : "Next level"}</button>
+                {nextButton}
             </div>
         );
   }
