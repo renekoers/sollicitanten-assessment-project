@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import {LevelOverview} from './LevelOverview';
 
 export function Overview() {
-  const [levels, setLevels] = useState(null);
+  const [levels, setLevels] = useState([]);
   useEffect(() => {
       getOverview();
   },[]);

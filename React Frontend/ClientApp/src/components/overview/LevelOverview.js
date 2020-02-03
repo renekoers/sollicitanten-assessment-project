@@ -19,7 +19,7 @@ export function LevelOverview(props) {
   },[]);
   return (
     <div className={classNames}>
-        {levelNumber}: {solved ? "Solved": "Not solved"} if(solved){ " in " + numberOfLines + ". Par is " + par}
+        {levelNumber}: {solved ? "Solved": "Not solved"} {solved ? " in " + numberOfLines + " lines. Par is " + par : ""}
     </div>
   );
 }

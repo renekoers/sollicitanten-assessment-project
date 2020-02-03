@@ -8,7 +8,7 @@ export class Game extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            gameOver: false, level: null, solved: false, levelNumber: 1, totalLevels: 0
+            gameOver: false, level: null, solved: false, levelNumber: 1, totalLevels: 1
         }
     }
 
@@ -36,6 +36,9 @@ export class Game extends Component {
     }
 
     async getLevel(level) {
+        if(level>this.state.totalLevels){
+
+        }
         await fetch('api/session/retrieveLevel?levelNumber=' + level, {
             method: "GET",
             headers: {
@@ -83,8 +86,7 @@ export class Game extends Component {
                     </div>
                     <div style={{ 'width': '50%', 'float': 'right' }}>
                         {levelGrid}
-                        <SkipButton name="Previous" onClick={this.previousLevel.bind(this)} disabled={this.state.levelNumber===1}/>
-                        <SkipButton name="Next" onClick={this.nextLevel.bind(this)} disabled={this.state.levelNumber===this.state.totalLevels}/>
+                        <SkipButton onClickPrevious={this.previousLevel.bind(this)} onClickNext={this.nextLevel.bind(this)} disabledPrevious={this.state.levelNumber===1} lastLevel={this.state.levelNumber===this.state.totalLevels}/>
                     </div>
                 </div>
             </div>

@@ -1,23 +1,35 @@
 import React, { Component } from "react";
+import {Redirect} from 'react-router-dom';
 import '../styles/SkipButton.css'
 
 export class SkipButton extends Component {
     constructor(props){
         super(props)
-        this.skipButtonClicked = this.skipButtonClicked.bind(this);
+        this.previousButtonClicked = this.previousButtonClicked.bind(this);
+        this.nextButtonClicked = this.nextButtonClicked.bind(this);
     }
-    skipButtonClicked(){
-        this.props.onClick();
+    previousButtonClicked(){
+        this.props.onClickPrevious();
+    }
+    nextButtonClicked(){
+        if(this.props.lastLevel){
+            return  <Redirect  to="/overview" />;
+        } else {
+            this.props.onClickNext();
+        }
     }
     render() {
         let classNames;
-        if(this.props.disabled){
+        if(this.props.disabledPrevious){
             classNames=["skipButton", "disabled"].join(' ');
         } else {
             classNames="skipButton";
         }
         return (
-            <button disabled={this.props.disabled} className={classNames} onClick={ this.skipButtonClicked }> {this.props.name} level</button>
+            <div>
+                <button disabled={this.props.disabledPrevious} className={classNames} onClick={ this.previousButtonClicked }> Previous level</button>
+                <button className="skipButton" onClick={ this.nextButtonClicked }> {this.props.lastLevel ? "Go to overview" : "Next level"}</button>
+            </div>
         );
   }
 }
