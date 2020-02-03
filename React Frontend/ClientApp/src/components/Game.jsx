@@ -13,11 +13,11 @@ export class Game extends Component {
     }
 
     async componentDidMount() {
+        await this.getSessionID();
+        this.getTotalAmountLevels();
         if(this.props.match.params.level){
             this.getLevel(this.props.match.params.level);
         } else {
-            await this.getSessionID();
-            this.getTotalAmountLevels();
             this.getLevel(1);
         }
     }
@@ -40,9 +40,6 @@ export class Game extends Component {
     }
 
     async getLevel(level) {
-        if(level>this.state.totalLevels){
-
-        }
         await fetch('api/session/retrieveLevel?levelNumber=' + level, {
             method: "GET",
             headers: {
