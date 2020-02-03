@@ -1,23 +1,25 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Linq;
 
 namespace BackEnd
 {
     public class GameSession : Session
     {
-        protected Dictionary<int, LevelSession> _levelSessions;
-
+        protected Dictionary<int, LevelSession> LevelSessions;
+        public int NumberOfSolvedLevels => LevelSessions.Values.ToList().FindAll(s => s.Solved).Count;
+        public ISet<int> SolvedLevelNumbers => new HashSet<int>(LevelSessions.Where(pair => pair.Value.Solved).Select(pair => pair.Key).ToList());
         public GameSession() : base()
         {
-            _levelSessions = new Dictionary<int, LevelSession>();
+            LevelSessions = new Dictionary<int, LevelSession>();
         }
 
         public void AddLevel(LevelSession levelSession)
         {
             if (InProgress)
             {
-                _levelSessions.Add(levelSession.LevelNumber, levelSession);
+                LevelSessions.Add(levelSession.LevelNumber, levelSession);
             }
             else
             {
@@ -27,7 +29,7 @@ namespace BackEnd
 
         public LevelSession GetSession(int levelNumber)
         {
-            return _levelSessions.TryGetValue(levelNumber, out LevelSession session) ? session : null;
+            return LevelSessions.TryGetValue(levelNumber, out LevelSession session) ? session : null;
         }
     }
 }
