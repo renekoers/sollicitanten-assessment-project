@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
+import {LevelOverview} from './LevelOverview';
 
-function Overview() {
+export function Overview() {
   const [levels, setLevels] = useState(null);
   useEffect(() => {
       getOverview();
