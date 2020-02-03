@@ -96,7 +96,7 @@ namespace BackEnd
             GameSession gameSession = GetSession(ID);
             foreach (int levelNumber in gameSession.SolvedLevelNumbers)
             {
-                amountOfLinesByLevel.Add(levelNumber, gameSession.GetSession(levelNumber).GetLeastLinesOfCodeSolution().Lines);
+                amountOfLinesByLevel.Add(levelNumber, NumberOfLinesSolved(ID, levelNumber));
             }
             return amountOfLinesByLevel;
         }
