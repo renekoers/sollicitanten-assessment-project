@@ -93,6 +93,10 @@ namespace BackEnd
             GameSession gameSession = GetSession(ID);
             return gameSession.GetSession(levelNumber) != null;
         }
+        public static Overview GetOverview(int ID)
+        {
+            return new Overview(GetSession(ID));
+        }
 
         public static int GetTotalLevelAmount()
         {

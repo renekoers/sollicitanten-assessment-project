@@ -51,6 +51,12 @@ namespace React_Frontend.Controllers
         public int GetTotalAmountLevels(){
             return Api.GetTotalLevelAmount();
         }
+        [HttpGet("getOverview")]
+        public string GetOverview()
+        {
+            int sessionID = int.Parse(Request.Headers["Authorization"]);
+            return JSON.Serialize(Api.GetOverview(sessionID));
+        }
     }
 
 }
