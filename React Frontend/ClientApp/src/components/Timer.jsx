@@ -7,6 +7,7 @@ export class Timer extends Component {
     this.state = {
       time: 1200000
     };
+    this.updateTime();
   }
 
   componentDidMount() {
