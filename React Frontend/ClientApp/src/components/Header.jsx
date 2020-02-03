@@ -1,27 +1,25 @@
 ﻿import React, { Component } from "react";
-import { Timer } from './Timer';
-import '../styles/Header.css';
+import { Timer } from "./Timer";
+import "../css/Header.css";
 
 export class Header extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-        }
-    }
+  constructor(props) {
+    super(props);
+    this.state = {};
+  }
 
-    async startTimer() {
-        const response = fetch()
-    }
+  async startTimer() {
+    const response = fetch();
+  }
   render() {
-      return (
+    return (
       <div>
-          <div className="header-container">
-              <div className="header-content">
-                      <Timer
-                          key="timer"
-                      />
-              </div>
+        <div className="header-container">
+          <div className="header-content">
+            <Timer key="timer" />
           </div>
-      </div>);
+        </div>
+      </div>
+    );
   }
 }
