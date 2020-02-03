@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {LevelOverview} from './LevelOverview';
+import { Header } from '../Header';
 
 export function Overview() {
   const [levels, setLevels] = useState([]);
@@ -21,6 +22,7 @@ export function Overview() {
 }
   return (
     <div>
+        <Header />
         {levels.map((key,index) => (
             <LevelOverview key={index} info={key} />
         ))} 

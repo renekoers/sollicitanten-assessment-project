@@ -1,0 +1,11 @@
+.levelOverview{
+    text-decoration: none;
+}
+.solved{
+    color: black;
+    background-color: green;
+}
+.unsolved{
+    color: white;
+    background-color: red;
+}

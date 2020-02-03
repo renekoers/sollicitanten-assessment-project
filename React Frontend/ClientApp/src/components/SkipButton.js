@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import {Redirect} from 'react-router-dom';
+import {Link} from 'react-router-dom';
 import '../styles/SkipButton.css'
 
 export class SkipButton extends Component {

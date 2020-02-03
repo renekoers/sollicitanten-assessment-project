@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import {Link} from 'react-router-dom';
+import '../../css/overview.css';
 
 export function LevelOverview(props) {
   const [levelNumber, setLevelNumber] = useState(0);
@@ -19,7 +21,7 @@ export function LevelOverview(props) {
   },[]);
   return (
     <div className={classNames}>
-        {levelNumber}: {solved ? "Solved": "Not solved"} {solved ? " in " + numberOfLines + " lines. Par is " + par : ""}
+        <Link to={'/gamesession/'+levelNumber} className={classNames}> {levelNumber}: {solved ? "Solved in " + numberOfLines + " lines. Par is " + par : "Not solved"} </Link>
     </div>
   );
 }

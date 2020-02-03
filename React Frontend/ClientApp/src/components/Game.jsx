@@ -13,9 +13,13 @@ export class Game extends Component {
     }
 
     async componentDidMount() {
-        await this.getSessionID();
-        this.getTotalAmountLevels();
-        this.getLevel(1);
+        if(this.props.match.params.level){
+            this.getLevel(this.props.match.params.level);
+        } else {
+            await this.getSessionID();
+            this.getTotalAmountLevels();
+            this.getLevel(1);
+        }
     }
 
     async getSessionID() {
