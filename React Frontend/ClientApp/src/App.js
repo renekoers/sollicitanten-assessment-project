@@ -1,20 +1,20 @@
-import React, { Component } from 'react';
-import { Route } from 'react-router';
-import { Layout } from './components/Layout';
-import { Home } from './components/Home';
-import { Game } from './components/Game';
+import React, { Component } from "react";
+import { Route } from "react-router";
+import { Layout } from "./components/Layout";
+import { StartingPage } from "./components/StartingPage";
+import { Game } from "./components/Game";
 
-import './css/custom.css'
+import "./css/custom.css";
 
 export default class App extends Component {
-    static displayName = App.name;
+  static displayName = App.name;
 
-    render () {
-        return (
-            <Layout>
-                <Route exact path='/' component={Game} />
-                <Route path='/gamesession' component={Game} />
-            </Layout>
-        );
-    }
+  render() {
+    return (
+      <Layout>
+        <Route exact path="/" component={StartingPage} />
+        <Route path="/gamesession" component={Game} />
+      </Layout>
+    );
+  }
 }

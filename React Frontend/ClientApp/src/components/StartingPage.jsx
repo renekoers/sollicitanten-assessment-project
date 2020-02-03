@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Jumbotron, Button, Container } from "reactstrap";
+import "../css/StartingPage.css";
 
 export const StartingPage = props => {
   const [sessionStarted, setSessionStatus] = useState(false);
@@ -12,7 +13,7 @@ export const StartingPage = props => {
     <div>
       <Jumbotron fluid>
         <Container fluid>
-          <h1 className="display-3">Welkom Soggy Boy!</h1>
+          <h1 className="display-3">Welkom Joost!</h1>
           <p className="lead">
             Lorem ipsum dolor sit amet, dictum sodales fringilla, taciti arcu
             odit etiam, elit blandit consequat lectus. Mi ultricies cras sit nam
@@ -25,7 +26,9 @@ export const StartingPage = props => {
           </p>
         </Container>
       </Jumbotron>
-      <Button color="primary">Stard Spèl</Button>
+      <Button color="primary start-button" onClick={() => startSession()}>
+        Stardt Spèl
+      </Button>
     </div>
   );
 };
