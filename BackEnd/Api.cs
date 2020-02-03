@@ -57,6 +57,22 @@ namespace BackEnd
             Repository.UpdateSession(ID, gameSession);
             return solution;
         }
+        
+        public static void PauseLevelSession(int ID, int levelNumber)
+        {
+            GameSession gameSession = GetSession(ID);
+            LevelSession levelSession = gameSession.GetSession(levelNumber);
+            levelSession.Pause();
+            Repository.UpdateSession(ID, gameSession);
+        }
+        public static IState ContinueLevelSession(int ID, int levelNumber)
+        {
+            GameSession gameSession = GetSession(ID);
+            LevelSession levelSession = gameSession.GetSession(levelNumber);
+            levelSession.Restart();
+            Repository.UpdateSession(ID, gameSession);
+            return new State(new Puzzle(Level.Get(levelNumber)));
+        }
 
         public static void EndLevelSession(int ID, int levelNumber)
         {
@@ -71,6 +87,11 @@ namespace BackEnd
             GameSession gameSession = GetSession(ID);
             gameSession.End();
             Repository.UpdateSession(ID, gameSession);
+        }
+        public static bool LevelHasBeenStarted(int ID, int levelNumber)
+        {
+            GameSession gameSession = GetSession(ID);
+            return gameSession.GetSession(levelNumber) != null;
         }
 
         public static int GetTotalLevelAmount()

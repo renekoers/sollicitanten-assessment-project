@@ -33,7 +33,7 @@ export class Statistics extends Component {
                 components.push(
                     <div className="level-chart-container" key={"C" + levelNumber}>
                         <label className="level-chart-label" key={"L" + levelNumber}>Level {levelNumber}</label>
-                        <LevelBarChart className="level-chart" key={"D" + levelNumber} dataTally={results} dataCandidate={this.state.dataCurrentCandidate[levelNumber]} 
+                        <LevelBarChart className="level-chart" key={"D" + levelNumber} dataTally={results} dataCandidate={this.state.dataCurrentCandidate[levelNumber]}/>
                     </div>
                 );
             }
