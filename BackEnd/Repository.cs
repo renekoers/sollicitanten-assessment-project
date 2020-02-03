@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Linq;
 
 namespace BackEnd
 {
@@ -38,6 +38,39 @@ namespace BackEnd
                 return true;
             }
             return false;
+        }
+
+        /// <summary>
+        /// Tallies the number of lines of the best solution for the given level number over all sessions
+        /// </summary>
+        /// <param name="levelNumber"></param>
+        /// <returns>A dictionary with as the first int the number of lines and the second int the number of people that solved the level in said amount of lines</returns>
+        public static Dictionary<int, int> TallyEveryoneNumberOfLines(int levelNumber)
+        {
+            Dictionary<int, int> tally = new Dictionary<int, int>();
+            foreach (GameSession gameSession in GameSessions.Values)
+            {
+                LevelSession levelSession = gameSession.GetSession(levelNumber);
+                if (levelSession is null)
+                {
+                    continue;
+                }
+                LevelSolution leastLinesSolution = levelSession.GetLeastLinesOfCodeSolution();
+                if (leastLinesSolution is null)
+                {
+                    continue;
+                }
+                int lines = leastLinesSolution.Lines;
+                if (tally.ContainsKey(lines))
+                {
+                    tally[lines]++;
+                }
+                else
+                {
+                    tally[lines] = 1;
+                }
+            }
+            return tally;
         }
     }
 }

@@ -40,7 +40,7 @@ namespace UnitTest
 
             Assert.AreEqual(item, character.HeldItem);
             Assert.IsNull(tileNeighbour.ContainedItem);
-            Assert.IsFalse(tileNeighbour.ContainsMoveable);
+            Assert.IsFalse(tileNeighbour.ContainsMovable);
         }
 
         [TestMethod]
@@ -56,7 +56,7 @@ namespace UnitTest
             character.ExecuteCommand(Command.Drop);
 
             Assert.AreEqual(item, tileNeighbour.ContainedItem);
-            Assert.IsTrue(tileNeighbour.ContainsMoveable);
+            Assert.IsTrue(tileNeighbour.ContainsMovable);
             Assert.IsNull(character.HeldItem);
         }
 
@@ -72,7 +72,7 @@ namespace UnitTest
 
             character.ExecuteCommand(Command.Drop);
 
-            Assert.IsFalse(wall.ContainsMoveable);
+            Assert.IsFalse(wall.ContainsMovable);
             Assert.IsNull(wall.ContainedItem);
             Assert.AreEqual(item, character.HeldItem);
         }
@@ -91,7 +91,7 @@ namespace UnitTest
             character.ExecuteCommand(Command.Drop);
 
             Assert.IsTrue(door.IsOpen);
-            Assert.IsTrue(button.ContainsMoveable);
+            Assert.IsTrue(button.ContainsMovable);
             Assert.AreEqual(item, button.ContainedItem);
             Assert.IsNull(character.HeldItem);
         }
@@ -110,7 +110,7 @@ namespace UnitTest
             character.ExecuteCommand(Command.PickUp);
 
             Assert.IsTrue(door.IsClosed);
-            Assert.IsFalse(button.ContainsMoveable);
+            Assert.IsFalse(button.ContainsMovable);
             Assert.AreEqual(item, character.HeldItem);
         }
     }

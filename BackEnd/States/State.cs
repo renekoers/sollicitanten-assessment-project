@@ -59,7 +59,7 @@ namespace BackEnd
                 {
                     tileState.State = StateOfTile.End;
                 }
-                if (tile.ContainsMoveable)
+                if (tile.ContainsMovable)
                 {
                     tileState.Movable = MovableItem.Box;
                 }

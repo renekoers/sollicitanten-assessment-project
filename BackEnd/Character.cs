@@ -64,7 +64,7 @@ namespace BackEnd
         protected virtual bool PickUp()
         {
             Tile tileInFront = Position.GetNeighbour(Direction);
-            if (HeldItem == null && tileInFront.ContainsMoveable)
+            if (HeldItem == null && tileInFront.ContainsMovable)
             {
                 HeldItem = tileInFront.Retrieve();
                 return HeldItem != null;
@@ -119,7 +119,7 @@ namespace BackEnd
                 case ConditionValue.Button:
                     return tileToCheck is ButtonTile;
                 case ConditionValue.HasMovable:
-                    return tileToCheck.ContainsMoveable;
+                    return tileToCheck.ContainsMovable;
                 case ConditionValue.Finish:
                     return tileToCheck is FinishTile;
                 default:
