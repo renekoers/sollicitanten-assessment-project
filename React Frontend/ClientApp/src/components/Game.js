@@ -49,7 +49,7 @@ export class Game extends Component {
 		})
 			.then(response => response.json())
 			.then(data => {
-				this.setState({ level: data, levelNumber: data.puzzleLevel });
+				this.setState({ level: data, levelNumber: data.puzzleLevel, solved: false });
 			});
 	}
 	async pauseLevel() {
