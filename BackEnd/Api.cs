@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections;
+using System.Linq;
 using Newtonsoft.Json.Linq;
 
 namespace BackEnd
@@ -303,6 +305,91 @@ namespace BackEnd
             });
             EndLevelSession(idOther, 1);
             EndSession(idOther);
+        }
+        /// <summary>
+        /// Receives the commands from the frontend and returns a LevelSolution
+        /// </summary>
+        /// <param name="input">String array of commands.</param>
+        /// <returns>LevelSolution.</returns>
+        public static LevelSolution ConvertAndSubmit(int ID, int levelnr, string[] input)
+        {
+            List<List<Statement>> totalStatements = new List<List<Statement>>();
+            for (int i = 0; i < input.Length; i++)
+            {
+                totalStatements.Add(new List<Statement>());
+            }
+            Stack<Statement> st = new Stack<Statement>();
+            string[] singleCommands = { "MoveForward", "RotateLeft", "RotateRight", "PickUp", "Drop" };
+            //["MoveForward", "RotateLeft", "RotateRight", "PickUp","Drop",
+            // "--While--","--If--","--Else--","--End--","TileFront","Passable","Button","Box"];
+            int counter = 0;
+            for (int i = 0; i < input.Length; i++)
+            {
+                var item = input[i];
+                if (singleCommands.Any(item.Contains))
+                {
+                    totalStatements.ElementAt(counter).Add(new SingleCommand((Command)Enum.Parse(typeof(Command), item.Trim())));
+                }
+                else
+                {
+                    if (item.Equals("While"))
+                    {
+                        counter++;
+                        Statement temp = new While(
+                            (ConditionParameter)Enum.Parse(typeof(ConditionParameter), input[i + 1].Trim()),
+                            (ConditionValue)Enum.Parse(typeof(ConditionValue), input[i + 2].Trim()),
+                            true,
+                            (Statement[])null
+                            );
+                        i = i + 2;
+                        st.Push(temp);
+                        totalStatements.ElementAt(counter).Add(temp);
+                    }
+                    else if (item.Equals("If"))
+                    {
+                        counter++;
+                        Statement temp = new IfElse(
+                            (ConditionParameter)Enum.Parse(typeof(ConditionParameter), input[i + 1].Trim()),
+                            (ConditionValue)Enum.Parse(typeof(ConditionValue), input[i + 2].Trim()),
+                            true,
+                            (Statement[])null
+                            );
+                        i = i + 2;
+                        st.Push(temp);
+                        totalStatements.ElementAt(counter).Add(temp);
+                    }
+                    else if (item.Equals("End"))
+                    {
+                        int count = st.Count();
+                        Statement endLoop = st.Pop();
+                        if (endLoop is IfElse)
+                        {
+                            IfElse ifl = (IfElse) endLoop;
+                            foreach (var sub in totalStatements.ElementAt(count))
+                            {
+                                if(sub is IfElse) continue;
+                                else ifl.AddTrueStatement(sub);
+                            }
+                            totalStatements[count-1].Add(ifl);
+                            totalStatements[count] = new List<Statement>();
+                        }
+                        else if (endLoop is While)
+                        {
+                            While wh = (While) endLoop;
+                            foreach (var sub in totalStatements.ElementAt(count))
+                            {
+                                if(sub is While) continue;
+                                else wh.AddStatement(sub);
+                            }
+                            totalStatements[count-1].Add(wh);
+                            totalStatements[count] = new List<Statement>();
+                        }
+                        counter--;
+                    }
+                }
+            }
+            Statement[] statements = (Statement[])totalStatements.ElementAt(0).ToArray();
+            return SubmitSolution(ID, levelnr, statements);
         }
     }
 }
