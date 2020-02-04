@@ -12,7 +12,7 @@ export const EndPage = props => {
             <div>
                 <p>Invalid session ID</p>
             </div>
-        );
+        )
     }
 
     return (
@@ -21,9 +21,9 @@ export const EndPage = props => {
                 <Container fluid>
                     <h1 className="display-3">Statistieken</h1>
                     <p>Je bent klaar!</p>
-                    <Statistics id={sessionID} />
+                    <Statistics id={sessionID}/>
                 </Container>
             </Jumbotron>
         </div>
     );
-};
+}

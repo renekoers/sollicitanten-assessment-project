@@ -1,6 +1,4 @@
-﻿import React, {
-  Component
-} from "react";
+﻿import React, { Component } from "react";
 import Tile from "./Tile";
 import helpIcon from "../../img/help-icon.png";
 import "../../css/LevelGrid.css";
@@ -73,81 +71,46 @@ export class LevelGrid extends Component {
   }
 
   render() {
-    return ( <
-      div >
-      <
-      img className = "help"
-      onClick = {
-        this.showLegend
-      }
-      src = {
-        helpIcon
-      }
-      alt = "help" /
-      >
-      <
-      div id = "popupLegend"
-      className = "popup"
-      onClick = {
-        this.hideLegend
-      } >
-      <
-      article className = "singleBlock" >
-      <
-      div className = "legend" >
-      Legend {
-        " "
-      } {
-        <
-        span className = "close"
-        onClick = {
-            this.hideLegend
-          } >
-          &
-          times; <
-        /span>
-      } <
-      /div> <
-      br / >
-      <
-      div >
-      <
-      div > !is the end of the level. < /div> <
-      div > #is a wall. < /div> <
-      div > {
-        "^, <, _, > is the position of the character."
-      } < /div> <
-      div > * is a box. < /div> <
-      div > An uppercase letter is a closed door. < /div> <
-      div > A lowercase letter is a button. < /div> <
-      /div> <
-      /article> <
-      /div>
+    return (
+      <div>
+        <img
+          className="help"
+          onClick={this.showLegend}
+          src={helpIcon}
+          alt="help"
+        />
+        <div id="popupLegend" className="popup" onClick={this.hideLegend}>
+          <article className="singleBlock">
+            <div className="legend">
+              Legend{" "}
+              {
+                <span className="close" onClick={this.hideLegend}>
+                  &times;
+                </span>
+              }
+            </div>
+            <br />
+            <div>
+              <div> ! is the end of the level. </div>
+              <div> # is a wall. </div>
+              <div> {"^, <, _, > is the position of the character."} </div>
+              <div> * is a box. </div>
+              <div> An uppercase letter is a closed door. </div>
+              <div> A lowercase letter is a button. </div>
+            </div>
+          </article>
+        </div>
 
-      <
-      div className = "game-grid-container"
-      style = {
-        {
-          display: "grid",
-          gridTemplateColumns: this.state.width
-        }
-      } >
-      {
-        this.state.tiles.map((key, index) => ( <
-          Tile key = {
-            index
-          }
-          tile = {
-            key
-          }
-          />
-        ))
-      } <
-      /div> <
-      span > Level complete: {
-        this.props.isComplete.toString()
-      } < /span> <
-      /div>
+        <div
+          className="game-grid-container"
+          style={{ display: "grid", gridTemplateColumns: this.state.width }}
+        >
+          {this.state.tiles.map((key, index) => (
+            <Tile key={index} tile={key} />
+          ))}
+        </div>
+        <span>Level complete: {this.props.isComplete.toString()}</span>
+      </div>
     );
   }
 }

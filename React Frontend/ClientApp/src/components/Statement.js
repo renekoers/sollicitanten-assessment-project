@@ -1,6 +1,4 @@
-import React, {
-  Component
-} from "react";
+import React, { Component } from "react";
 import "../css/statement.css";
 
 export class Statement extends Component {
@@ -25,29 +23,20 @@ export class Statement extends Component {
       "Box"
     ];
     this.counter = 0;
-    this.state = {
-      currentButtons: this.currentButtons,
-      counter: 0
-    };
+    this.state = { currentButtons: this.currentButtons, counter: 0 };
     this.showOffline = this.showOffline.bind(this);
     this.deleteButton = this.deleteButton.bind(this);
   }
 
   showOffline(e) {
-    this.currentButtons.push( <
-      button id = {
-        e.target.id + this.counter
-      }
-      onClick = {
-        this.deleteButton
-      }
-      key = {
-        e.target.id + this.counter
-      } >
-      {
-        e.target.id
-      } <
-      /button>
+    this.currentButtons.push(
+      <button
+        id={e.target.id + this.counter}
+        onClick={this.deleteButton}
+        key={e.target.id + this.counter}
+      >
+        {e.target.id}
+      </button>
     );
     this.counter = this.counter + 1;
     this.setState({
@@ -66,48 +55,26 @@ export class Statement extends Component {
   }
 
   render() {
-    return ( <
-      div >
-      <
-      div id = "wrapper" >
-      <
-      div id = "input" > {
-        this.currentStatements.map((stmt, index) => ( <
-          button id = {
-            stmt
-          }
-          onClick = {
-            this.showOffline
-          }
-          key = {
-            index
-          } > {
-            stmt
-          } <
-          /button>
-        ))
-      } <
-      /div> <
-      div id = "output" > {
-        this.currentButtons
-      } < /div> <
-      button style = {
-        {
-          backgroundColor: "Pink"
-        }
-      }
-      onClick = {
-        this.commitStatements
-      } >
-      {
-        " "
-      }
-      Run puzzle!{
-        " "
-      } <
-      /button> <
-      /div> <
-      /div>
+    return (
+      <div>
+        <div id="wrapper">
+          <div id="input">
+            {this.currentStatements.map((stmt, index) => (
+              <button id={stmt} onClick={this.showOffline} key={index}>
+                {stmt}
+              </button>
+            ))}
+          </div>
+          <div id="output">{this.currentButtons}</div>
+          <button
+            style={{ backgroundColor: "Pink" }}
+            onClick={this.commitStatements}
+          >
+            {" "}
+            Run puzzle!{" "}
+          </button>
+        </div>
+      </div>
     );
   }
 }

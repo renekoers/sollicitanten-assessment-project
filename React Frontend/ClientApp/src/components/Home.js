@@ -1,6 +1,4 @@
-import React, {
-    Component
-} from 'react';
+import React, { Component } from 'react';
 import LevelGrid from './game-grid/LevelGrid';
 
 export class Home extends Component {
@@ -25,7 +23,8 @@ export class Home extends Component {
             ]
         }`;
 
-    constructor(props) {
+    constructor(props)
+    {
         super(props);
         this.onUpdateButtonClicked = this.onUpdateButtonClicked.bind(this);
         this.state = {
@@ -34,11 +33,13 @@ export class Home extends Component {
         }
     }
 
-    onUpdateButtonClicked() {
+    onUpdateButtonClicked()
+    {
         this.onReceiveUpdateJson(Home.puzzle1ResultJSON);
     }
 
-    onReceiveUpdateJson(updateJson) {
+    onReceiveUpdateJson(updateJson)
+    {
         let puzzleStateUpdate = JSON.parse(updateJson);
         let puzzleFinalState = puzzleStateUpdate.states[puzzleStateUpdate.states.length - 1];
 
@@ -48,44 +49,18 @@ export class Home extends Component {
         });
     }
 
-    render() {
-        return ( <
-            div >
-            <
-            div style = {
-                {
-                    'width': '300px'
-                }
-            } >
-            <
-            LevelGrid puzzle = {
-                this.state.puzzleState
-            }
-            isComplete = {
-                this.state.puzzleCompleted
-            }
-            /> <
-            /div> <
-            hr / >
-            <
-            div style = {
-                {
-                    'width': '300px'
-                }
-            } >
-            <
-            LevelGrid puzzle = {
-                JSON.parse(Home.puzzle2InitialJSON)
-            }
-            isComplete = {
-                false
-            }
-            /> <
-            /div> <
-            button onClick = {
-                this.onUpdateButtonClicked
-            } > Update! < /button> <
-            /div>
+    render () {
+        return (
+            <div>
+                <div style={{ 'width': '300px' }}>
+                    <LevelGrid puzzle={this.state.puzzleState} isComplete={this.state.puzzleCompleted}/>
+                </div>
+                <hr/>
+                <div style={{ 'width': '300px' }}>
+                    <LevelGrid puzzle={JSON.parse(Home.puzzle2InitialJSON)} isComplete={false} />
+                </div>
+                <button onClick={ this.onUpdateButtonClicked }>Update!</button>
+            </div>
         );
     }
 }
