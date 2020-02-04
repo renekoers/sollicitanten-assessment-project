@@ -8,9 +8,6 @@ export class Header extends Component {
     this.state = {};
   }
 
-  async startTimer() {
-    const response = fetch();
-  }
   render() {
     return (
       <div>
