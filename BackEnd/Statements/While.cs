@@ -9,7 +9,9 @@ namespace BackEnd
         private readonly ConditionParameter _parameter;
         private readonly ConditionValue _value;
         private readonly bool _isTrue;
-        private readonly StatementBlock _statements;
+        private StatementBlock _statements;
+
+        private List<Statement> _tempStatements;
         public While(ConditionParameter parameter, ConditionValue value, bool isTrue, Statement[] statements)
             : this(parameter, value, isTrue, new StatementBlock(statements)) { }
         public While(ConditionParameter parameter, ConditionValue value, bool isTrue, StatementBlock statements)
@@ -18,6 +20,7 @@ namespace BackEnd
             this._value = value;
             this._isTrue = isTrue;
             this._statements = statements;
+            this._tempStatements = new List<Statement>();
         }
         internal override List<State> ExecuteCommand(Puzzle puzzle)
         {
@@ -32,6 +35,15 @@ namespace BackEnd
         internal override int GetLines()
         {
             return 1 + _statements.GetLines();
+        }
+
+        public void AddStatement(Statement s){
+            this._tempStatements.Add(s);
+            ConvertStatements();
+        }
+
+        private void ConvertStatements(){
+            this._statements = new StatementBlock(this._tempStatements.ToArray());
         }
     }
 }
