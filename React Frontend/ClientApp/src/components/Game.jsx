@@ -5,6 +5,8 @@ import LevelGrid from './game-grid/LevelGrid';
 import {SkipButton} from './SkipButton';
 
 export class Game extends Component {
+    _currentStateTimeoutID = null;
+
     constructor(props) {
         super(props);
         this.state = {
@@ -88,6 +90,8 @@ export class Game extends Component {
      */
     updateGridFromLevelSolution(levelSolution)
     {
+        if(this._currentStateTimeoutID !== null)
+            clearTimeout(this._currentStateTimeoutID);
         this._updateGridFromLevelSolutionAtStateIndex(levelSolution, 0);
     }
 
@@ -103,7 +107,9 @@ export class Game extends Component {
         });
 
         if(!isFinalState)
-            setTimeout(() => this._updateGridFromLevelSolutionAtStateIndex(levelSolution, currentStateIndex + 1), 1000);
+            this._currentStateTimeoutID = setTimeout(() => this._updateGridFromLevelSolutionAtStateIndex(levelSolution, currentStateIndex + 1), 1000);
+        else
+            this._currentStateTimeoutID = null;
     }
 
     render() {
