@@ -13,6 +13,7 @@ export class Tile extends Component {
 				return "_";
 			case "Character West":
 				return "<";
+			default:
 		}
 		switch (this.props.tile.stateString) {
 			case "Door":
@@ -30,7 +31,9 @@ export class Tile extends Component {
 			case "End":
 				return "!";
 			default:
-				throw "Invalid state: " + this.props.tile.stateString;
+				throw new Error(
+					"Invalid state: " + this.props.tile.stateString
+				);
 		}
 	}
 
