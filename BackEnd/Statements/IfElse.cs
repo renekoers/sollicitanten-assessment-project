@@ -8,9 +8,13 @@ namespace BackEnd
     {
         private readonly ConditionParameter _parameter;
         private readonly ConditionValue _value;
+
+        private List<Statement> _tempTrue;
+
+        private List<Statement> _tempFalse;
         private readonly bool _isTrue;
-        private readonly StatementBlock _statementsTrue;
-        private readonly StatementBlock _statementsFalse;
+        private  StatementBlock _statementsTrue;
+        private  StatementBlock _statementsFalse;
         public IfElse(ConditionParameter parameter, ConditionValue value, bool isTrue, Statement[] statementsTrue)
             : this(parameter, value, isTrue, statementsTrue, new Statement[0]) { }
         public IfElse(ConditionParameter parameter, ConditionValue value, bool isTrue, Statement[] statementsTrue, Statement[] statementsFalse)
@@ -23,6 +27,8 @@ namespace BackEnd
             this._isTrue = isTrue;
             this._statementsTrue = statementsTrue;
             this._statementsFalse = statementsFalse;
+            this._tempFalse = new List<Statement>();
+            this._tempTrue = new List<Statement>();
         }
         internal override List<State> ExecuteCommand(Puzzle puzzle)
         {
@@ -39,6 +45,21 @@ namespace BackEnd
         internal override int GetLines()
         {
             return 1 + _statementsTrue.GetLines() + _statementsFalse.GetLines();
+        }
+
+        public void AddTrueStatement(Statement s){
+            this._tempTrue.Add(s);
+            this.ConvertStatementBlock();
+        }
+
+        public void AddFalseStatement(Statement s){
+            this._tempFalse.Add(s);
+            this.ConvertStatementBlock();
+        }
+
+        public void ConvertStatementBlock(){
+            this._statementsFalse = new StatementBlock(this._tempFalse.ToArray());
+            this._statementsTrue = new StatementBlock(this._tempTrue.ToArray());
         }
     }
 }
