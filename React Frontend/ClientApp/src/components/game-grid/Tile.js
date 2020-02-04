@@ -1,7 +1,9 @@
-﻿import React, { Component } from 'react';
+﻿import React, {
+    Component
+} from 'react';
 
 export class Tile extends Component {
-    
+
     convertTypeToASCII() {
         switch (this.props.tile.movableString) {
             case "Box":
@@ -22,25 +24,26 @@ export class Tile extends Component {
                 } else {
                     return String.fromCharCode(65 + this.props.tile.id); //65 = 'A'
                 }
-            case "Wall":
-                return '#';
-            case "Empty":
-                return '.';
-            case "Button":
-                return String.fromCharCode(97 + this.props.tile.door.id); //97 = 'a'
-            case "End":
-                return '!';
-            default:
-                throw "Invalid state: " + this.props.tile.stateString;
+                case "Wall":
+                    return '#';
+                case "Empty":
+                    return '.';
+                case "Button":
+                    return String.fromCharCode(97 + this.props.tile.door.id); //97 = 'a'
+                case "End":
+                    return '!';
+                default:
+                    throw "Invalid state: " + this.props.tile.stateString;
 
         }
     }
 
     render() {
-        return (
-            <div className="tile">
-                {this.convertTypeToASCII()}
-            </div>
+        return ( <
+            div className = "tile" > {
+                this.convertTypeToASCII()
+            } <
+            /div>
         );
     }
 }
