@@ -1,33 +1,81 @@
 import React, { useState } from "react";
 import { Jumbotron, Button, Container } from "reactstrap";
 import "../css/StartingPage.css";
+import { Redirect } from "react-router-dom";
 
-export const StartingPage = props => {
+export const StartingPage = () => {
   const [sessionStarted, setSessionStatus] = useState(false);
 
-  const startSession = () => {
-    setSessionStatus(true);
+  const startSession = async () => {
+    console.log("Checking for existing session...");
+    if (IsNoSessionIdAvailable()) {
+      console.log("There is no session available!");
+      await makeNewSession();
+    } else if (!(await isSessionValid())) {
+      console.log("Already existing session is not valid!");
+      await makeNewSession();
+    }
+    console.log("Redirecting to gamesession...");
+    // setSessionStatus(true);
+  };
+
+  const IsNoSessionIdAvailable = () => {
+    const id = localStorage.getItem("sessionID");
+    if (id === null) {
+      return true;
+    } else {
+      return false;
+    }
+  };
+
+  const makeNewSession = async () => {
+    await fetch("api/session/startsession")
+      .then(response => response.json())
+      .then(data => {
+        localStorage.setItem("sessionID", data);
+      });
+  };
+
+  const isSessionValid = async () => {
+    let sessionExists;
+    await fetch("api/session/sessionValidation", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: localStorage.getItem("sessionID")
+      }
+    })
+      .then(response => response.json())
+      .then(data => {
+        sessionExists = data;
+      });
+    return sessionExists;
+  };
+
+  const gameSessionRedirect = () => {
+    if (sessionStarted) {
+      return <Redirect to="/gamesession" />;
+    }
   };
 
   return (
     <div>
+      {gameSessionRedirect()}
       <Jumbotron fluid>
         <Container fluid>
-          <h1 className="display-3">Welkom Joost!</h1>
+          <h1 className="display-4">Welkom, Kandidaat!</h1>
           <p className="lead">
-            Lorem ipsum dolor sit amet, dictum sodales fringilla, taciti arcu
-            odit etiam, elit blandit consequat lectus. Mi ultricies cras sit nam
-            sem, nunc laoreet, id curabitur aliquam, sed leo pellentesque
-            suscipit diam, proin incididunt sit. Vitae nulla et vitae.
-            Suspendisse tristique ullamcorper, mattis in mi et faucibus.
-            Adipiscing nam suscipit in mauris sed, velit soluta fermentum nam
-            nunc ornare. Magna eu enim, metus at suscipit neque, est dui
-            interdum, orci lectus sed, nascetur etiam.
+            Wanneer je op start drukt volgt een tutorial van het
+            sollicitatieprogrammeerspel. De bedoeling is om jouw karakter op de
+            finish te laten eindigen aan de hand van commando's die jij het
+            geeft. Hierbij is het van belang dit met zo min mogelijk commando's
+            te doen.
           </p>
+          <p className="lead">Veel geluk pik.</p>
         </Container>
       </Jumbotron>
       <Button color="primary start-button" onClick={() => startSession()}>
-        Stardt Spèl
+        Start Spel
       </Button>
     </div>
   );
