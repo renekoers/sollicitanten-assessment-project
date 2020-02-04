@@ -21,10 +21,13 @@ namespace React_Frontend.Controllers
         /// <param name="ID"> Session ID</param>
         /// <returns> Remaining time in milliseconds</returns>
         [HttpGet("remainingtime")]
-        public long GetRemainingTime()
+        public ActionResult<long> GetRemainingTime()
         {
             int sessionID = int.Parse(Request.Headers["Authorization"]);
             GameSession session = Api.GetSession(sessionID);
+            if(session == null){
+                return BadRequest();
+            }
             return Math.Max(0, 1200000L - session.CurrentDuration); //20 minutes in milliseconds
         }
 
