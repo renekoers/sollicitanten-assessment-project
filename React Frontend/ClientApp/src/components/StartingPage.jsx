@@ -7,24 +7,20 @@ export const StartingPage = () => {
   const [sessionStarted, setSessionStatus] = useState(false);
 
   const startSession = async () => {
-    console.log("Checking for existing session...");
-    if (IsNoSessionIdAvailable()) {
-      console.log("There is no session available!");
+    if (!(IsSessionIdAvailable())) {
       await makeNewSession();
     } else if (!(await isSessionValid())) {
-      console.log("Already existing session is not valid!");
       await makeNewSession();
     }
-    console.log("Redirecting to gamesession...");
-    // setSessionStatus(true);
+     setSessionStatus(true);
   };
 
-  const IsNoSessionIdAvailable = () => {
+  const IsSessionIdAvailable = () => {
     const id = localStorage.getItem("sessionID");
     if (id === null) {
-      return true;
-    } else {
       return false;
+    } else {
+      return true;
     }
   };
 
