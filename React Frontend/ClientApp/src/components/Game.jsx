@@ -7,6 +7,11 @@ import {SkipButton} from './SkipButton';
 export class Game extends Component {
     _currentStateTimeoutID = null;
 
+    static get STATE_CHANGE_ANIMATION_INTERVAL_TIME() //Closest thing we have to a constant class member in JS.
+    {
+        return 1000;
+    }
+
     constructor(props) {
         super(props);
         this.state = {
@@ -71,20 +76,6 @@ export class Game extends Component {
         }
     }
 
-    async mock__getUpdatedStates()
-    {
-        const sessionId = localStorage.getItem("sessionID");
-        const updateStateJson = await fetch("/api/mock", {
-            method: "POST",
-            headers: {
-                "Content-Type": "Application/JSON"
-            },
-            body: sessionId,
-        });
-        const update = await updateStateJson.json();
-        this.updateGridFromLevelSolution(update);
-    }
-
     /**
      * @param {*} levelSolution The LevelSolution as returned by the API (See: BackEnd.Api.SubmitSolution(int, int, Statement[]))
      */
@@ -107,8 +98,13 @@ export class Game extends Component {
         });
 
         if(!isFinalState)
-            this._currentStateTimeoutID = setTimeout(() => this._updateGridFromLevelSolutionAtStateIndex(levelSolution, currentStateIndex + 1), 1000);
-        else
+        {
+            this._currentStateTimeoutID = setTimeout(
+                () => this._updateGridFromLevelSolutionAtStateIndex(levelSolution, currentStateIndex + 1), 
+                Game.STATE_CHANGE_ANIMATION_INTERVAL_TIME
+            );
+        }
+        else // Set to null to indicate the sequence has been completed (and avoid potential conflicts with other timeouts).
             this._currentStateTimeoutID = null;
     }
 
@@ -129,7 +125,6 @@ export class Game extends Component {
                         <SkipButton name="Previous" onClick={this.previousLevel.bind(this)} disabled={this.state.levelNumber===1}/>
                         <SkipButton name="Next" onClick={this.nextLevel.bind(this)} disabled={this.state.levelNumber===this.state.totalLevels}/>
                     </div>
-                    <button onClick={this.mock__getUpdatedStates.bind(this)}>MOCK BUTTON</button>
                 </div>
             </div>
         );
