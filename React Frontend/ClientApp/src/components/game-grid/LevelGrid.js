@@ -101,10 +101,9 @@ export class LevelGrid extends Component {
 							<div> ! is the end of the level. </div>
 							<div> # is a wall. </div>
 							<div>
-								{" "}
 								{
-									"^, <, _, > is the position of the character."
-								}{" "}
+									" ^, <, _, > is the position of the character. "
+								}
 							</div>
 							<div> * is a box. </div>
 							<div> An uppercase letter is a closed door. </div>

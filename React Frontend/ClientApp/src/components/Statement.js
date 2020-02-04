@@ -74,8 +74,7 @@ export class Statement extends Component {
 						style={{ backgroundColor: "Pink" }}
 						onClick={this.commitStatements}
 					>
-						{" "}
-						Run puzzle!{" "}
+						Run puzzle!
 					</button>
 				</div>
 			</div>
