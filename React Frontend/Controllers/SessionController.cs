@@ -21,11 +21,28 @@ namespace React_Frontend.Controllers
         /// <param name="ID"> Session ID</param>
         /// <returns> Remaining time in milliseconds</returns>
         [HttpGet("remainingtime")]
-        public long GetRemainingTime()
+        public ActionResult<long> GetRemainingTime()
         {
             int sessionID = int.Parse(Request.Headers["Authorization"]);
             GameSession session = Api.GetSession(sessionID);
+            if(session == null){
+                return BadRequest();
+            }
             return Math.Max(0, 1200000L - session.CurrentDuration); //20 minutes in milliseconds
+        }
+
+        [HttpGet("sessionValidation")]
+        public Boolean IsSessionValid()
+        {
+            int sessionID = int.Parse(Request.Headers["Authorization"]);
+            if (Api.GetSession(sessionID) != null)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
 
         [HttpGet("retrieveLevel")]
@@ -33,9 +50,12 @@ namespace React_Frontend.Controllers
         {
             int level = int.Parse(levelNumber);
             int sessionID = int.Parse(Request.Headers["Authorization"]);
-            if(Api.LevelHasBeenStarted(sessionID, level)){
+            if (Api.LevelHasBeenStarted(sessionID, level))
+            {
                 return JSON.Serialize(Api.ContinueLevelSession(sessionID, level));
-            } else {
+            }
+            else
+            {
                 return JSON.Serialize(Api.StartLevelSession(sessionID, level));
             }
         }
@@ -48,7 +68,8 @@ namespace React_Frontend.Controllers
             return Ok();
         }
         [HttpGet("totalAmountLevels")]
-        public int GetTotalAmountLevels(){
+        public int GetTotalAmountLevels()
+        {
             return Api.GetTotalLevelAmount();
         }
         [HttpGet("getOverview")]
