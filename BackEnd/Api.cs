@@ -57,7 +57,7 @@ namespace BackEnd
             Repository.UpdateSession(ID, gameSession);
             return solution;
         }
-        
+
         public static void PauseLevelSession(int ID, int levelNumber)
         {
             GameSession gameSession = GetSession(ID);
