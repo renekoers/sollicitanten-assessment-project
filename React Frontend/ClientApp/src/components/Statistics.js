@@ -44,8 +44,8 @@ export class Statistics extends Component {
 							className="level-chart-label"
 							key={"L" + levelNumber}
 						>
-							Level {levelNumber}{" "}
-						</label>{" "}
+							Level {levelNumber}
+						</label>
 						<LevelBarChart
 							className="level-chart"
 							key={"D" + levelNumber}
@@ -53,7 +53,7 @@ export class Statistics extends Component {
 							dataCandidate={
 								this.state.dataCurrentCandidate[levelNumber]
 							}
-						/>{" "}
+						/>
 					</div>
 				);
 			}
@@ -77,7 +77,7 @@ const AxisLabel = ({ axisType, x, y, width, height, stroke, children }) => {
 			textAnchor="middle"
 			stroke={stroke}
 		>
-			{children}{" "}
+			{children}
 		</text>
 	);
 };
@@ -93,9 +93,7 @@ class LevelBarChart extends Component {
 				candidates: Number.parseInt(_candidates)
 			});
 		}
-		this.state = {
-			dataTally: _dataTally
-		};
+		this.state = { dataTally: _dataTally };
 	}
 
 	render() {
@@ -109,12 +107,9 @@ class LevelBarChart extends Component {
 				<CartesianGrid strokeDasharray="3 3" />
 				<XAxis
 					dataKey="lines"
-					label={{
-						value: "Lines of Code",
-						position: "insideBottom"
-					}}
+					label={{ value: "Lines of Code", position: "insideBottom" }}
 					height={40}
-				/>{" "}
+				/>
 				<YAxis
 					label={
 						<AxisLabel
@@ -124,13 +119,12 @@ class LevelBarChart extends Component {
 							width={0}
 							height={300}
 						>
-							Candidates{" "}
+							Candidates
 						</AxisLabel>
 					}
 					allowDecimals={false}
-				/>{" "}
+				/>
 				<Bar dataKey="candidates">
-					{" "}
 					{this.state.dataTally.map((entry, index) => {
 						return (
 							<Cell
@@ -142,8 +136,8 @@ class LevelBarChart extends Component {
 								}
 							/>
 						);
-					})}{" "}
-				</Bar>{" "}
+					})}
+				</Bar>
 			</BarChart>
 		);
 	}
