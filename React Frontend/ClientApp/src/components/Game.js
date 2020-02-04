@@ -18,7 +18,11 @@ export class Game extends Component {
 
 	async componentDidMount() {
 		this.getTotalAmountLevels();
-		this.getLevel(1);
+        if(this.props.match.params.level){
+            this.getLevel(this.props.match.params.level);
+        } else {
+            this.getLevel(1);
+        }
 	}
 
 	async getTotalAmountLevels() {
@@ -83,23 +87,11 @@ export class Game extends Component {
 						<Statement />
 					</div>
 					<div style={{ width: "50%", float: "right" }}>
-						{levelGrid}
-						<SkipButton
-							name="Previous"
-							onClick={this.previousLevel.bind(this)}
-							disabled={this.state.levelNumber === 1}
-						/>
-						<SkipButton
-							name="Next"
-							onClick={this.nextLevel.bind(this)}
-							disabled={
-								this.state.levelNumber ===
-								this.state.totalLevels
-							}
-						/>
-					</div>
-				</div>
-			</div>
-		);
-	}
+                        {levelGrid}
+                        <SkipButton onClickPrevious={this.previousLevel.bind(this)} onClickNext={this.nextLevel.bind(this)} disabledPrevious={this.state.levelNumber===1} lastLevel={this.state.levelNumber===this.state.totalLevels}/>
+                    </div>
+                </div>
+            </div>
+        );
+    }
 }
