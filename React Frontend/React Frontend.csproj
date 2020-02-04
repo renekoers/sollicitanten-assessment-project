@@ -25,6 +25,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="ClientApp\src\components\EndPage.jsx" />
     <None Remove="ClientApp\src\components\Statistics.js" />
     <None Remove="ClientApp\src\css\Statistics.ts" />
   </ItemGroup>
@@ -34,6 +35,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <TypeScriptCompile Include="ClientApp\src\components\EndPage.jsx" />
     <TypeScriptCompile Include="ClientApp\src\components\Statistics.js" />
   </ItemGroup>
 
