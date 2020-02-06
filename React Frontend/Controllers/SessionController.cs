@@ -44,7 +44,13 @@ namespace React_Frontend.Controllers
                 return false;
             }
         }
-
+        [HttpGet("levelIsSolved")]
+        public bool IsSolved(string levelNumber)
+        {
+            int level = int.Parse(levelNumber);
+            int sessionID = int.Parse(Request.Headers["Authorization"]);
+            return Api.LevelIsSolved(sessionID, level);
+        }
         [HttpGet("retrieveLevel")]
         public string GetLevel(string levelNumber)
         {
@@ -71,6 +77,12 @@ namespace React_Frontend.Controllers
         public int GetTotalAmountLevels()
         {
             return Api.GetTotalLevelAmount();
+        }
+        [HttpGet("getOverview")]
+        public string GetOverview()
+        {
+            int sessionID = int.Parse(Request.Headers["Authorization"]);
+            return JSON.Serialize(Api.GetOverview(sessionID));
         }
     }
 }
