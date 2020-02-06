@@ -54,8 +54,7 @@ namespace BackEnd
         {
             GameSession gameSession = GetSession(ID);
             LevelSession levelSession = gameSession.GetSession(levelNumber);
-            LevelSolution solution = new LevelSolution(levelNumber, statements);
-            levelSession.Attempt(solution);
+            LevelSolution solution = levelSession.Attempt(statements);
             Repository.UpdateSession(ID, gameSession);
             return solution;
         }
