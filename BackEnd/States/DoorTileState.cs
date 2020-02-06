@@ -11,5 +11,6 @@ namespace BackEnd
         {
             IsOpen = isOpen;
         }
+        public bool Equals(DoorTileState otherDoor) => Equals((TileState) otherDoor) && IsOpen==otherDoor.IsOpen;
     }
 }

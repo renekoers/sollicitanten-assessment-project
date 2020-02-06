@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Linq;
 
 namespace BackEnd
 {
@@ -78,5 +79,17 @@ namespace BackEnd
                 }
             }
         }
+        public bool Equals(State otherState){
+            if(otherState is null)
+            {
+                return false;
+            }
+            if(PuzzleHeight != otherState.PuzzleHeight || PuzzleWidth != otherState.PuzzleWidth || PuzzleLevel != otherState.PuzzleLevel || !Character.Equals(otherState.Character)){
+                return false;
+            }
+            return PuzzleTiles.SequenceEqual(otherState.PuzzleTiles);
+        }
+        public override bool Equals(object obj) => Equals(obj as State);
+        public override int GetHashCode() => ((object)this).GetHashCode();
     }
 }

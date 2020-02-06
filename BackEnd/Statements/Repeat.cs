@@ -22,6 +22,11 @@ namespace BackEnd
             for (int i = 0; i < _amount; i++)
             {
                 states.AddRange(_statements.ExecuteCommand(puzzle));
+                if(_statements.IsInfiniteLoop)
+                {
+                    this.IsInfiniteLoop = true;
+                    return states;
+                }
             }
             return states;
         }
