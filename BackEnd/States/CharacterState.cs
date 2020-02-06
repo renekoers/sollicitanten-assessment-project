@@ -13,5 +13,6 @@ namespace BackEnd
         {
             this.DirectionCharacter = direction;
         }
+        public bool Equals(CharacterState otherCharacter) => DirectionCharacter.Equals(otherCharacter.DirectionCharacter) && Tile.Equals(otherCharacter.Tile);
     }
 }

@@ -86,5 +86,41 @@ namespace UnitTest
             Assert.AreEqual(3, states.Count);
             Assert.AreEqual(initialDir.Right(), states[2].Character.DirectionCharacter);
         }
+        [TestMethod]
+        public void StatesEqualsTest()
+        {
+            Statement[] statements = new Statement[]{new SingleCommand(Command.RotateLeft)};
+            List<IState> states1 = (new LevelSolution(1, statements)).States;
+            List<IState> states2 = (new LevelSolution(1, statements)).States;
+            Assert.AreEqual(states1[0],states2[0]);
+        }
+        [TestMethod]
+        public void InfiniteLoopTest()
+        {
+            Statement[] statements = new Statement[] { new While(ConditionParameter.TileCurrent, ConditionValue.Passable, true, new Statement[] { new SingleCommand(Command.RotateLeft),new SingleCommand(Command.RotateRight) }) };
+            List<IState> states = (new LevelSolution(1, statements)).States;
+            Assert.IsTrue(states.Count<5);
+        }
+        [TestMethod]
+        public void InfiniteLoopMultipleIterationsTest()
+        {
+            Statement[] statements = new Statement[] { new While(ConditionParameter.TileCurrent, ConditionValue.Passable, true, new Statement[] { new SingleCommand(Command.RotateLeft) }) };
+            List<IState> states = (new LevelSolution(1, statements)).States;
+            Assert.IsTrue(states.Count<6);
+        }
+        [TestMethod]
+        public void InfiniteLoopInNestedLoopTest()
+        {
+            Statement[] statements = new Statement[] {new Repeat(10, new Statement[] {new While(ConditionParameter.TileCurrent, ConditionValue.Passable, true, new Statement[] { new SingleCommand(Command.RotateLeft) })}) };
+            List<IState> states = (new LevelSolution(1, statements)).States;
+            Assert.IsTrue(states.Count<6);
+        }
+        [TestMethod]
+        public void MaxAmountStatesTest()
+        {
+            Statement[] statements = new Statement[]{new Repeat(Statement.MaxStates+2, new Statement[]{new SingleCommand(Command.MoveForward)})};
+            List<IState> states = (new LevelSolution(1, statements)).States;
+            Assert.AreEqual((int)Statement.MaxStates, states.Count);
+        }
     }
 }
