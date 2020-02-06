@@ -24,7 +24,11 @@ export class Game extends Component {
 
 	async componentDidMount() {
 		this.getTotalAmountLevels();
-		this.getLevel(1);
+        if(this.props.match.params.level){
+            this.getLevel(this.props.match.params.level);
+        } else {
+            this.getLevel(1);
+        }
 	}
 
 	async getTotalAmountLevels() {
@@ -43,10 +47,21 @@ export class Game extends Component {
 				Authorization: localStorage.getItem("sessionID")
 			}
 		})
-			.then(response => response.json())
-			.then(data => {
-				this.setState({ level: data, levelNumber: data.puzzleLevel });
-			});
+		.then(response => response.json())
+		.then(data => {
+			this.setState({ level: data, levelNumber: data.puzzleLevel});
+		});
+		await fetch("api/session/levelIsSolved?levelNumber=" + level, {
+			method: "GET",
+			headers: {
+				"Content-Type": "application/json",
+				Authorization: localStorage.getItem("sessionID")
+			}
+		})
+		.then(response => response.json())
+		.then(data => {
+			this.setState({ solved: data });
+		});
 	}
 	async pauseLevel() {
 		await fetch("api/session/pauseLevel", {
@@ -136,23 +151,11 @@ export class Game extends Component {
 						<Statement levelNumber = {this.state.levelNumber} onIncomingStatements = {this.handleIncomingStatements} />
 					</div>
 					<div style={{ width: "50%", float: "right" }}>
-						{levelGrid}
-						<SkipButton
-							name="Previous"
-							onClick={this.previousLevel.bind(this)}
-							disabled={this.state.levelNumber === 1}
-						/>
-						<SkipButton
-							name="Next"
-							onClick={this.nextLevel.bind(this)}
-							disabled={
-								this.state.levelNumber ===
-								this.state.totalLevels
-							}
-						/>
-					</div>
-				</div>
-			</div>
-		);
-	}
+                        {levelGrid}
+                        <SkipButton onClickPrevious={this.previousLevel.bind(this)} onClickNext={this.nextLevel.bind(this)} disabledPrevious={this.state.levelNumber===1} lastLevel={this.state.levelNumber===this.state.totalLevels}/>
+                    </div>
+                </div>
+            </div>
+        );
+    }
 }
