@@ -19,8 +19,13 @@ namespace BackEnd
             foreach (Statement statement in _statements)
             {
                 states.AddRange(statement.ExecuteCommand(puzzle));
+                if(statement.IsInfiniteLoop)
+                {
+                    this.IsInfiniteLoop = true;
+                    return (states.Count>MaxStates) ? states.GetRange(0,(int)MaxStates) : states;
+                }
             }
-            return states;
+            return (states.Count>MaxStates) ? states.GetRange(0,(int)MaxStates) : states;
         }
 
         internal override int GetLines()
