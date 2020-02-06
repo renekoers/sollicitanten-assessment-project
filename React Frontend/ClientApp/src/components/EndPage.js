@@ -1,19 +1,22 @@
-﻿import React, { useState } from "react";
+﻿import React, { useState, useEffect } from "react";
 import { Jumbotron, Button, Container } from "reactstrap";
+import { Statistics } from "./Statistics";
 
 export const EndPage = props => {
 	const [sessionID, setSessionID] = useState(-1);
 
-	const ID = localStorage.getItem("sessionID");
-	if (ID) {
-		setSessionID(ID);
-	} else {
-		return (
-			<div>
-				<p>Invalid session ID</p>
-			</div>
-		);
-	}
+	useEffect(() => {
+		const ID = localStorage.getItem("sessionID");
+		if (ID) {
+			setSessionID(ID);
+		} else {
+			return (
+				<div>
+					<p>Invalid session ID</p>
+				</div>
+			);
+		}
+	}, []);
 
 	return (
 		<div>
