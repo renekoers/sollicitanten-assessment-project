@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {Link} from 'react-router-dom';
-import '../../css/Overview.css';
+import '../../css/overview.css';
 import solvedIcon from "../../img/solved.png";
 import unsolvedIcon from "../../img/unsolved.png";
 
