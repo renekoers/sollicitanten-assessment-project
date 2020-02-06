@@ -97,7 +97,7 @@ class SylveonBlocks
     static get ifFlow()
     {
         return {
-            message0: "If %1 then %2",
+            message0: "If %1 then %2 else %3",
             previousStatement: null,
             nextStatement: null,
             colour: SylveonBlocks.FLOW_COLOR,
@@ -106,6 +106,10 @@ class SylveonBlocks
                     type: "input_value",
                     name: "statement",
                     check: [ "flow_statement" ],
+                },
+                {
+                    type: "input_statement",
+                    name: "action",
                 },
                 {
                     type: "input_statement",
