@@ -95,6 +95,17 @@ namespace BackEnd
             GameSession gameSession = GetSession(ID);
             return gameSession.GetSession(levelNumber) != null;
         }
+        public static bool LevelIsSolved(int ID, int levelNumber)
+        {
+            GameSession gameSession = GetSession(ID);
+            LevelSession levelSession = gameSession.GetSession(levelNumber);
+            if(levelSession == null)
+            {
+                return false;
+            }
+            return levelSession.Solved;
+        }
+
         public static Overview GetOverview(int ID)
         {
             return new Overview(GetSession(ID));

@@ -47,10 +47,21 @@ export class Game extends Component {
 				Authorization: localStorage.getItem("sessionID")
 			}
 		})
-			.then(response => response.json())
-			.then(data => {
-				this.setState({ level: data, levelNumber: data.puzzleLevel, solved: false });
-			});
+		.then(response => response.json())
+		.then(data => {
+			this.setState({ level: data, levelNumber: data.puzzleLevel});
+		});
+		await fetch("api/session/levelIsSolved?levelNumber=" + level, {
+			method: "GET",
+			headers: {
+				"Content-Type": "application/json",
+				Authorization: localStorage.getItem("sessionID")
+			}
+		})
+		.then(response => response.json())
+		.then(data => {
+			this.setState({ solved: data });
+		});
 	}
 	async pauseLevel() {
 		await fetch("api/session/pauseLevel", {
