@@ -1,18 +1,60 @@
 import React, { Component } from "react";
+import ReactBlockly from "react-blockly";
+import Blockly from "blockly";
+import SylveonBlocks from "../blockly/SylveonBlocks"
+import "../css/blockly.css";
 import "../css/statement.css";
 
 export class Statement extends Component {
-	static displayName = Statement.name;
+    static displayName = Statement.name;
+    
+    static get BLOCKLY_CATEGORIES()
+    {
+        return [
+            Statement.BLOCKLY_CATEGORY_COMMANDS,
+            Statement.BLOCKLY_CATEGORY_FLOW,
+        ];
+    }
+
+    static get BLOCKLY_CATEGORY_COMMANDS()
+    {
+        return {
+            name: "Commands",
+            blocks: [
+                { type: "move_forward" },
+                { type: "rotate" },
+                { type: "pickup" },
+                { type: "drop" },
+            ]
+        };
+    }
+
+    static get BLOCKLY_CATEGORY_FLOW()
+    {
+        return {
+            name: "Flow",
+            blocks: [
+                { type: "if_then" },
+                { type: "while_do" },
+                { type: "state_equals" },
+            ]
+        }
+    }
 
   constructor(props) {
       super(props);
+      SylveonBlocks.registerBlocks();
+      
       this.currentButtons = [];
       this.currentSingleStatements = ["MoveForward", "RotateLeft", "RotateRight", "PickUp","Drop"];
       this.currentMultiStatements = ["--While--","--If--","--End--"];
       this.currentConditionalStatements = ["TileCurrent","TileFront"];
       this.currentChecks = ["Passable","Button","HasMovable"];
       this.counter = 0
-      this.state = { currentButtons: this.currentButtons, counter: 0 };
+      this.state = { 
+          currentButtons: this.currentButtons,
+          counter: 0,
+        };
       this.addButton = this.addButton.bind(this);
       this.deleteButton = this.deleteButton.bind(this);
   }
@@ -46,6 +88,12 @@ export class Statement extends Component {
   render() {
     return (
         <div>
+            <div style={{ width: "640px", height: "480px" }} id="blockly-app">
+                <ReactBlockly.BlocklyEditor 
+                    toolboxCategories={Statement.BLOCKLY_CATEGORIES}
+                    wrapperDivClassName="blockly-wrapper"
+                />
+            </div>
             <div id="wrapper">
                 <div id="input">
                     Single:
@@ -70,6 +118,7 @@ export class Statement extends Component {
                 </div>
                 <button style={{ backgroundColor: 'Pink' }} onClick={this.handleStatements}> Run puzzle! </button>
             </div>
+            />
       </div>
     );
   }
