@@ -32,14 +32,24 @@ namespace BackEnd
         }
         internal override List<State> ExecuteCommand(Puzzle puzzle)
         {
+            List<State> states = null;
             if (puzzle.Character.CheckCondition(_parameter, _value) == _isTrue)
             {
-                return _statementsTrue.ExecuteCommand(puzzle);
+                states = _statementsTrue.ExecuteCommand(puzzle);
+                if(_statementsTrue.IsInfiniteLoop)
+                {
+                    this.IsInfiniteLoop = true;
+                }
             }
             else
             {
-                return _statementsFalse.ExecuteCommand(puzzle);
+                states = _statementsFalse.ExecuteCommand(puzzle);
+                if(_statementsFalse.IsInfiniteLoop)
+                {
+                    this.IsInfiniteLoop = true;
+                }
             }
+            return states;
         }
 
         internal override int GetLines()
