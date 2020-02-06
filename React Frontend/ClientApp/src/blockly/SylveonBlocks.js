@@ -7,31 +7,45 @@ class SylveonBlocks
 
     static registerBlocks()
     {
-        SylveonBlocks.registerBlock("move_forward", SylveonBlocks.moveForwardAction, (block) => "moveForward\n");
+        SylveonBlocks.registerBlock("move_forward", SylveonBlocks.moveForwardAction, (block) => "{\"type\":\"command\",\"action\":\"moveForward\"}");
         SylveonBlocks.registerBlock("rotate", SylveonBlocks.rotateAction, (block) => {
             const direction = block.getFieldValue("direction");
-            return "rotate_" + direction + "\n";
+            return "{\"type\":\"command\",\"action\":\"rotate\",\"direction\":\"" + direction + "\"}";
         });
-        SylveonBlocks.registerBlock("pickup", SylveonBlocks.pickupAction, (block) => "pickUp\n");
-        SylveonBlocks.registerBlock("drop", SylveonBlocks.dropAction, (block) => "drop\n");
+        SylveonBlocks.registerBlock("pickup", SylveonBlocks.pickupAction, (block) => "{\"type\":\"command\",\"action\":\"pickUp\"}");
+        SylveonBlocks.registerBlock("drop", SylveonBlocks.dropAction, (block) => "{\"type\":\"command\",\"action\":\"drop\"}");
         SylveonBlocks.registerBlock("if_then", SylveonBlocks.ifFlow, (block) => {
-            const statement = Blockly.JavaScript.statementToCode(block, "statement");
+            const condition = Blockly.JavaScript.statementToCode(block, "condition");
             const true_content = Blockly.JavaScript.statementToCode(block, "true_action");
             const false_content = Blockly.JavaScript.statementToCode(block, "false_action");
 
-            return "if\n" + statement + true_content + "else\n" + false_content + "end\n";
+            return "{\"type\":\"flow\",\"action\":\"if\",\"condition\":"
+                + condition
+                + ",\"true\":["
+                + true_content
+                + "],\"false\":["
+                + false_content
+                + "]}";
         });
         SylveonBlocks.registerBlock("while_do", SylveonBlocks.whileFlow, (block) => {
-            const statement = Blockly.JavaScript.statementToCode(block, "statement");
+            const condition = Blockly.JavaScript.statementToCode(block, "condition");
             const content = Blockly.JavaScript.statementToCode(block, "action");
 
-            return "while\n" + statement + content + "end\n";
+            return "{\"type\":\"flow\",\"action\":\"while\",\"condition\":"
+                + condition
+                + ",\"content\":["
+                + content
+                + "]}";
         });
         SylveonBlocks.registerBlock("state_equals", SylveonBlocks.flowStatementStateEquals, (block) => {
             const object = block.getFieldValue("flow_statement_object");
             const objectState = block.getFieldValue("flow_statement_object_state");
 
-            return object + "\n" + objectState + "\n";
+            return "{\"targetObject\":\""
+                + object
+                + "\",\"targetState\":\""
+                + objectState
+                + "\"}";
         });
     }
 
@@ -43,7 +57,18 @@ class SylveonBlocks
             }
         }
 
-        Blockly.JavaScript[name] = function(block) { return writeCode(block); }
+        Blockly.JavaScript[name] = function(block)
+        {
+            let json = writeCode(block);
+            if(block.getNextBlock() !== null)
+                json += ",";
+            return json;
+        }
+    }
+
+    static workspaceToJson(workspace)
+    {
+        return "[" + Blockly.JavaScript.workspaceToCode(workspace) + "]";
     }
 
     static get moveForwardAction()
@@ -106,7 +131,7 @@ class SylveonBlocks
             args0: [
                 {
                     type: "input_value",
-                    name: "statement",
+                    name: "condition",
                     check: [ "flow_statement" ],
                 },
                 {
@@ -131,7 +156,7 @@ class SylveonBlocks
             args0: [
                 {
                     type: "input_value",
-                    name: "statement",
+                    name: "condition",
                     check: [ "flow_statement" ],
                 },
                 {
