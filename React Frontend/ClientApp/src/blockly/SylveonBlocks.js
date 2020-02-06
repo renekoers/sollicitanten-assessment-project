@@ -7,41 +7,43 @@ class SylveonBlocks
 
     static registerBlocks()
     {
-        Blockly.Blocks["move_forward"] = {
+        SylveonBlocks.registerBlock("move_forward", SylveonBlocks.moveForwardAction, (block) => "moveForward\n");
+        SylveonBlocks.registerBlock("rotate", SylveonBlocks.rotateAction, (block) => {
+            const direction = block.getFieldValue("direction");
+            return "rotate_" + direction + "\n";
+        });
+        SylveonBlocks.registerBlock("pickup", SylveonBlocks.pickupAction, (block) => "pickUp\n");
+        SylveonBlocks.registerBlock("drop", SylveonBlocks.dropAction, (block) => "drop\n");
+        SylveonBlocks.registerBlock("if_then", SylveonBlocks.ifFlow, (block) => {
+            const statement = Blockly.JavaScript.statementToCode(block, "statement");
+            const true_content = Blockly.JavaScript.statementToCode(block, "true_action");
+            const false_content = Blockly.JavaScript.statementToCode(block, "false_action");
+
+            return "if\n" + statement + true_content + "else\n" + false_content + "end\n";
+        });
+        SylveonBlocks.registerBlock("while_do", SylveonBlocks.whileFlow, (block) => {
+            const statement = Blockly.JavaScript.statementToCode(block, "statement");
+            const content = Blockly.JavaScript.statementToCode(block, "action");
+
+            return "while\n" + statement + content + "end\n";
+        });
+        SylveonBlocks.registerBlock("state_equals", SylveonBlocks.flowStatementStateEquals, (block) => {
+            const object = block.getFieldValue("flow_statement_object");
+            const objectState = block.getFieldValue("flow_statement_object_state");
+
+            return object + "\n" + objectState + "\n";
+        });
+    }
+
+    static registerBlock(name, object, writeCode)
+    {
+        Blockly.Blocks[name] = {
             init: function() {
-                this.jsonInit(SylveonBlocks.moveForwardAction);
-            }
-        };
-        Blockly.Blocks["rotate"] = {
-            init: function() {
-                this.jsonInit(SylveonBlocks.rotateAction);
-            }
-        };
-        Blockly.Blocks["pickup"] = {
-            init: function() {
-                this.jsonInit(SylveonBlocks.pickupAction);
-            }
-        };
-        Blockly.Blocks["drop"] = {
-            init: function() {
-                this.jsonInit(SylveonBlocks.dropAction);
-            }
-        };
-        Blockly.Blocks["if_then"] = {
-            init: function() {
-                this.jsonInit(SylveonBlocks.ifFlow);
-            }
-        };
-        Blockly.Blocks["while_do"] = {
-            init: function() {
-                this.jsonInit(SylveonBlocks.whileFlow);
-            }
-        };
-        Blockly.Blocks["state_equals"] = {
-            init: function() {
-                this.jsonInit(SylveonBlocks.flowStatementStateEquals);
+                this.jsonInit(object);
             }
         }
+
+        Blockly.JavaScript[name] = function(block) { return writeCode(block); }
     }
 
     static get moveForwardAction()
@@ -67,7 +69,7 @@ class SylveonBlocks
                     name: "direction",
                     options: [
                         [ "left", "left" ],
-                        [ "right", "rgiht" ],
+                        [ "right", "right" ],
                     ]
                 }
             ]
@@ -109,11 +111,11 @@ class SylveonBlocks
                 },
                 {
                     type: "input_statement",
-                    name: "action",
+                    name: "true_action",
                 },
                 {
                     type: "input_statement",
-                    name: "action",
+                    name: "false_action",
                 }
             ]
         }

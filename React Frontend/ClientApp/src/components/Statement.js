@@ -84,6 +84,10 @@ export class Statement extends Component {
             );
         this.props.onIncomingStatements(statements);
     }
+    
+    onSomethingHappenMate(workspace) {
+        console.log(Blockly.JavaScript.workspaceToCode(workspace));
+    }
 
   render() {
     return (
@@ -92,6 +96,7 @@ export class Statement extends Component {
                 <ReactBlockly.BlocklyEditor 
                     toolboxCategories={Statement.BLOCKLY_CATEGORIES}
                     wrapperDivClassName="blockly-wrapper"
+                    workspaceDidChange={this.onSomethingHappenMate.bind(this)}
                 />
             </div>
             <div id="wrapper">
