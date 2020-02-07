@@ -10,8 +10,10 @@ export class Statistics extends Component {
 	}
 
 	state = {
-		dataTally: null,
-		dataCurrentCandidate: null
+		dataTallyLines: null,
+		dataCurrentCandidateLines: null,
+		dataTallyDuration: null,
+		dataCurrentCandidateDuration: null
 	};
 
 	componentDidMount() {
@@ -22,48 +24,73 @@ export class Statistics extends Component {
 			const responseCurrentCandidate = await fetch(
 				"api/statistics/shortestsolutions/" + this.props.id
 			);
+			const responseTallyDuration = await fetch(
+				"api/statistics/tallyduration/" + this.props.id
+			);
+			const responseCurrentCandidateDuration = await fetch(
+				"api/statistics/durationshortestsolutions/" + this.props.id
+			);
 			this.setState({
-				dataTally: await responseTally.json(),
-				dataCurrentCandidate: await responseCurrentCandidate.json()
+				dataTallyLines: await responseTally.json(),
+				dataCurrentCandidateLines: await responseCurrentCandidate.json(),
+				dataTallyDuration: await responseTallyDuration.json(),
+				dataCurrentCandidateDuration: await responseCurrentCandidateDuration.json()
 			});
 		})();
 	}
 
+
 	render() {
-		if (this.state.dataTally) {
-			const components = [];
+		const components = [];
+		if (this.state.dataTallyLines) {
 			for (const [levelNumber, results] of Object.entries(
-				this.state.dataTally
+				this.state.dataTallyLines
 			)) {
 				components.push(
-					<div
-						className="level-chart-container"
-						key={"C" + levelNumber}
-					>
-						<label
-							className="level-chart-label"
-							key={"L" + levelNumber}
-						>
-							Level {levelNumber}
-						</label>
-						<LevelBarChart
-							className="level-chart"
-							key={"D" + levelNumber}
-							dataTally={results}
-							dataCandidate={
-								this.state.dataCurrentCandidate[levelNumber]
-							}
-						/>
-					</div>
+					makeChart(levelNumber,results,this.state.dataCurrentCandidateLines[levelNumber],"Lines of code")
 				);
 			}
+		} 
+		if (this.state.dataTallyDuration) {
+			for (const [levelNumber, results] of Object.entries(
+				this.state.dataTallyDuration
+			)) {
+				components.push(
+					makeChart(levelNumber,results,this.state.dataCurrentCandidateDuration[levelNumber],"Duration")
+				);
+			}
+		} 
+		if(components){
 			return components;
-		} else {
+		}else {
 			return null;
 		}
 	}
 }
 
+function makeChart(levelNumber, results, dataCurrentCandidate, nameLabel){
+	return( 
+		<div
+			className="level-chart-container"
+			key={"C" + nameLabel + levelNumber}
+		>
+			<label
+				className="level-chart-label"
+				key={"L" + nameLabel + levelNumber}
+			>
+				Level {levelNumber}
+			</label>
+			<LevelBarChart
+				className="level-chart"
+				key={"D" + nameLabel + levelNumber}
+				dataTally={results}
+				dataCandidate={
+					dataCurrentCandidate
+				}
+				labelHorizontalAxis={nameLabel}
+			/>
+		</div>)
+}
 const AxisLabel = ({ axisType, x, y, width, height, stroke, children }) => {
 	const isVert = axisType === "yAxis";
 	const cx = isVert ? x : x + width / 2;
@@ -107,7 +134,7 @@ class LevelBarChart extends Component {
 				<CartesianGrid strokeDasharray="3 3" />
 				<XAxis
 					dataKey="lines"
-					label={{ value: "Lines of Code", position: "insideBottom" }}
+					label={{ value: this.props.labelHorizontalAxis, position: "insideBottom" }}
 					height={40}
 				/>
 				<YAxis
@@ -130,7 +157,7 @@ class LevelBarChart extends Component {
 							<Cell
 								key={`cell-${index}`}
 								fill={
-									entry.lines == this.props.dataCandidate
+									entry.lines === this.props.dataCandidate
 										? "#00AA00"
 										: "#8CA183"
 								}

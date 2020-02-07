@@ -41,11 +41,12 @@ namespace BackEnd
         }
 
         /// <summary>
-        /// Tallies the number of lines of the best solution for the given level number over all sessions
+        /// Tallies a given function of the best solution for the given level number over all sessions
         /// </summary>
         /// <param name="levelNumber"></param>
-        /// <returns>A dictionary with as the first int the number of lines and the second int the number of people that solved the level in said amount of lines</returns>
-        public static Dictionary<int, int> TallyEveryoneNumberOfLines(int levelNumber)
+        /// <param name="function"></param>
+        /// <returns>A dictionary with as the first int result of function(leastLinesSolution) and the second int the number of people that solved the level with the same info</returns>
+        public static Dictionary<int, int> TallyEveryoneBestSolution(int levelNumber, Func<LevelSolution,int> function)
         {
             Dictionary<int, int> tally = new Dictionary<int, int>();
             foreach (GameSession gameSession in GameSessions.Values)
@@ -60,7 +61,35 @@ namespace BackEnd
                 {
                     continue;
                 }
-                int lines = leastLinesSolution.Lines;
+                int info = function(leastLinesSolution);
+                if (tally.ContainsKey(info))
+                {
+                    tally[info]++;
+                }
+                else
+                {
+                    tally[info] = 1;
+                }
+            }
+            return tally;
+        }
+        /// <summary>
+        /// Tallies a given function of a level session for the given level number over all sessions
+        /// </summary>
+        /// <param name="levelNumber"></param>
+        /// <param name="function"></param>
+        /// <returns>A dictionary with as the first int result of function and the second int the number of people that solved the level with the same info</returns>
+        public static Dictionary<int, int> TallyEveryone(int levelNumber, Func<LevelSession, int> function)
+        {
+            Dictionary<int, int> tally = new Dictionary<int, int>();
+            foreach (GameSession gameSession in GameSessions.Values)
+            {
+                LevelSession levelSession = gameSession.GetSession(levelNumber);
+                if (levelSession is null)
+                {
+                    continue;
+                }
+                int lines = function(levelSession);
                 if (tally.ContainsKey(lines))
                 {
                     tally[lines]++;
@@ -71,6 +100,7 @@ namespace BackEnd
                 }
             }
             return tally;
+
         }
     }
 }

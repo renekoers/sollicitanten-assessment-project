@@ -4,6 +4,8 @@ import { Layout } from './components/Layout';
 import { Game } from './components/Game';
 import { Overview } from './components/overview/Overview';
 import { StartingPage } from "./components/StartingPage";
+import { EndPage } from "./components/EndPage";
+import { Statistics } from "./components/Statistics";
 
 import "./css/custom.css";
 
@@ -17,6 +19,7 @@ export default class App extends Component {
                 <Route exact path='/gamesession/:level' component={Game} />
                 <Route exact path='/gamesession' component={Game} />
                 <Route path='/overview' component={Overview} />
+                <Route path='/end' component={Statistics} />
             </Layout>
         );
     }

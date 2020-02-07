@@ -13,31 +13,28 @@ namespace React_Frontend.Controllers
     public class StatisticsController : Controller
     {
         [HttpGet("tallylines/{id}")]
-        public Dictionary<string, Dictionary<string, int>> TallyEveryoneNumberOfLinesSolvedLevelsOf(int id)
+        public string TallyEveryoneNumberOfLinesSolvedLevelsOf(int id)
         {
             Dictionary<int, Dictionary<int, int>> totalTally = Api.TallyEveryoneNumberOfLinesSolvedLevelsOf(id);
-            Dictionary<string, Dictionary<string, int>> stringTotalTally = new Dictionary<string, Dictionary<string, int>>();
-            foreach (KeyValuePair<int, Dictionary<int, int>> pair in totalTally)
-            {
-                Dictionary<string, int> stringPair = new Dictionary<string, int>();
-                foreach (KeyValuePair<int, int> subPair in pair.Value)
-                {
-                    stringPair.Add(subPair.Key.ToString(), subPair.Value);
-                }
-                stringTotalTally.Add(pair.Key.ToString(), stringPair);
-            }
-            return stringTotalTally;
+            return JSON.Serialize(totalTally);
         }
         [HttpGet("shortestsolutions/{id}")]
-        public Dictionary<string, int> NumberOfLinesSolvedLevelsOf(int id)
+        public string NumberOfLinesSolvedLevelsOf(int id)
         {
             Dictionary<int, int> solutions = Api.NumberOfLinesSolvedLevelsOf(id);
-            Dictionary<string, int> solutionsString = new Dictionary<string, int>();
-            foreach (KeyValuePair<int, int> pair in solutions)
-            {
-                solutionsString.Add(pair.Key.ToString(), pair.Value);
-            }
-            return solutionsString;
+            return JSON.Serialize(solutions);
+        }
+        [HttpGet("tallyduration/{id}")]
+        public string TallyEveryoneDurationSolvedLevelsOf(int id)
+        {
+            Dictionary<int, Dictionary<int, int>> totalTally = Api.TallyEveryoneDurationSolvedLevelsOf(id);
+            return JSON.Serialize(totalTally);
+        }
+        [HttpGet("durationshortestsolutions/{id}")]
+        public string DurationSolvedLevelsOf(int id)
+        {
+            Dictionary<int, int> solutions = Api.DurationSolvedLevelsOf(id);
+            return JSON.Serialize(solutions);
         }
     }
 }

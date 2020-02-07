@@ -1,5 +1,6 @@
 ﻿import React, { useState } from "react";
 import { Jumbotron, Button, Container } from "reactstrap";
+import { Statistics } from "./Statistics";
 
 export const EndPage = props => {
 	const [sessionID, setSessionID] = useState(-1);
