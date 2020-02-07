@@ -62,5 +62,13 @@ namespace UnitTest
                 Assert.IsTrue(IDs.Add(tile.ID));
             }
         }
+        [TestMethod]
+        public void StatesEqualsTest()
+        {
+            Puzzle puzzle = new Puzzle(Level.Get(1));
+            State state1 = new State(puzzle);
+            State state2 = new State(puzzle);
+            Assert.AreEqual(state1,state2);
+        }
     }
 }

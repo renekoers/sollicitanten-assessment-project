@@ -1,8 +1,9 @@
-import React, { Component } from "react";
-import { Route } from "react-router";
-import { Layout } from "./components/Layout";
+import React, { Component } from 'react';
+import { Route } from 'react-router';
+import { Layout } from './components/Layout';
+import { Game } from './components/Game';
+import { Overview } from './components/overview/Overview';
 import { StartingPage } from "./components/StartingPage";
-import { Game } from "./components/Game";
 
 import "./css/custom.css";
 
@@ -13,8 +14,10 @@ export default class App extends Component {
     return (
       <Layout>
         <Route exact path="/" component={StartingPage} />
-        <Route path="/gamesession" component={Game} />
-      </Layout>
-    );
-  }
+                <Route exact path='/gamesession/:level' component={Game} />
+                <Route exact path='/gamesession' component={Game} />
+                <Route path='/overview' component={Overview} />
+            </Layout>
+        );
+    }
 }
