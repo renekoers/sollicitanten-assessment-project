@@ -20,7 +20,7 @@ class SylveonBlocks
             const false_content = Blockly.JavaScript.statementToCode(block, "false_action");
 
             return "{\"type\":\"flow\",\"action\":\"if\",\"condition\":"
-                + condition
+                + (condition ? condition : "null")
                 + ",\"true\":["
                 + true_content
                 + "],\"false\":["
@@ -32,7 +32,7 @@ class SylveonBlocks
             const content = Blockly.JavaScript.statementToCode(block, "action");
 
             return "{\"type\":\"flow\",\"action\":\"while\",\"condition\":"
-                + condition
+                + (condition ? condition : "null")
                 + ",\"content\":["
                 + content
                 + "]}";
@@ -68,7 +68,10 @@ class SylveonBlocks
 
     static workspaceToJson(workspace)
     {
-        return "[" + Blockly.JavaScript.workspaceToCode(workspace) + "]";
+        if(workspace.getTopBlocks().length == 1)
+            return "[" + Blockly.JavaScript.workspaceToCode(workspace) + "]";
+        else
+            return "null";
     }
 
     static get moveForwardAction()

@@ -86,7 +86,6 @@ export class Statement extends Component {
     }
     
     onSomethingHappenMate(workspace) {
-        console.log(SylveonBlocks.workspaceToJson(workspace));
         console.log(JSON.parse(SylveonBlocks.workspaceToJson(workspace)));
     }
 
