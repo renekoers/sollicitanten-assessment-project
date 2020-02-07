@@ -21,6 +21,7 @@ export class Statement extends Component {
             name: "Commands",
             blocks: [
                 { type: "move_forward" },
+                { type: "move_backward" },
                 { type: "rotate" },
                 { type: "pickup" },
                 { type: "drop" },
@@ -36,6 +37,7 @@ export class Statement extends Component {
                 { type: "if_then" },
                 { type: "while_do" },
                 { type: "state_equals" },
+                { type: "state_not_equals" },
             ]
         }
     }

@@ -99,6 +99,7 @@ export class Game extends Component {
 		});
 		console.log(levelSolutionResponse);
 		const levelSolution = await levelSolutionResponse.json();
+		console.log(levelSolution);
 		this.updateGridFromLevelSolution(levelSolution);
 	}
 

@@ -47,6 +47,8 @@ namespace BackEnd
             {
                 case "moveForward":
                     return new SingleCommand(Command.MoveForward);
+                case "moveBackward":
+                    return new SingleCommand(Command.MoveBackward);
                 case "pickUp":
                     return new SingleCommand(Command.PickUp);
                 case "drop":
@@ -91,14 +93,14 @@ namespace BackEnd
             JsonElement trueBlockElement = statementElement.GetProperty("true");
             JsonElement falseBlockElement = statementElement.GetProperty("false");
             JsonElement conditionElement = statementElement.GetProperty("condition");
-            Tuple<ConditionParameter, ConditionValue> conditionStatementTuple = ParseConditionStatementJson(conditionElement);
+            Tuple<ConditionParameter, ConditionValue, bool> conditionStatementTuple = ParseConditionStatementJson(conditionElement);
             Statement[] trueBlock = ParseStatementArrayJson(trueBlockElement).ToArray();
             Statement[] falseBlock = ParseStatementArrayJson(falseBlockElement).ToArray();
 
             return new IfElse(
                 conditionStatementTuple.Item1,
                 conditionStatementTuple.Item2,
-                true,
+                conditionStatementTuple.Item3,
                 trueBlock,
                 falseBlock
             );
@@ -106,35 +108,38 @@ namespace BackEnd
         
         private static While ParseWhileStatementJson(JsonElement statementElement)
         {
-            JsonElement blockElement = statementElement.GetProperty("action");
+            JsonElement blockElement = statementElement.GetProperty("content");
             JsonElement conditionElement = statementElement.GetProperty("condition");
-            Tuple<ConditionParameter, ConditionValue> conditionStatementTuple = ParseConditionStatementJson(conditionElement);
+            Tuple<ConditionParameter, ConditionValue, bool> conditionStatementTuple = ParseConditionStatementJson(conditionElement);
             Statement[] block = ParseStatementArrayJson(blockElement).ToArray();
 
             return new While(
                 conditionStatementTuple.Item1,
                 conditionStatementTuple.Item2,
-                true,
+                conditionStatementTuple.Item3,
                 block
             );
         }
 
-        private static Tuple<ConditionParameter, ConditionValue> ParseConditionStatementJson(JsonElement conditionElement)
+        private static Tuple<ConditionParameter, ConditionValue, bool> ParseConditionStatementJson(JsonElement conditionElement)
         {
             if(conditionElement.ValueKind == JsonValueKind.Null)
             {
-                return new Tuple<ConditionParameter, ConditionValue>(
+                return new Tuple<ConditionParameter, ConditionValue, bool>(
                     ConditionParameter.TileCurrent,
-                    ConditionValue.Finish
+                    ConditionValue.Finish,
+                    false
                 );
             }
 
+            bool shouldInvert = conditionElement.GetProperty("inverse").GetBoolean();
             string targetObjectString = conditionElement.GetProperty("targetObject").GetString();
             string targetStateString = conditionElement.GetProperty("targetState").GetString();
 
-            return new Tuple<ConditionParameter, ConditionValue>(
+            return new Tuple<ConditionParameter, ConditionValue, bool>(
                 ParseConditionParameter(targetObjectString),
-                ParseConditionValue(targetStateString)
+                ParseConditionValue(targetStateString),
+                shouldInvert
             );
         }
 
@@ -146,6 +151,12 @@ namespace BackEnd
                     return ConditionParameter.TileFront;
                 case "current_tile":
                     return ConditionParameter.TileCurrent;
+                case "tile_to_left":
+                    return ConditionParameter.TileLeft;
+                case "tile_to_right":
+                    return ConditionParameter.TileRight;
+                case "tile_behind":
+                    return ConditionParameter.TileBehind;
                 default:
                     throw new JsonException($"Invalid condition parameter \"{targetObjectString}\".");
             }
@@ -157,10 +168,14 @@ namespace BackEnd
             {
                 case "passable":
                     return ConditionValue.Passable;
+                case "impassable":
+                    return ConditionValue.Impassable;
                 case "is_box":
                     return ConditionValue.HasMovable;
                 case "is_button":
                     return ConditionValue.Button;
+                case "is_finish":
+                    return ConditionValue.Finish;
                 default:
                     throw new JsonException($"Invalid condition value \"{targetStateString}\".");
             }

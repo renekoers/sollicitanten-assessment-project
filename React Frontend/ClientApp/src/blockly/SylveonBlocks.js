@@ -8,6 +8,7 @@ class SylveonBlocks
     static registerBlocks()
     {
         SylveonBlocks.registerBlock("move_forward", SylveonBlocks.moveForwardAction, (block) => "{\"type\":\"command\",\"action\":\"moveForward\"}");
+        SylveonBlocks.registerBlock("move_backward", SylveonBlocks.moveBackwardAction, (block) => "{\"type\":\"command\",\"action\":\"moveBackward\"}");
         SylveonBlocks.registerBlock("rotate", SylveonBlocks.rotateAction, (block) => {
             const direction = block.getFieldValue("direction");
             return "{\"type\":\"command\",\"action\":\"rotate\",\"direction\":\"" + direction + "\"}";
@@ -41,7 +42,17 @@ class SylveonBlocks
             const object = block.getFieldValue("flow_statement_object");
             const objectState = block.getFieldValue("flow_statement_object_state");
 
-            return "{\"targetObject\":\""
+            return "{\"inverse\":false,\"targetObject\":\""
+                + object
+                + "\",\"targetState\":\""
+                + objectState
+                + "\"}";
+        });
+        SylveonBlocks.registerBlock("state_not_equals", SylveonBlocks.flowStatementStateNotEquals, (block) => {
+            const object = block.getFieldValue("flow_statement_object");
+            const objectState = block.getFieldValue("flow_statement_object_state");
+
+            return "{\"inverse\":true,\"targetObject\":\""
                 + object
                 + "\",\"targetState\":\""
                 + objectState
@@ -78,6 +89,16 @@ class SylveonBlocks
     {
         return {
             message0: "Move forward",
+            previousStatement: null,
+            nextStatement: null,
+            colour: SylveonBlocks.COMMAND_COLOR,
+        }
+    }
+
+    static get moveBackwardAction()
+    {
+        return {
+            message0: "Move backward",
             previousStatement: null,
             nextStatement: null,
             colour: SylveonBlocks.COMMAND_COLOR,
@@ -178,6 +199,9 @@ class SylveonBlocks
             options: [
                 [ "tile in front", "tile_in_front" ],
                 [ "current tile", "current_tile" ],
+                [ "tile to the left", "tile_to_left" ],
+                [ "tile to the right", "tile_to_right" ],
+                [ "tile behind", "tile_behind" ],
             ]
         }
     }
@@ -189,8 +213,10 @@ class SylveonBlocks
             name: "flow_statement_object_state",
             options: [
                 [ "passable", "passable" ],
-                [ "a box", "is_box" ],
+                [ "impassable", "impassable" ],
+                [ "moveable", "is_box" ],
                 [ "a button", "is_button" ],
+                [ "the finish", "is_finish" ],
             ]
         }
     }
@@ -199,6 +225,19 @@ class SylveonBlocks
     {
         return {
             message0: "%1 is %2",
+            colour: SylveonBlocks.FLOW_COLOR,
+            args0: [
+                SylveonBlocks.flowObjectDropdown,
+                SylveonBlocks.flowObjectStateDropdown,
+            ],
+            output: "flow_statement"
+        }
+    }
+
+    static get flowStatementStateNotEquals()
+    {
+        return {
+            message0: "%1 is not %2",
             colour: SylveonBlocks.FLOW_COLOR,
             args0: [
                 SylveonBlocks.flowObjectDropdown,
