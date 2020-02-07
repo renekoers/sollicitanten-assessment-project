@@ -4,10 +4,6 @@ import "../css/Statistics.css";
 
 export class Statistics extends Component {
 	static displayName = Statistics.name;
-	constructor(props) {
-		//expects props.id
-		super(props);
-	}
 
 	state = {
 		dataTally: null,
@@ -141,7 +137,7 @@ class LevelBarChart extends Component {
 							<Cell
 								key={`cell-${index}`}
 								fill={
-									entry.lines == this.props.dataCandidate
+									entry.lines === this.props.dataCandidate
 										? "#00AA00"
 										: "#8CA183"
 								}
