@@ -166,17 +166,6 @@ namespace BackEnd
             return talliesByLevel;
         }
 
-        /// <summary>
-        /// Gives the state of the given level and the recommended numbers of lines to use.
-        /// </summary>
-        /// <param name="level"></param>
-        /// <returns>JSON consisting of the state</returns>
-        [Obsolete("Use StartLevelSession instead")]
-        public static IState GetLevel(int level)
-        {
-            return new State(new Puzzle(Level.Get(level)));
-        }
-
         public static long GetEpochTime()
         {
             return DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
@@ -265,12 +254,13 @@ namespace BackEnd
             EndSession(idOther);
         }
         /// <summary>
-        /// Receives the commands from the frontend and returns a LevelSolution
+        /// Receives the commands from the frontend and returns a LevelSolution.!-- This method needs to be moved to a different class after draggables are implemented!!!!!!
         /// </summary>
         /// <param name="input">String array of commands.</param>
         /// <returns>LevelSolution.</returns>
         public static LevelSolution ConvertAndSubmit(int ID, int levelnr, string[] input)
         {
+            Console.WriteLine("This method needs to be moved to a different class after draggables are implemented!!!!!!");
             List<List<Statement>> totalStatements = new List<List<Statement>>();
             for (int i = 0; i < input.Length; i++)
             {
