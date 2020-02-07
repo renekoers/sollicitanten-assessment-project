@@ -317,11 +317,16 @@ namespace BackEnd
             EndLevelSession(idOther, 1);
             EndSession(idOther);
         }
+
+        public static IEnumerable<Statement> ParseStatementTreeJson(System.Text.Json.JsonElement statementTreeJson)
+            => StatementParser.ParseStatementTreeJson(statementTreeJson);
+
         /// <summary>
         /// Receives the commands from the frontend and returns a LevelSolution
         /// </summary>
         /// <param name="input">String array of commands.</param>
         /// <returns>LevelSolution.</returns>
+        [Obsolete("Use Api.ParseStatementTreeJson(System.Text.Json.JsonElement) instead.")]
         public static LevelSolution ConvertAndSubmit(int ID, int levelnr, string[] input)
         {
             List<List<Statement>> totalStatements = new List<List<Statement>>();

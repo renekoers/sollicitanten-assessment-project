@@ -85,21 +85,23 @@ export class Game extends Component {
 			this.getLevel(this.state.level.puzzleLevel - 1);
 		}
 	}
-
-    handleIncomingStatements = async (statements) => {
-        console.log(statements);
-        var levelSol = await fetch("api/statement/deliver", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json"
-            },
-            body: JSON.stringify(statements)
-          });
-        console.log(levelSol);
-        var solution = await levelSol.json();
-        console.log(solution);
-        this.updateGridFromLevelSolution(solution);
-    }
+	
+	async onReceiveStatementTree(statementTree)
+	{
+		const sessionId = localStorage.getItem("sessionID");
+		const levelSolutionResponse = await fetch("api/statement/" + this.state.levelNumber, {
+			method: "POST",
+			headers: {
+				"content-type": "application/json",
+				Authorization: sessionId,
+			},
+			body: JSON.stringify(statementTree),
+		});
+		console.log(levelSolutionResponse);
+		const levelSolution = await levelSolutionResponse.json();
+		console.log(levelSolution);
+		this.updateGridFromLevelSolution(levelSolution);
+	}
 
     /**
      * @param {*} levelSolution The LevelSolution as returned by the API (See: BackEnd.Api.SubmitSolution(int, int, Statement[]))
@@ -148,7 +150,7 @@ export class Game extends Component {
 				<Header />
 				<div>
 					<div style={{ width: "50%", float: "left" }}>
-						<Statement levelNumber = {this.state.levelNumber} onIncomingStatements = {this.handleIncomingStatements} />
+						<Statement levelNumber = {this.state.levelNumber} onRunCode={this.onReceiveStatementTree.bind(this)} />
 					</div>
 					<div style={{ width: "50%", float: "right" }}>
                         {levelGrid}
