@@ -16,11 +16,22 @@ export class Statistics extends Component {
 
 	componentDidMount() {
 		(async () => {
-			const responseTally = await fetch(
-				"api/statistics/tallylines/" + this.props.id
-			);
+			const responseTally = await fetch("api/statistics/tallylines/", {
+				method: "GET",
+				headers: {
+					"Content-Type": "application/json",
+					Authorization: this.props.id
+				}
+			});
 			const responseCurrentCandidate = await fetch(
-				"api/statistics/shortestsolutions/" + this.props.id
+				"api/statistics/shortestsolutions/",
+				{
+					method: "GET",
+					headers: {
+						"Content-Type": "application/json",
+						Authorization: this.props.id
+					}
+				}
 			);
 			this.setState({
 				dataTally: await responseTally.json(),
