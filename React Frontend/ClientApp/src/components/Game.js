@@ -40,7 +40,7 @@ export class Game extends Component {
 	}
 
 	async getLevel(level) {
-		await fetch("api/session/retrieveLevel?levelNumber=" + level, {
+		await fetch("api/session/retrieveLevel/" + level, {
 			method: "GET",
 			headers: {
 				"Content-Type": "application/json",
@@ -51,7 +51,7 @@ export class Game extends Component {
 		.then(data => {
 			this.setState({ level: data, levelNumber: data.puzzleLevel});
 		});
-		await fetch("api/session/levelIsSolved?levelNumber=" + level, {
+		await fetch("api/session/levelIsSolved/" + level, {
 			method: "GET",
 			headers: {
 				"Content-Type": "application/json",
@@ -87,17 +87,15 @@ export class Game extends Component {
 	}
 
     handleIncomingStatements = async (statements) => {
-        console.log(statements);
         var levelSol = await fetch("api/statement/deliver", {
             method: "POST",
             headers: {
-              "Content-Type": "application/json"
+              "Content-Type": "application/json",
+			  Authorization: localStorage.getItem("sessionID")
             },
             body: JSON.stringify(statements)
           });
-        console.log(levelSol);
         var solution = await levelSol.json();
-        console.log(solution);
         this.updateGridFromLevelSolution(solution);
     }
 

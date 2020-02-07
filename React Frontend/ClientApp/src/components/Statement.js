@@ -36,7 +36,7 @@ export class Statement extends Component {
 	}
 
     handleStatements = () => {
-        var statements = [localStorage.getItem("sessionID"), this.props.levelNumber.toString()];
+        var statements = [this.props.levelNumber.toString()];
         this.currentButtons.map((stmt) =>
             statements.push(stmt.props.children.replace(/-/ig,''))
             );

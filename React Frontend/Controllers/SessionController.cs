@@ -44,14 +44,14 @@ namespace React_Frontend.Controllers
                 return false;
             }
         }
-        [HttpGet("levelIsSolved")]
+        [HttpGet("levelIsSolved/{levelNumber}")]
         public bool IsSolved(string levelNumber)
         {
             int level = int.Parse(levelNumber);
             int sessionID = int.Parse(Request.Headers["Authorization"]);
             return Api.LevelIsSolved(sessionID, level);
         }
-        [HttpGet("retrieveLevel")]
+        [HttpGet("retrieveLevel/{levelNumber}")]
         public string GetLevel(string levelNumber)
         {
             int level = int.Parse(levelNumber);

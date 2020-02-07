@@ -13,7 +13,10 @@ export class Statistics extends Component {
 		dataTally: null,
 		dataCurrentCandidate: null
 	};
-
+	/// <summary>
+	/// Add authorization to every request in order to validate HR. -- This needs to be done after HR page is implemented!!!!!!
+	/// </summary>
+	/// <returns></returns>
 	componentDidMount() {
 		(async () => {
 			const responseTally = await fetch(
@@ -22,6 +25,7 @@ export class Statistics extends Component {
 			const responseCurrentCandidate = await fetch(
 				"api/statistics/shortestsolutions/" + this.props.id
 			);
+			console.log("Add authorization to every request in order to validate HR. -- This needs to be done after HR page is implemented!!!!!!");
 			this.setState({
 				dataTally: await responseTally.json(),
 				dataCurrentCandidate: await responseCurrentCandidate.json()

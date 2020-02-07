@@ -166,66 +166,11 @@ namespace BackEnd
             return talliesByLevel;
         }
 
-        /// <summary>
-        /// Gives the state of the given level and the recommended numbers of lines to use.
-        /// </summary>
-        /// <param name="level"></param>
-        /// <returns>JSON consisting of the state</returns>
-        [Obsolete("Use StartLevelSession instead")]
-        public static IState GetLevel(int level)
-        {
-            return new State(new Puzzle(Level.Get(level)));
-        }
-
-        /// <summary>
-        /// This method runs the given commands for the given level. Returns an arraylist of all the states.
-        /// </summary>
-        /// <param name="level">Current level.</param> 
-        /// <param name="input">String array of commands.</param>
-        /// <returns>Arraylist of all the states.</returns>
-        [Obsolete("Use SubmitSolution instead")]
-        public static List<IState> RunCommands(int level, Statement[] input)
-        {
-            Level currentLevel = Level.Get(level);
-            Puzzle puzzle = new Puzzle(currentLevel);
-            List<IState> states = RunListOfStatements(puzzle, input);
-            if (puzzle.Finished)
-            {
-                Console.WriteLine("User solved level " + level + " in " + CalculateScore(input) + " lines. Par is " + currentLevel.Par + ".");
-            }
-            return states;
-        }
-
-        [Obsolete]
-        public static List<IState> RunCommands(int level, string[] input)
-        {
-            Statement[] commands = ConvertStringToSingleCommands(input);
-            return RunCommands(level, commands);
-
-        }
-
         public static long GetEpochTime()
         {
             return DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
         }
 
-        /// <summary>
-        /// This method runs the given commands for the given level. Returns an arraylist of all the states.
-        /// </summary>
-        /// <param name="level">Current level.</param> 
-        /// <param name="input">String of commands seperated by ';'.</param>
-        /// <returns>Arraylist of all the states.</returns>
-        [Obsolete]
-        private static List<IState> RunListOfStatements(Puzzle puzzle, Statement[] input)
-        {
-            List<IState> states = new List<IState>();
-
-            foreach (Statement statement in input)
-            {
-                states.AddRange(statement.ExecuteCommand(puzzle));
-            }
-            return states;
-        }
         /// <summary>
         /// Converts a string into an array of commands.
         /// </summary>
@@ -242,15 +187,6 @@ namespace BackEnd
             return commands;
         }
 
-        private static int CalculateScore(Statement[] input)
-        {
-            int lines = 0;
-            foreach (Statement statement in input)
-            {
-                lines += statement.GetLines();
-            }
-            return lines;
-        }
 
         /// <summary>
         /// Used to insert some solutions of the levels to see the graphs
@@ -318,12 +254,13 @@ namespace BackEnd
             EndSession(idOther);
         }
         /// <summary>
-        /// Receives the commands from the frontend and returns a LevelSolution
+        /// Receives the commands from the frontend and returns a LevelSolution.!-- This method needs to be moved to a different class after draggables are implemented!!!!!!
         /// </summary>
         /// <param name="input">String array of commands.</param>
         /// <returns>LevelSolution.</returns>
         public static LevelSolution ConvertAndSubmit(int ID, int levelnr, string[] input)
         {
+            Console.WriteLine("This method needs to be moved to a different class after draggables are implemented!!!!!!");
             List<List<Statement>> totalStatements = new List<List<Statement>>();
             for (int i = 0; i < input.Length; i++)
             {

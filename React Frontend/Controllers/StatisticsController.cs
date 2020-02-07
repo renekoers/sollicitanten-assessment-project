@@ -13,8 +13,13 @@ namespace React_Frontend.Controllers
     public class StatisticsController : Controller
     {
         [HttpGet("tallylines/{id}")]
+        /// <summary>
+        /// This method needs to get the authorization of the request. This will be a token to validate HR!!!!!!!!
+        /// </summary>
+        /// <returns></returns>
         public Dictionary<string, Dictionary<string, int>> TallyEveryoneNumberOfLinesSolvedLevelsOf(int id)
         {
+            Console.WriteLine("This method needs to get the authorization of the request. This will be a token to validate HR!!!!!!!!");
             Dictionary<int, Dictionary<int, int>> totalTally = Api.TallyEveryoneNumberOfLinesSolvedLevelsOf(id);
             Dictionary<string, Dictionary<string, int>> stringTotalTally = new Dictionary<string, Dictionary<string, int>>();
             foreach (KeyValuePair<int, Dictionary<int, int>> pair in totalTally)
@@ -29,8 +34,13 @@ namespace React_Frontend.Controllers
             return stringTotalTally;
         }
         [HttpGet("shortestsolutions/{id}")]
+        /// <summary>
+        /// This method needs to get the authorization of the request. This will be a token to validate HR!!!!!!!!
+        /// </summary>
+        /// <returns></returns>
         public Dictionary<string, int> NumberOfLinesSolvedLevelsOf(int id)
         {
+            Console.WriteLine("This method needs to get the authorization of the request. This will be a token to validate HR!!!!!!!!");
             Dictionary<int, int> solutions = Api.NumberOfLinesSolvedLevelsOf(id);
             Dictionary<string, int> solutionsString = new Dictionary<string, int>();
             foreach (KeyValuePair<int, int> pair in solutions)
