@@ -68,7 +68,7 @@ class SylveonBlocks
 
     static workspaceToJson(workspace)
     {
-        if(workspace.getTopBlocks().length == 1)
+        if(workspace.getTopBlocks().length === 1)
             return "[" + Blockly.JavaScript.workspaceToCode(workspace) + "]";
         else
             return "null";

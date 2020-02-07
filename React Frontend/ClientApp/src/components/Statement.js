@@ -1,8 +1,7 @@
 import React, { Component } from "react";
 import ReactBlockly from "react-blockly";
 import Blockly from "blockly";
-import SylveonBlocks from "../blockly/SylveonBlocks"
-import "../css/blockly.css";
+import SylveonBlocks from "../blockly/SylveonBlocks";
 import "../css/statement.css";
 
 export class Statement extends Component {
@@ -41,90 +40,40 @@ export class Statement extends Component {
         }
     }
 
-  constructor(props) {
-      super(props);
-      SylveonBlocks.registerBlocks();
-      
-      this.currentButtons = [];
-      this.currentSingleStatements = ["MoveForward", "RotateLeft", "RotateRight", "PickUp","Drop"];
-      this.currentMultiStatements = ["--While--","--If--","--End--"];
-      this.currentConditionalStatements = ["TileCurrent","TileFront"];
-      this.currentChecks = ["Passable","Button","HasMovable"];
-      this.counter = 0
-      this.state = { 
-          currentButtons: this.currentButtons,
-          counter: 0,
-        };
-      this.addButton = this.addButton.bind(this);
-      this.deleteButton = this.deleteButton.bind(this);
-  }
-
-    addButton(e) {
-        this.currentButtons.push(<button key={this.counter} id={e.target.id + this.counter} onClick={this.deleteButton}>{e.target.id}</button>);
-        this.counter = this.counter + 1
+    constructor(props)
+    {
+        super(props);
+        SylveonBlocks.registerBlocks();
+        this.state = {
+            statementTree: null,
+        }
+    }
+    
+    onWorkplaceChanged(workspace) 
+    {
+        const statementTree = JSON.parse(SylveonBlocks.workspaceToJson(workspace));
         this.setState({
-            currentButtons: this.currentButtons,
-            counter: this.counter
+            statementTree: statementTree
         });
     }
 
-	deleteButton(e) {
-		this.currentButtons = this.currentButtons.filter(
-			el => el.props.id !== e.target.id
-		);
-		this.setState({
-			currentButtons: this.currentButtons
-		});
-	}
-
-    handleStatements = () => {
-        var statements = [localStorage.getItem("sessionID"), this.props.levelNumber.toString()];
-        this.currentButtons.map((stmt) =>
-            statements.push(stmt.props.children.replace(/-/ig,''))
-            );
-        this.props.onIncomingStatements(statements);
-    }
-    
-    onSomethingHappenMate(workspace) {
-        console.log(JSON.parse(SylveonBlocks.workspaceToJson(workspace)));
+    onRunButtonClicked()
+    {
+        this.props.onRunCode(this.state.statementTree);
     }
 
-  render() {
-    return (
-        <div>
-            <div style={{ width: "640px", height: "480px" }} id="blockly-app">
-                <ReactBlockly.BlocklyEditor 
-                    toolboxCategories={Statement.BLOCKLY_CATEGORIES}
-                    wrapperDivClassName="blockly-wrapper"
-                    workspaceDidChange={this.onSomethingHappenMate.bind(this)}
-                />
-            </div>
-            <div id="wrapper">
-                <div id="input">
-                    Single:
-                    {this.currentSingleStatements.map((stmt) =>
-                        <button key={stmt} id={stmt} onClick={this.addButton}>{stmt}</button>
-                    )} 
-                    Loop:
-                    {this.currentMultiStatements.map((stmt) =>
-                        <button key={stmt} id={stmt} onClick={this.addButton}>{stmt}</button>
-                    )} 
-                    Conditional:
-                    {this.currentConditionalStatements.map((stmt) =>
-                        <button key={stmt} id={stmt} onClick={this.addButton}>{stmt}</button>
-                    )} 
-                    Checks(?):
-                    {this.currentChecks.map((stmt) =>
-                        <button key={stmt} id={stmt} onClick={this.addButton}>{stmt}</button>
-                    )} 
+    render() {
+        return (
+            <div id="code-section">
+                <div id="blockly">
+                    <ReactBlockly.BlocklyEditor 
+                        toolboxCategories={Statement.BLOCKLY_CATEGORIES}
+                        wrapperDivClassName="blockly-wrapper"
+                        workspaceDidChange={this.onWorkplaceChanged.bind(this)}
+                    />
                 </div>
-                <div id="output">
-                    {this.currentButtons}
-                </div>
-                <button style={{ backgroundColor: 'Pink' }} onClick={this.handleStatements}> Run puzzle! </button>
+                <button id="run-button" onClick={this.onRunButtonClicked.bind(this)}>OwO</button>
             </div>
-            />
-      </div>
-    );
-  }
+        );
+    }
 }

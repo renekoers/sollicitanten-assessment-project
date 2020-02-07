@@ -1,6 +1,12 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using BackEnd;
 using Microsoft.AspNetCore.Mvc;
+using System.Text.Json;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 
 namespace React_Frontend.Controllers
 {
@@ -8,19 +14,13 @@ namespace React_Frontend.Controllers
     [Route("api/statement")]
     public class StatementController : Controller
     {
-        // Post the found statements to the backend "api/statement/deliver"
-        [HttpPost("deliver")]
-        public string PostStatements([FromBody]string[] input)
+        [HttpPost("{levelId}")]
+        public string PostStatements(int levelId, [FromBody] JsonElement statementTreeJson)
         {
-            int sessionID = Int32.Parse(input[0]);
-            int level = Int32.Parse(input[1]);
-            string[] statements = new string[input.Length - 2];
-            for (int i = 0; i < statements.Length; i++)
-            {
-                statements[i] = input[i+2];
-            }
-            LevelSolution lvl = Api.ConvertAndSubmit(sessionID, level, statements);
-            return JSON.Serialize(lvl);
+            int sessionID = int.Parse(Request.Headers["Authorization"]);
+            Console.WriteLine(statementTreeJson);
+            IEnumerable<Statement> statements = Api.ParseStatementTreeJson(statementTreeJson);
+            return JSON.Serialize(Api.SubmitSolution(sessionID, levelId, statements.ToArray()));
         }
     }
 }
