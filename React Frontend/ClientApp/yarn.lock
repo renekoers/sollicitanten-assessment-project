@@ -2100,7 +2100,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"acorn-globals@npm:^4.1.0, acorn-globals@npm:^4.3.0":
+"acorn-globals@npm:^4.1.0, acorn-globals@npm:^4.3.0, acorn-globals@npm:^4.3.2":
   version: 4.3.4
   resolution: "acorn-globals@npm:4.3.4"
   dependencies:
@@ -2891,6 +2891,15 @@ __metadata:
   dependencies:
     file-uri-to-path: 1.0.0
   checksum: 6788fff2dce7accaaa491af181385aa303a77751b1b7880b28dfdc22f6b6774da86b743d6f254da88202ead1673c82d920bf22dd446670c7355cb9712e738512
+  languageName: node
+  linkType: hard
+
+"blockly@npm:^3.20191014.4":
+  version: 3.20200123.1
+  resolution: "blockly@npm:3.20200123.1"
+  dependencies:
+    jsdom: ^15.1.1
+  checksum: 8e142663ba84f6d6d53a0d747deea4e4d7a3906479fbb125266c21da72c79c0307c825a4fdcc9de48f424b1b81df7e99aa18da9d6941d8decc71001bd6ea2a47
   languageName: node
   linkType: hard
 
@@ -4262,10 +4271,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"cssom@npm:0.3.x, cssom@npm:>= 0.3.2 < 0.4.0, cssom@npm:^0.3.4":
+"cssom@npm:0.3.x, cssom@npm:>= 0.3.2 < 0.4.0, cssom@npm:^0.3.4, cssom@npm:~0.3.6":
   version: 0.3.8
   resolution: "cssom@npm:0.3.8"
   checksum: 6674ebcaba29ddf789b6f7e8a44b6ed6ddf0e60425fee3549213eac6b3d2d217ba0e7267f25f0212dae36028e106d65d18c70be0969d0f470b6e15689ac2adde
+  languageName: node
+  linkType: hard
+
+"cssom@npm:^0.4.1":
+  version: 0.4.4
+  resolution: "cssom@npm:0.4.4"
+  checksum: 4fe2f00b157761f93705919a1258345839971203a06d1d4fdde29a6adca81912dd35495bad06cc6d2c30ac36c0520c449ceded6c8cedcba47cf41422bec4c727
   languageName: node
   linkType: hard
 
@@ -4275,6 +4291,15 @@ __metadata:
   dependencies:
     cssom: 0.3.x
   checksum: 7ee3b6ee3ce71c8b00c308fa3fbb7a5d63fb2942288858f03e9bd437b54d92191216596a41343dba1099f584b09a0dbd1c85d78bfccfbad04650ee25071b8672
+  languageName: node
+  linkType: hard
+
+"cssstyle@npm:^2.0.0":
+  version: 2.2.0
+  resolution: "cssstyle@npm:2.2.0"
+  dependencies:
+    cssom: ~0.3.6
+  checksum: 924cff2159735979ab9e454b3cb6dca0b8a8ec210ae31c221ef658e0d5500ff4968547393baa83e05d7984d499a6277845dd5a0ee7e816e0afc0e4b4ae7250b1
   languageName: node
   linkType: hard
 
@@ -5064,6 +5089,25 @@ __metadata:
     escodegen: ./bin/escodegen.js
     esgenerate: ./bin/esgenerate.js
   checksum: 13ac58d1b090d43bec88661dbe9078412f24d4136cfc4c72661056344ef0b789a4c14be16696cb7506b76d779c0c7c3c4c42be5e7294d5bdcc8db1a8d785bc7c
+  languageName: node
+  linkType: hard
+
+"escodegen@npm:^1.11.1":
+  version: 1.14.1
+  resolution: "escodegen@npm:1.14.1"
+  dependencies:
+    esprima: ^4.0.1
+    estraverse: ^4.2.0
+    esutils: ^2.0.2
+    optionator: ^0.8.1
+    source-map: ~0.6.1
+  dependenciesMeta:
+    source-map:
+      optional: true
+  bin:
+    escodegen: ./bin/escodegen.js
+    esgenerate: ./bin/esgenerate.js
+  checksum: 8c0416d440d98c25b80eab353eb4776906d41f7eb2a315070000c8c3a55517027420dd48ffddaea49fbae13581de9f736094320c3a170d5b8c4171b94a8e24b3
   languageName: node
   linkType: hard
 
@@ -6718,6 +6762,13 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
+"immutable@npm:^3.8.2":
+  version: 3.8.2
+  resolution: "immutable@npm:3.8.2"
+  checksum: 08f5ef4db444e18883f118a2d28f72e0ea60700ba08aae1fe1f2b2b2e6c791881cba3f9a5d291a5b49c69e22170497d26b393e3a7e1d29413260ea4ca885f31f
+  languageName: node
+  linkType: hard
+
 "import-cwd@npm:^2.0.0":
   version: 2.1.0
   resolution: "import-cwd@npm:2.1.0"
@@ -7964,6 +8015,45 @@ fsevents@^1.2.7:
     ws: ^6.1.2
     xml-name-validator: ^3.0.0
   checksum: ee7c1e98d9d53ced75b1d412e2e7911f3e4616b53f1b23776bb62f1ace7552cbeb36850be8d688813941371cd1dcc6932855237eb96826d37967d7afe3e3d13e
+  languageName: node
+  linkType: hard
+
+"jsdom@npm:^15.1.1":
+  version: 15.2.1
+  resolution: "jsdom@npm:15.2.1"
+  dependencies:
+    abab: ^2.0.0
+    acorn: ^7.1.0
+    acorn-globals: ^4.3.2
+    array-equal: ^1.0.0
+    cssom: ^0.4.1
+    cssstyle: ^2.0.0
+    data-urls: ^1.1.0
+    domexception: ^1.0.1
+    escodegen: ^1.11.1
+    html-encoding-sniffer: ^1.0.2
+    nwsapi: ^2.2.0
+    parse5: 5.1.0
+    pn: ^1.1.0
+    request: ^2.88.0
+    request-promise-native: ^1.0.7
+    saxes: ^3.1.9
+    symbol-tree: ^3.2.2
+    tough-cookie: ^3.0.1
+    w3c-hr-time: ^1.0.1
+    w3c-xmlserializer: ^1.1.2
+    webidl-conversions: ^4.0.2
+    whatwg-encoding: ^1.0.5
+    whatwg-mimetype: ^2.3.0
+    whatwg-url: ^7.0.0
+    ws: ^7.0.0
+    xml-name-validator: ^3.0.0
+  peerDependencies:
+    canvas: ^2.5.0
+  peerDependenciesMeta:
+    canvas:
+      optional: true
+  checksum: dc3419f0f3529e87f84e20587c46d34ce2e04373b272a9478f980cc51983b4e7e1a64b5d2572df41e7ad0ac21450736e6651609c3909a342d6817b3d6618b9b7
   languageName: node
   linkType: hard
 
@@ -9248,7 +9338,7 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"nwsapi@npm:^2.0.7, nwsapi@npm:^2.1.3":
+"nwsapi@npm:^2.0.7, nwsapi@npm:^2.1.3, nwsapi@npm:^2.2.0":
   version: 2.2.0
   resolution: "nwsapi@npm:2.2.0"
   checksum: d5d9810dcaf142a1831cf53e0dd63bfb6a8f082ce5447dd375fce833134f0726269f5459d37f3375f24a8137f3a487aab313996235d5ae6a04c6690c341d44a7
@@ -11199,6 +11289,20 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
+"react-blockly@npm:^5.0.0":
+  version: 5.0.0
+  resolution: "react-blockly@npm:5.0.0"
+  dependencies:
+    blockly: ^3.20191014.4
+    immutable: ^3.8.2
+    prop-types: ^15.7.2
+    react-immutable-proptypes: ^2.1.0
+  peerDependencies:
+    react: ^15.0 || ^16.0
+  checksum: 808b9b8c8a0c2269f919c71f8370bdfbc2a95c599e5ae1fb792d6fcd615dd5f3fc048ab1b4882ebb709ff2eaabe352cdbec6c6b2028328ca8848bafab02a94a3
+  languageName: node
+  linkType: hard
+
 "react-bootstrap@npm:^1.0.0-beta.16":
   version: 1.0.0-beta.16
   resolution: "react-bootstrap@npm:1.0.0-beta.16"
@@ -11275,6 +11379,15 @@ fsevents@^1.2.7:
   version: 6.0.5
   resolution: "react-error-overlay@npm:6.0.5"
   checksum: c8f9f39bbe5448db2b57d2936702417f273f9588eb282ca171d56068259c9beef79154ea28ad0a1fe3e3dd596bcf8d2d3c9eea843e58498801c83401cabb388d
+  languageName: node
+  linkType: hard
+
+"react-immutable-proptypes@npm:^2.1.0":
+  version: 2.1.0
+  resolution: "react-immutable-proptypes@npm:2.1.0"
+  peerDependencies:
+    immutable: ">=3.6.2"
+  checksum: 3c643650318d1082b1bf922be1782c82f7a346db3007b47850fd7f37068945a7bcb5de0e5a92815fcb0e9a905b2c4a6c391093803b1e2a8c21001ceb2ae7dad9
   languageName: node
   linkType: hard
 
@@ -11531,6 +11644,7 @@ fsevents@^1.2.7:
     merge: ^1.2.1
     oidc-client: ^1.10.1
     react: ^16.12.0
+    react-blockly: ^5.0.0
     react-bootstrap: ^1.0.0-beta.16
     react-dom: ^16.12.0
     react-router-bootstrap: ^0.24.4
@@ -11883,7 +11997,7 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"request-promise-native@npm:^1.0.5":
+"request-promise-native@npm:^1.0.5, request-promise-native@npm:^1.0.7":
   version: 1.0.8
   resolution: "request-promise-native@npm:1.0.8"
   dependencies:
@@ -13421,6 +13535,17 @@ resolve@1.1.7:
   languageName: node
   linkType: hard
 
+"tough-cookie@npm:^3.0.1":
+  version: 3.0.1
+  resolution: "tough-cookie@npm:3.0.1"
+  dependencies:
+    ip-regex: ^2.1.0
+    psl: ^1.1.28
+    punycode: ^2.1.1
+  checksum: d52fe9e7df8571fa0b603c94d69cc1d57b91bac72ff4bdb9c1453d30eb6a4876be5354a75a8de3d235025a0665873524345629cec411965274fe960a06447bd9
+  languageName: node
+  linkType: hard
+
 "tough-cookie@npm:~2.4.3":
   version: 2.4.3
   resolution: "tough-cookie@npm:2.4.3"
@@ -14418,6 +14543,21 @@ typescript@^3.7.5:
   dependencies:
     async-limiter: ~1.0.0
   checksum: 731ad2205472faf91c33e09240cf36f0941e7e627c1adb3287d00810e1b308cc346526eeca6ef2f60f12be2313c3a76582bd1ff4c12d6aec6968457273741e6f
+  languageName: node
+  linkType: hard
+
+"ws@npm:^7.0.0":
+  version: 7.2.1
+  resolution: "ws@npm:7.2.1"
+  peerDependencies:
+    bufferutil: ^4.0.1
+    utf-8-validate: ^5.0.2
+  peerDependenciesMeta:
+    bufferutil:
+      optional: true
+    utf-8-validate:
+      optional: true
+  checksum: 78bd611c32a4de962cff870fdd686ee9e6de6035054547c2c0c41933bd7a470ea2604dac8b96b192c5b7db7f08acdb48084a32e042b9367b505241bcb136c006
   languageName: node
   linkType: hard
 
