@@ -40,18 +40,3 @@ main{
   transform: translateY(3px);
   box-shadow: 0 1px #999;
 }
-
-/* The Close Button */
-.close {
-  color: white;
-  float: right;
-  font-size: 28px;
-  font-weight: bold;
-}
-
-.close:hover,
-.close:focus {
-  color: #000;
-  text-decoration: none;
-  cursor: pointer;
-}
