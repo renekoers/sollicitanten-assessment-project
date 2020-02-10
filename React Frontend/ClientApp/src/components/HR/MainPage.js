@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { Jumbotron, Button, Container } from "reactstrap";
 import { Login } from "./Login";
+import { AddCandidate } from "./AddCandidate";
 
 export function MainPage() {
 	const [token, setToken] = useState(localStorage.getItem("token"));
@@ -25,16 +25,8 @@ export function MainPage() {
         setToken(newToken)
     }
    if(isValid){
-    	console.log(token);
 		return (
-			<div>
-				<Jumbotron fluid>
-					<Container fluid>
-						<h1 className="display-3">Statistieken</h1>
-						<p>Jeej token!!!!</p>
-					</Container>
-				</Jumbotron>
-			</div>
+			<AddCandidate/>
 		);
    } else {
 		return (

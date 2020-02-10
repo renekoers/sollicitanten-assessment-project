@@ -25,6 +25,9 @@ namespace React_Frontend.Controllers
             string username = value.ToString();
             credentials.TryGetProperty("password", out value);
             string password = value.ToString();
+            if(username == null || password == null){
+                return BadRequest();
+            }
             string token = JWT.CreateToken(username,password);
             if(token != null){
                 return Ok(JSON.Serialize("Bearer " + token));
@@ -35,6 +38,13 @@ namespace React_Frontend.Controllers
         [HttpGet("validate"), Authorize]
         public ActionResult validateToken()
         {
+            return Ok();
+        }
+        [HttpPost("candidate"), Authorize]
+        public ActionResult addCandidate([FromBody] string name)
+        {
+            //System.Console.WriteLine(name);
+            Api.AddCandidate(name);
             return Ok();
         }
 	}

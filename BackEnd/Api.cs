@@ -12,13 +12,26 @@ namespace BackEnd
         {
             return Repository.ValidateUser(username, hashedPass);
         }
+        public static void AddCandidate(string name)
+        {
+            Repository.AddCandidate(name);
+        }
+        public static Candidate GetCandidate()
+        {
+            return Repository.GetCandidate();
+        }
         /// <summary>
-        /// Start a new session for a new candidate
+        /// Start a new session for a new candidate.!-- This method is used in mockdata and tests!!!!
         /// </summary>
         /// <returns>The ID of the newly created candidate used to access their session</returns>
+        [Obsolete("Use StartSession(int ID) instead")]
         public static int StartSession()
         {
             return Repository.CreateSession();
+        }
+        public static bool StartSession(int ID)
+        {
+            return Repository.StartSession(ID);
         }
 
         /// <summary>

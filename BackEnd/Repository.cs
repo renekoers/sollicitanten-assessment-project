@@ -11,14 +11,23 @@ namespace BackEnd
     {
         private Repository() { }
         private static int _currentID = 0;
+        private static readonly Dictionary<int, GameSession> GameSessions = new Dictionary<int, GameSession>();
+        private static readonly Dictionary<int, string> Candidates = new Dictionary<int, string>();
+        private static readonly HashSet<int> UnstartedSessions = new HashSet<int>();
 
         /// <summary>
         /// This method should validate the credentials of HR. This will later be implemented!!!!!!
         /// </summary>
         /// <returns></returns>
-        public static bool ValidateUser(string username, string hashedPassword)
+        internal static bool ValidateUser(string username, string hashedPassword)
         {
             return true;
+        }
+        internal static void AddCandidate(string name)
+        {
+            int ID = CreateID();
+            Candidates.Add(ID, name);
+            UnstartedSessions.Add(ID);
         }
 
         /// <summary>
@@ -30,14 +39,28 @@ namespace BackEnd
             Console.WriteLine("This method should get a session of a candidate in a dictionary.!-- -- This needs to be done after HR page is implemented!!!!!!");
             return _currentID++;
         }
-
-        private static readonly Dictionary<int, GameSession> GameSessions = new Dictionary<int, GameSession>();
-
+        internal static Candidate GetCandidate()
+        {
+            int ID = UnstartedSessions.First();
+            Candidates.TryGetValue(ID, out string name);
+            return name != null ? new Candidate(name,ID) : null;
+        }
+        
+        [Obsolete("Use StartSession(int ID) instead!")]
         public static int CreateSession()
         {
             int ID = CreateID();
             GameSessions.Add(ID, new GameSession());
             return ID;
+        }
+        public static bool StartSession(int ID)
+        {
+            if(UnstartedSessions.Remove(ID)){
+                GameSessions.Add(ID, new GameSession());
+                return true;
+            } else {
+                return false;
+            }
         }
 
         public static GameSession GetSession(int ID)
