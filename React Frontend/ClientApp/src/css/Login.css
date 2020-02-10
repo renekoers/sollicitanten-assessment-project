@@ -1,0 +1,57 @@
+.singleBlock {
+  width: 35%;
+  margin-left: auto;
+  margin-right: auto;
+  position: float;
+  height: auto;
+  background-color:white;
+}
+main{
+  display:block;
+}
+.login {
+  text-align: center;
+  background-color: blue;
+  color: white;
+  font-size: 2rem;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+#password {
+  margin-left:25px;
+}
+
+/* Button styling */
+#loginbutton{
+  color: white;
+  background-color: #4a7ce9;
+  padding: 6px 18px;
+  border-radius: 3px;
+  border: none;
+  box-shadow: 0 4px #999;
+  margin:6px 2px;
+  cursor: pointer ;
+}
+#loginbutton:hover{
+  background-color: #2967ee;
+}
+#loginbutton:active{
+  transform: translateY(3px);
+  box-shadow: 0 1px #999;
+}
+
+/* The Close Button */
+.close {
+  color: white;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: #000;
+  text-decoration: none;
+  cursor: pointer;
+}

@@ -3,7 +3,8 @@ using System.IdentityModel.Tokens.Jwt;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json.Linq;
 using JSonWebToken;
-using Microsoft.AspNetCore.Authorization;  
+using Microsoft.AspNetCore.Authorization;
+using System.Text.Json;  
 
 namespace React_Frontend.Controllers
 { 
@@ -17,13 +18,12 @@ namespace React_Frontend.Controllers
         /// This method needs to get the authorization of the request. This will be a token to validate HR!!!!!!!!
         /// </summary>
         /// <returns></returns>
-		public ActionResult<string> Login([FromBody] string credentials)
+		public ActionResult<string> Login([FromBody] JsonElement credentials)
 		{
-            var creds = JObject.Parse(credentials);
-            JToken value = null;
-            creds.TryGetValue("username", out value);
+            JsonElement value;
+            credentials.TryGetProperty("username", out value);
             string username = value.ToString();
-            creds.TryGetValue("password", out value);
+            credentials.TryGetProperty("password", out value);
             string password = value.ToString();
             string token = JWT.CreateToken(username,password);
             if(token != null){
@@ -32,10 +32,10 @@ namespace React_Frontend.Controllers
                 return Unauthorized();
             } 
 		}
-        [HttpGet("test"), Authorize]
-        public ActionResult<string> getNumber()
+        [HttpGet("validate"), Authorize]
+        public ActionResult validateToken()
         {
-            return Ok(JSON.Serialize("Five"));
+            return Ok();
         }
 	}
 }

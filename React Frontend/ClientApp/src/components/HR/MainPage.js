@@ -1,53 +1,44 @@
 import React, { useState, useEffect } from "react";
 import { Jumbotron, Button, Container } from "reactstrap";
+import { Login } from "./Login";
 
 export function MainPage() {
-    const [token, setToken] = useState(null);
-    useEffect(() => {
-        if(localStorage.getItem("token", token) == null){
-            fetch("api/credentials/login", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify('{"username": "HR", "password": "pass"}')
-              })
-              .then(response => response.json())
-              .then(token => {localStorage.setItem("token", token);
-                setToken(token)});
-        }
-    },[]);
-   useEffect(() => {
-    if(localStorage.getItem("token", token) != null){
-        fetch("api/credentials/test", {
-            method: "GET",
-			headers: {
-				"Content-Type": "application/json",
-				Authorization: localStorage.getItem("token", token)
-			}
-        })
-        .then(response => response.json())
-        .then(data => console.log(data))
-    } else {
-        fetch("api/credentials/test", {
-            method: "GET",
-			headers: {
-				"Content-Type": "application/json",
-				Authorization: localStorage.getItem("token", token)
-			}
-        })
-        .then(response => response.json())
-        .then(data => console.log(data))
+	const [token, setToken] = useState(localStorage.getItem("token"));
+	const [isValid, setIsValid] = useState(false);
+	useEffect(() => {
+		if(token !== null){
+			fetch("api/credentials/validate", {
+				method: "GET",
+				headers: {
+					"Content-Type": "application/json",
+					Authorization: token
+				}
+			})
+			.then(response => {
+				setIsValid((response.status === 200))
+			})
+		}
+	},[token]);
+	
+    function addToken(newToken){
+        localStorage.setItem("token",newToken);
+        setToken(newToken)
     }
-   },[])
-	return (
-		<div>
-			<Jumbotron fluid>
-				<Container fluid>
-					<h1 className="display-3">Statistieken</h1>
-					<p>Je bent klaar!</p>
-				</Container>
-			</Jumbotron>
-		</div>
-	);
+   if(isValid){
+    	console.log(token);
+		return (
+			<div>
+				<Jumbotron fluid>
+					<Container fluid>
+						<h1 className="display-3">Statistieken</h1>
+						<p>Jeej token!!!!</p>
+					</Container>
+				</Jumbotron>
+			</div>
+		);
+   } else {
+		return (
+			<Login onLogin={addToken}/>
+		);
+	}
 };
