@@ -139,7 +139,7 @@ namespace BackEnd
             return new Tuple<ConditionParameter, ConditionValue, bool>(
                 ParseConditionParameter(targetObjectString),
                 ParseConditionValue(targetStateString),
-                shouldInvert
+                !shouldInvert
             );
         }
 
