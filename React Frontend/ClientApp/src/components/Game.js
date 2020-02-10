@@ -5,12 +5,11 @@ import LevelGrid from "./game-grid/LevelGrid";
 import { SkipButton } from "./SkipButton";
 
 export class Game extends Component {
-    _currentStateTimeoutID = null;
+	_currentStateTimeoutID = null;
 
-    static get STATE_CHANGE_ANIMATION_INTERVAL_TIME() //Closest thing we have to a constant class member in JS.
-    {
-        return 1000;
-    }
+	static get STATE_CHANGE_ANIMATION_INTERVAL_TIME() { //Closest thing we have to a constant class member in JS.
+		return 1000;
+	}
 	constructor(props) {
 		super(props);
 		this.state = {
@@ -24,11 +23,11 @@ export class Game extends Component {
 
 	async componentDidMount() {
 		this.getTotalAmountLevels();
-        if(this.props.match.params.level){
-            this.getLevel(this.props.match.params.level);
-        } else {
-            this.getLevel(1);
-        }
+		if (this.props.match.params.level) {
+			this.getLevel(this.props.match.params.level);
+		} else {
+			this.getLevel(1);
+		}
 	}
 
 	async getTotalAmountLevels() {
@@ -47,10 +46,10 @@ export class Game extends Component {
 				Authorization: localStorage.getItem("sessionID")
 			}
 		})
-		.then(response => response.json())
-		.then(data => {
-			this.setState({ level: data, levelNumber: data.puzzleLevel});
-		});
+			.then(response => response.json())
+			.then(data => {
+				this.setState({ level: data, levelNumber: data.puzzleLevel });
+			});
 		await fetch("api/session/levelIsSolved?levelNumber=" + level, {
 			method: "GET",
 			headers: {
@@ -58,10 +57,10 @@ export class Game extends Component {
 				Authorization: localStorage.getItem("sessionID")
 			}
 		})
-		.then(response => response.json())
-		.then(data => {
-			this.setState({ solved: data });
-		});
+			.then(response => response.json())
+			.then(data => {
+				this.setState({ solved: data });
+			});
 	}
 	async pauseLevel() {
 		await fetch("api/session/pauseLevel", {
@@ -85,55 +84,59 @@ export class Game extends Component {
 			this.getLevel(this.state.level.puzzleLevel - 1);
 		}
 	}
-	
-	async onReceiveStatementTree(statementTree)
-	{
+
+	async onReceiveStatementTree(statementTree) {
 		const sessionId = localStorage.getItem("sessionID");
-		const levelSolutionResponse = await fetch("api/statement/" + this.state.levelNumber, {
-			method: "POST",
-			headers: {
-				"content-type": "application/json",
-				Authorization: sessionId,
-			},
-			body: JSON.stringify(statementTree),
-		});
+		const levelSolutionResponse = await fetch(
+			"api/statement/" + this.state.levelNumber,
+			{
+				method: "POST",
+				headers: {
+					"content-type": "application/json",
+					Authorization: sessionId
+				},
+				body: JSON.stringify(statementTree)
+			}
+		);
 		console.log(levelSolutionResponse);
 		const levelSolution = await levelSolutionResponse.json();
 		console.log(levelSolution);
 		this.updateGridFromLevelSolution(levelSolution);
 	}
 
-    /**
-     * @param {*} levelSolution The LevelSolution as returned by the API (See: BackEnd.Api.SubmitSolution(int, int, Statement[]))
-     */
-    updateGridFromLevelSolution(levelSolution)
-    {
-        if(this._currentStateTimeoutID !== null)
-            clearTimeout(this._currentStateTimeoutID);
-        this._updateGridFromLevelSolutionAtStateIndex(levelSolution, 0);
-    }
+	/**
+	 * @param {*} levelSolution The LevelSolution as returned by the API (See: BackEnd.Api.SubmitSolution(int, int, Statement[]))
+	 */
+	updateGridFromLevelSolution(levelSolution) {
+		console.log(levelSolution);
+		if (this._currentStateTimeoutID !== null)
+			clearTimeout(this._currentStateTimeoutID);
+		this._updateGridFromLevelSolutionAtStateIndex(levelSolution, 0);
+	}
 
-    _updateGridFromLevelSolutionAtStateIndex(levelSolution, currentStateIndex)
-    {
-        const isFinalState = (currentStateIndex === (levelSolution.states.length - 1));
-        const solved = isFinalState && levelSolution.solved;
-        const currentState = levelSolution.states[currentStateIndex];
+	_updateGridFromLevelSolutionAtStateIndex(levelSolution, currentStateIndex) {
+		const isFinalState =
+			currentStateIndex === levelSolution.states.length - 1;
+		const solved = isFinalState && levelSolution.solved;
+		const currentState = levelSolution.states[currentStateIndex];
 
-        this.setState({
-            solved: solved,
-            level: currentState,
-        });
+		this.setState({
+			solved: solved,
+			level: currentState
+		});
 
-        if(!isFinalState)
-        {
-            this._currentStateTimeoutID = setTimeout(
-                () => this._updateGridFromLevelSolutionAtStateIndex(levelSolution, currentStateIndex + 1), 
-                Game.STATE_CHANGE_ANIMATION_INTERVAL_TIME
-            );
-        }
-        else // Set to null to indicate the sequence has been completed (and avoid potential conflicts with other timeouts).
-            this._currentStateTimeoutID = null;
-    }
+		if (!isFinalState) {
+			this._currentStateTimeoutID = setTimeout(
+				() =>
+					this._updateGridFromLevelSolutionAtStateIndex(
+						levelSolution,
+						currentStateIndex + 1
+					),
+				Game.STATE_CHANGE_ANIMATION_INTERVAL_TIME
+			);
+		} // Set to null to indicate the sequence has been completed (and avoid potential conflicts with other timeouts).
+		else this._currentStateTimeoutID = null;
+	}
 
 	render() {
 		let levelGrid;
@@ -150,14 +153,25 @@ export class Game extends Component {
 				<Header />
 				<div>
 					<div style={{ width: "50%", float: "left" }}>
-						<Statement levelNumber = {this.state.levelNumber} onRunCode={this.onReceiveStatementTree.bind(this)} />
+						<Statement
+							levelNumber={this.state.levelNumber}
+							onRunCode={this.onReceiveStatementTree.bind(this)}
+						/>
 					</div>
 					<div style={{ width: "50%", float: "right" }}>
-                        {levelGrid}
-                        <SkipButton onClickPrevious={this.previousLevel.bind(this)} onClickNext={this.nextLevel.bind(this)} disabledPrevious={this.state.levelNumber===1} lastLevel={this.state.levelNumber===this.state.totalLevels}/>
-                    </div>
-                </div>
-            </div>
-        );
-    }
+						{levelGrid}
+						<SkipButton
+							onClickPrevious={this.previousLevel.bind(this)}
+							onClickNext={this.nextLevel.bind(this)}
+							disabledPrevious={this.state.levelNumber === 1}
+							lastLevel={
+								this.state.levelNumber ===
+								this.state.totalLevels
+							}
+						/>
+					</div>
+				</div>
+			</div>
+		);
+	}
 }
