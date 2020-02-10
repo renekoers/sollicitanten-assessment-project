@@ -19,11 +19,22 @@ export class Statistics extends Component {
 	/// <returns></returns>
 	componentDidMount() {
 		(async () => {
-			const responseTally = await fetch(
-				"api/statistics/tallylines/" + this.props.id
-			);
+			const responseTally = await fetch("api/statistics/tallylines/", {
+				method: "GET",
+				headers: {
+					"Content-Type": "application/json",
+					Authorization: this.props.id
+				}
+			});
 			const responseCurrentCandidate = await fetch(
-				"api/statistics/shortestsolutions/" + this.props.id
+				"api/statistics/shortestsolutions/",
+				{
+					method: "GET",
+					headers: {
+						"Content-Type": "application/json",
+						Authorization: this.props.id
+					}
+				}
 			);
 			console.log("Add authorization to every request in order to validate HR. -- This needs to be done after HR page is implemented!!!!!!");
 			this.setState({
