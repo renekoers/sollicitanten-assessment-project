@@ -20,6 +20,14 @@ namespace BackEnd
         {
             return Repository.GetCandidate();
         }
+        public static Candidate GetCandidate(int ID)
+        {
+            return Repository.GetCandidate(ID);
+        }
+        public static bool CheckSessionID(int ID)
+        {
+            return Repository.CheckSessionID(ID);
+        }
         /// <summary>
         /// Start a new session for a new candidate.!-- This method is used in mockdata and tests!!!!
         /// </summary>
@@ -42,6 +50,14 @@ namespace BackEnd
         public static GameSession GetSession(int ID)
         {
             return Repository.GetSession(ID);
+        }
+        public static bool IsStarted(int ID)
+        {
+            GameSession gameSession = Api.GetSession(ID);
+            if(gameSession==null){
+                return false;
+            }
+            return gameSession.InProgress;
         }
 
         /// <summary>

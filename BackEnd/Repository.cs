@@ -41,9 +41,22 @@ namespace BackEnd
         }
         internal static Candidate GetCandidate()
         {
+            if(UnstartedSessions.Count == 0){
+                return null;
+            }
             int ID = UnstartedSessions.First();
             Candidates.TryGetValue(ID, out string name);
             return name != null ? new Candidate(name,ID) : null;
+        }
+        internal static Candidate GetCandidate(int ID)
+        {
+            Candidates.TryGetValue(ID, out string name);
+            return name != null ? new Candidate(name,ID) : null;
+        }
+        internal static bool CheckSessionID(int ID)
+        {
+            Candidates.TryGetValue(ID, out string name);
+            return name != null ? UnstartedSessions.Contains(ID) : false;
         }
         
         [Obsolete("Use StartSession(int ID) instead!")]

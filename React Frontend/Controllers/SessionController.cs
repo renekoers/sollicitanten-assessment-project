@@ -8,11 +8,39 @@ namespace React_Frontend.Controllers
     [Route("api/session")]
     public class SessionController : Controller
     {
-        // GET: api/session/startsession
-        [HttpGet("startsession")]
-        public int StartSession()
+        [HttpGet("candidate")]
+        public ActionResult<string> getCandidate()
         {
-            return Api.StartSession();
+            Candidate candidate = Api.GetCandidate();
+            if(candidate==null){
+                return NotFound();
+            } else {
+                return JSON.Serialize(candidate);
+            }
+
+        }
+        [HttpGet("candidate/{id}")]
+        public ActionResult<string> getCandidateName(string id)
+        {
+            int sessionID = int.Parse(id);
+            Candidate candidate = Api.GetCandidate(sessionID);
+            if(candidate==null){
+                return NotFound();
+            } else {
+                return JSON.Serialize(candidate);
+            }
+
+        }
+        [HttpGet("startsession")]
+        public ActionResult StartSession()
+        {
+            int sessionID = int.Parse(Request.Headers["Authorization"]);
+            if(Api.StartSession(sessionID))
+            {
+                return Ok();
+            } else {
+                return BadRequest();
+            }
         }
 
         /// <summary>
@@ -31,18 +59,17 @@ namespace React_Frontend.Controllers
             return Math.Max(0, 1200000L - session.CurrentDuration); //20 minutes in milliseconds
         }
 
-        [HttpGet("sessionValidation")]
-        public Boolean IsSessionValid()
+        [HttpGet("sessionIDValidation")]
+        public bool IsSessionValid()
         {
             int sessionID = int.Parse(Request.Headers["Authorization"]);
-            if (Api.GetSession(sessionID) != null)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+            return Api.CheckSessionID(sessionID);
+        }
+        [HttpGet("isStarted")]
+        public bool isStarted()
+        {
+            int sessionID = int.Parse(Request.Headers["Authorization"]);
+            return Api.IsStarted(sessionID);
         }
         [HttpGet("levelIsSolved/{levelNumber}")]
         public bool IsSolved(string levelNumber)
@@ -77,6 +104,14 @@ namespace React_Frontend.Controllers
         public int GetTotalAmountLevels()
         {
             return Api.GetTotalLevelAmount();
+        }
+        [HttpPost("endSession")]
+        public StatusCodeResult EndSession()
+        {
+            int sessionID = int.Parse(Request.Headers["Authorization"]);
+            Api.EndSession(sessionID);
+            return Ok();
+
         }
         [HttpGet("getOverview")]
         public string GetOverview()

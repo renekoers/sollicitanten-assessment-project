@@ -18,7 +18,13 @@ namespace UnitTest
         {
             Api.AddCandidate("Test kandidaat");
             Candidate candidate = Api.GetCandidate();
+            Api.StartSession(candidate.ID);
             Assert.AreEqual("Test kandidaat", candidate.Name);
+        }
+        [TestMethod]
+        public void GetCandidateWithoutAddingTest()
+        {
+            Assert.IsNull(Api.GetCandidate());
         }
         [TestMethod]
         public void StartSessionNoCandidateTest()
