@@ -8,6 +8,10 @@ namespace BackEnd
 {
     public class Api
     {
+        public static bool ValidateUser(string username, string hashedPass)
+        {
+            return Repository.ValidateUser(username, hashedPass);
+        }
         /// <summary>
         /// Start a new session for a new candidate
         /// </summary>

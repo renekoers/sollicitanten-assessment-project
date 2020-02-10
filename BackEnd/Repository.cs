@@ -11,6 +11,16 @@ namespace BackEnd
     {
         private Repository() { }
         private static int _currentID = 0;
+
+        /// <summary>
+        /// This method should validate the credentials of HR. This will later be implemented!!!!!!
+        /// </summary>
+        /// <returns></returns>
+        public static bool ValidateUser(string username, string hashedPassword)
+        {
+            return true;
+        }
+
         /// <summary>
         /// This method should get a session of a candidate in a dictionary.!-- -- This needs to be done after HR page is implemented!!!!!!
         /// </summary>
