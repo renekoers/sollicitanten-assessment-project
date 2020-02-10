@@ -27,11 +27,11 @@ export function Login(props) {
     }
     function translateErrorStatusCodeToString(statusCode){
         if(statusCode===400){
-            return "Please fill in all fields."
+            return "Alle velden moeten ingevuld worden."
         } else if(statusCode===401){
-            return "This combination of username and password don't match."
+            return "De combinatie van gebruikersnaam en wachtwoord is niet correct."
         } else {
-            return "Something has gone wrong. Please try again later."
+            return "Er is iets mis gegaan. Probeer het later opnieuw."
         }
     }
     function status(response){
