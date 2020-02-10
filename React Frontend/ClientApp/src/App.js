@@ -5,6 +5,7 @@ import { Game } from "./components/Game";
 import { Overview } from "./components/overview/Overview";
 import { StartingPage } from "./components/StartingPage";
 import { EndPage } from "./components/EndPage";
+import { MainPage as HR} from "./components/HR/MainPage"; 
 
 import "./css/custom.css";
 
@@ -19,6 +20,7 @@ export default class App extends Component {
 				<Route exact path="/gamesession" component={Game} />
 				<Route path="/overview" component={Overview} />
 				<Route path="/results" component={EndPage} />
+				<Route path="/HR" component={HR} />
 			</Layout>
 		);
 	}
