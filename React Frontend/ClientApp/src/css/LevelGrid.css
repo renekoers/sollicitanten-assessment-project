@@ -4,9 +4,19 @@
     float: right;
     height: 40px;
 }
-.tile {
-    width: 100%;
+
+.game-grid-container
+{
+    --tile-size: 64px;
+    width: 0;
 }
+
+.tile 
+{
+    width: var(--tile-size);
+    height: var(--tile-size);
+}
+
 .tile:after {
     content: "";
     display: block;

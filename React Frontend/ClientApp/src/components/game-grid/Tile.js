@@ -1,44 +1,84 @@
 ﻿import React, { Component } from "react";
 
+import tileImgFloor from "../../img/game-grid/tile-floor.png";
+import tileImgWall from "../../img/game-grid/tile-wall.png";
+import tileImgDoorClose from "../../img/game-grid/tile-door-close.png";
+import tileImgDoorOpen from "../../img/game-grid/tile-door-open.png";
+import tileImgButton from "../../img/game-grid/tile-button.png";
+import tileImgFinish from "../../img/game-grid/tile-finish.png";
+
+import movableImgBox from "../../img/game-grid/movable-box.png";
+import movableImgPlayerDown from "../../img/game-grid/movable-player-down.png";
+import movableImgPlayerRight from "../../img/game-grid/movable-player-right.png";
+import movableImgPlayerLeft from "../../img/game-grid/movable-player-left.png";
+import movableImgPlayerUp from "../../img/game-grid/movable-player-up.png";
+
 export class Tile extends Component {
-	convertTypeToASCII() {
-		switch (this.props.tile.movableString) {
-			case "Box":
-				return "*";
-			case "Character North":
-				return "^";
-			case "Character East":
-				return ">";
-			case "Character South":
-				return "_";
-			case "Character West":
-				return "<";
-			default:
-		}
-		switch (this.props.tile.stateString) {
-			case "Door":
-				if (this.props.tile.isOpen) {
-					return ".";
-				} else {
-					return String.fromCharCode(65 + this.props.tile.id); //65 = 'A'
-				}
-			case "Wall":
-				return "#";
+
+	getTileImgFromStateString()
+	{
+		switch(this.props.tile.stateString)
+		{
 			case "Empty":
-				return ".";
+				return tileImgFloor;
+			case "Wall":
+				return tileImgWall;
+			case "Door":
+				return this.props.tile.isOpen ? tileImgDoorOpen : tileImgDoorClose;
 			case "Button":
-				return String.fromCharCode(97 + this.props.tile.door.id); //97 = 'a'
+				return tileImgButton;
 			case "End":
-				return "!";
+				return tileImgFinish;
 			default:
-				throw new Error(
-					"Invalid state: " + this.props.tile.stateString
-				);
+				throw new Error(`Tile state ${this.props.tile.stateString} is not recognized.`);
 		}
 	}
 
+	getTopObjectImageFromMovableString()
+	{
+		switch(this.props.tile.movableString)
+		{
+			case "Box":
+				return movableImgBox;
+			case "Character South":
+				return movableImgPlayerDown;
+			case "Character East":
+				return movableImgPlayerRight;
+			case "Character West":
+				return movableImgPlayerLeft;
+			case "Character North":
+				return movableImgPlayerUp;
+		}
+	}
+
+	hasTopObject()
+	{
+		return this.props.tile.movableString !== "None";
+	}
+
+	renderTopObject()
+	{
+		return (
+			<div className="movable tile"
+				style={{ 
+					position: "absolute",
+					backgroundImage: "url(" + this.getTopObjectImageFromMovableString() + ")" 
+					}}>
+			</div>
+		);
+	}
+
 	render() {
-		return <div className="tile">{this.convertTypeToASCII()}</div>;
+		
+		let topObjectRender = null;
+		if(this.hasTopObject())
+			topObjectRender = this.renderTopObject();
+
+		return (
+			<div className="tile"
+				style={{ backgroundImage: "url(" + this.getTileImgFromStateString() + ")" }}>
+					{topObjectRender}
+			</div>);
 	}
 }
 export default Tile;
