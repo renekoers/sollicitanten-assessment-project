@@ -26,8 +26,15 @@ export const Overview = () => {
 			});
 	};
 
-	const toggleFinishedState = () => {
-		setFinished(true);
+	const toggleFinishedState = async () => {
+		await fetch("api/session/endSession", {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+				Authorization: localStorage.getItem("sessionID")
+			}
+		})
+			.then(response => setFinished(response.status === 200));
 	};
 
 	const redirectToAnalysationPage = () => {
