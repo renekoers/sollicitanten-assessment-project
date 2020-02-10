@@ -23,6 +23,14 @@ namespace React_Frontend.Controllers
                 Formatting = Formatting.Indented
             });
         }
+        internal static object Deserialize(string obj)
+        {
+            return JsonConvert.DeserializeObject(obj, new JsonSerializerSettings
+            {
+                ContractResolver = contractResolver,
+                Formatting = Formatting.Indented
+            });
+        }
 
     }
 }
