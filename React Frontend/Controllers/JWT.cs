@@ -24,7 +24,7 @@ namespace JSonWebToken
                 {  
                     new Claim(JwtRegisteredClaimNames.Sub, username),  
                     new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                    new Claim("Role", "HR") 
+                    new Claim("Time", ""+Api.GetEpochTime()) 
                 };
                 return new JwtSecurityTokenHandler().WriteToken(new JwtSecurityToken(  
                          issuer: Issuer,  
