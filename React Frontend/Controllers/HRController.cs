@@ -1,19 +1,19 @@
 using BackEnd;
-using System.IdentityModel.Tokens.Jwt;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json.Linq;
 using JSonWebToken;
 using Microsoft.AspNetCore.Authorization;
-using System.Text.Json;  
+using System.Text.Json; 
+using System.Collections.Generic;
+using System.Security.Claims;
 
 namespace React_Frontend.Controllers
 { 
 	[ApiController]
-	[Route("api/credentials")]
+	[Route("api/HR"), Authorize]
 	public class CredentialsController : Controller
 	{
         
-		[HttpPost("login")]
+		[HttpPost("login"), AllowAnonymous]
         /// <summary>
         /// This method needs to get the authorization of the request. This will be a token to validate HR!!!!!!!!
         /// </summary>
@@ -35,17 +35,38 @@ namespace React_Frontend.Controllers
                 return Unauthorized();
             } 
 		}
-        [HttpGet("validate"), Authorize]
-        public ActionResult validateToken()
+        [HttpGet("validate")]
+        public StatusCodeResult ValidateToken()
         {
             return Ok();
         }
-        [HttpPost("candidate"), Authorize]
-        public ActionResult addCandidate([FromBody] string name)
+        [HttpPost("candidate")]
+        public StatusCodeResult AddCandidate([FromBody] string name)
         {
-            //System.Console.WriteLine(name);
             Api.AddCandidate(name);
             return Ok();
+        }
+        [HttpGet("newFinished")]
+        public ActionResult<List<int>> GetNewFinished()
+        {
+            ClaimsIdentity identity = (ClaimsIdentity)User.Identity;
+            long time = long.Parse(identity.FindFirst("Time").Value);
+            List<int> newFinishedIDs = Api.GetNewFinishedIDs(time);
+            if(newFinishedIDs.Count==0){
+                return NotFound();
+            } else {
+                return newFinishedIDs;
+            }
+        }
+        [HttpGet("newFinished")]
+        public ActionResult<List<int>> GetNewFinished(long time)
+        {
+            List<int> newFinishedIDs = Api.GetNewFinishedIDs(time);
+            if(newFinishedIDs.Count==0){
+                return NotFound();
+            } else {
+                return newFinishedIDs;
+            }
         }
 	}
 }

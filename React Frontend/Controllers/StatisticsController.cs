@@ -1,17 +1,35 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using BackEnd;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 
 namespace React_Frontend.Controllers
 {
 	[ApiController]
-	[Route("api/statistics")]
+	[Route("api/statistics"), Authorize]
 	public class StatisticsController : Controller
 	{
+        [HttpGet("nextFinished")]
+        public ActionResult<int> GetNextFinished(int ID)
+        {
+            int? nextID = Api.GetNextFinishedID(ID);
+            if(nextID==null){
+                return NotFound();
+            } else {
+                return nextID.Value;
+            }
+        }
+        [HttpGet("previousFinished")]
+        public ActionResult<int> GetPreviousFinished(int ID)
+        {
+            int? previousID = Api.GetPreviousFinishedID(ID);
+            if(previousID==null){
+                return NotFound();
+            } else {
+                return previousID.Value;
+            }
+        }
 		[HttpGet("tallylines")]
         /// <summary>
         /// This method needs to get the authorization of the request. This will be a token to validate HR!!!!!!!!
