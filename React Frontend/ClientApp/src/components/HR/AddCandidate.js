@@ -1,8 +1,12 @@
 
-import React from "react";
+import React, { useEffect } from "react";
 import "../../css/HR.css";
 
 export function AddCandidate(props) {
+    useEffect(() => {
+        document.querySelector("#loginerror").innerHTML = " ";
+        document.querySelector(".popupButton").style.setProperty("display", none);
+    },[])
     function checkenter(event){
         if(event.key === "Enter"){
             addCandidate(event)
@@ -20,9 +24,10 @@ export function AddCandidate(props) {
             body: JSON.stringify(name)
         })
         .then(status)
-        .then(() => document.querySelector("#loginerror").innerHTML = name + " is toegevoegd.")
+        .then(() => credentials.querySelector("#loginerror").innerHTML = name + " is toegevoegd.")
         .catch(error => {
-            document.querySelector("#loginerror").innerHTML = "Oeps! " + error;
+            credentials.querySelector("#loginerror").innerHTML = "Oeps! " + error;
+            credentials.querySelector(".popupButton").style.removeProperty("display");
         })
     }
     function translateErrorStatusCodeToString(statusCode){
@@ -53,6 +58,7 @@ export function AddCandidate(props) {
                 </div>
                 <button id="loginbutton" onClick={addCandidate}>Voeg toe</button>
                 <div className="error" id="loginerror"> </div>
+                <button id="loginbutton" className="popupButton" onClick={this.props.OnInvalidSession}>Naar login</button>
             </div>
         </article>
     );

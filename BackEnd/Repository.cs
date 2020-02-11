@@ -77,6 +77,10 @@ namespace BackEnd
         {
             return Util.Max(GameSessions.Where(pair => !pair.Value.InProgress && pair.Key<ID).Select(pair => pair.Key).ToList());
         }
+        internal static int GetLastFinishedID()
+        {
+            return Util.Max(GameSessions.Where(pair => !pair.Value.InProgress).Select(pair => pair.Key).ToList()).Value;
+        }
         
         [Obsolete("Use StartSession(int ID) instead!")]
         public static int CreateSession()

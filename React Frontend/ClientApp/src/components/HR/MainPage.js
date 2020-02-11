@@ -17,16 +17,21 @@ export function MainPage() {
 			.then(response => {
 				setIsValid((response.status === 200))
 			})
+		} else {
+			setIsValid(false)
 		}
 	},[token]);
 	
     function addToken(newToken){
         localStorage.setItem("token",newToken);
         setToken(newToken)
-    }
+	}
+	function toLogin(){
+		localStorage.setItem("token", null);
+	}
    if(isValid){
 		return (
-			<AddCandidate/>
+			<AddCandidate onInvalidSession={toLogin}/>
 		);
    } else {
 		return (

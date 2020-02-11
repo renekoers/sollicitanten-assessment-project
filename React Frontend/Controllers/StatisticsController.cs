@@ -30,6 +30,11 @@ namespace React_Frontend.Controllers
                 return previousID.Value;
             }
         }
+		[HttpGet("lastFinished")]
+		public int GetLastFinished()
+		{
+			return Api.GetLastFinishedID();
+		}
 		[HttpGet("tallylines")]
         /// <summary>
         /// This method needs to get the authorization of the request. This will be a token to validate HR!!!!!!!!

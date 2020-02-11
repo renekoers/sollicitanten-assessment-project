@@ -173,6 +173,10 @@ namespace BackEnd
         {
             return Repository.GetPreviousFinishedID(ID);
         }
+        public static int GetLastFinishedID()
+        {
+            return Repository.GetLastFinishedID();
+        }
 
 
         /// <summary>
