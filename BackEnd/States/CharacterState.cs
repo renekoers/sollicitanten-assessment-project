@@ -26,8 +26,8 @@ namespace BackEnd
         public override int GetHashCode()
         {
             return DirectionCharacter.GetHashCode()
-                ^ DirectionCharacterString.GetHashCode()
-                ^ Tile.GetHashCode();
+                + DirectionCharacterString.GetHashCode()
+                ^ (Tile.GetHashCode() << 4);
         }
     }
 }

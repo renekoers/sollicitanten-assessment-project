@@ -89,12 +89,22 @@ namespace BackEnd
         }
 
         // Let op: Het is de verwachting van de CLR dat als `a.Equals(b)` "true" returned, dat `a.GetHashCode()` en `b.GetHashCode()` ook identiek zijn.
+        // Dit impliceert ook dat het object dus niet mutable mag zijn, aangezien de standaard implementatie van zowel `object.GetHashCode` en
+        // `object.Equals(object)` op basis van reference werken.
+        // Het is echter dus ook van belang dat `object.GetHashCode()` een waarde teruggeeft dat zo uniek mogelijk is a.d.h.v. zijn state.
         public override int GetHashCode()
         {
+            int puzzleTileListHashCode = PuzzleTiles
+                .Select((tileState) => tileState.GetHashCode())
+                .Sum();
+
             return (this.PuzzleWidth << 0)
-                ^ (this.PuzzleHeight << 1)
-                ^ (this.PuzzleLevel << 2)
-                ^ this.Character.GetHashCode();
+                + (this.PuzzleHeight << 1)
+                * (this.PuzzleLevel << 2)
+                ^ (
+                    (this.Character.GetHashCode() << 4)
+                    + (puzzleTileListHashCode + (2 << 16))
+                  );
         }
     }
 }
