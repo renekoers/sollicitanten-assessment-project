@@ -1,6 +1,6 @@
 
 import React from "react";
-import "../../css/Login.css";
+import "../../css/HR.css";
 
 export function AddCandidate(props) {
     function checkenter(event){
@@ -11,7 +11,7 @@ export function AddCandidate(props) {
     async function addCandidate(event){
         let credentials = event.target.parentNode.parentNode
         var name = credentials.querySelector("#username").value;
-        fetch("api/credentials/candidate", {
+        fetch("api/HR/candidate", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",

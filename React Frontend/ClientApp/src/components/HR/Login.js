@@ -1,6 +1,6 @@
 
 import React from "react";
-import "../../css/Login.css";
+import "../../css/HR.css";
 
 export function Login(props) {
     function checkenter(event){
@@ -12,7 +12,7 @@ export function Login(props) {
         let credentials = event.target.parentNode.parentNode
         var username = credentials.querySelector("#username").value;
         var password = credentials.querySelector("#password").value;
-        fetch("api/credentials/login", {
+        fetch("api/HR/login", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
