@@ -7,7 +7,7 @@ export function MainPage() {
 	const [isValid, setIsValid] = useState(false);
 	useEffect(() => {
 		if(token !== null){
-			fetch("api/credentials/validate", {
+			fetch("api/HR/validate", {
 				method: "GET",
 				headers: {
 					"Content-Type": "application/json",
