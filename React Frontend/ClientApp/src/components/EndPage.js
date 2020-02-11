@@ -1,5 +1,5 @@
-﻿import React, { useState, useEffect } from "react";
-import { Jumbotron, Button, Container } from "reactstrap";
+﻿import React from "react";
+import { Jumbotron, Container } from "reactstrap";
 import { Statistics } from "./Statistics";
 
 export const EndPage = props => {
