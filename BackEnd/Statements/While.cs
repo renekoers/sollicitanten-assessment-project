@@ -21,11 +21,9 @@ namespace BackEnd
 			this._isTrue = isTrue;
 			this._statements = statements;
 			this._tempStatements = new List<Statement>();
-			Console.WriteLine("Constructing");
 		}
 		internal override List<State> ExecuteCommand(Puzzle puzzle)
 		{
-			Console.WriteLine("Executing");
 			List<State> states = new List<State>();
 			List<State> oldStates = new List<State>();
 			State newState = null;
@@ -35,6 +33,7 @@ namespace BackEnd
 				newState = states[states.Count - 1];
 				if (oldStates.Contains(newState))
 				{
+					Console.WriteLine("It's an infinite loop!");
 					this.IsInfiniteLoop = true;
 					return states;
 				}

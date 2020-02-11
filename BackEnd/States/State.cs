@@ -79,17 +79,22 @@ namespace BackEnd
                 }
             }
         }
-        public bool Equals(State otherState){
-            if(otherState is null)
-            {
+
+        public override bool Equals(object other)
+        {
+            if(other is State)
+                return other.GetHashCode() == this.GetHashCode();
+            else
                 return false;
-            }
-            if(PuzzleHeight != otherState.PuzzleHeight || PuzzleWidth != otherState.PuzzleWidth || PuzzleLevel != otherState.PuzzleLevel || !Character.Equals(otherState.Character)){
-                return false;
-            }
-            return PuzzleTiles.SequenceEqual(otherState.PuzzleTiles);
         }
-        public override bool Equals(object obj) => Equals(obj as State);
-        public override int GetHashCode() => ((object)this).GetHashCode();
+
+        // Let op: Het is de verwachting van de CLR dat als `a.Equals(b)` "true" returned, dat `a.GetHashCode()` en `b.GetHashCode()` ook identiek zijn.
+        public override int GetHashCode()
+        {
+            return (this.PuzzleWidth << 0)
+                ^ (this.PuzzleHeight << 1)
+                ^ (this.PuzzleLevel << 2)
+                ^ this.Character.GetHashCode();
+        }
     }
 }

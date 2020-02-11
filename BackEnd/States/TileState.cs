@@ -18,15 +18,20 @@ namespace BackEnd
             this.ID = ID;
             State = state;
         }
-        public bool Equals(TileState otherTile)
+
+        public override bool Equals(object other)
         {
-            if(otherTile is null)
-            {
+            if(other is TileState)
+                return other.GetHashCode() == this.GetHashCode();
+            else
                 return false;
-            }
-            return State.Equals(otherTile.State) && Movable.Equals(otherTile.Movable);
         }
-        public override bool Equals(object obj) => Equals(obj as TileState);
-        public override int GetHashCode() => ((object)this).GetHashCode();
+
+        public override int GetHashCode()
+        {
+            return ID
+                ^ State.GetHashCode()
+                ^ (Movable.GetHashCode() << 4);
+        }
     }
 }
