@@ -6,6 +6,7 @@ import { Overview } from "./components/overview/Overview";
 import { StartingPage } from "./components/StartingPage";
 import { EndPage } from "./components/EndPage";
 import { MainPage as HR} from "./components/HR/MainPage"; 
+import { Login } from "./components/HR/Login"; 
 
 import "./css/custom.css";
 
@@ -21,6 +22,7 @@ export default class App extends Component {
 				<Route path="/overview" component={Overview} />
 				<Route path="/results" component={EndPage} />
 				<Route path="/HR" component={HR} />
+				<Route path="/HR/login" component={Login} />
 			</Layout>
 		);
 	}

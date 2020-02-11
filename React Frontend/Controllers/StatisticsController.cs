@@ -31,9 +31,14 @@ namespace React_Frontend.Controllers
             }
         }
 		[HttpGet("lastFinished")]
-		public int GetLastFinished()
+		public ActionResult<int> GetLastFinished()
 		{
-			return Api.GetLastFinishedID();
+			int? lastID =  Api.GetLastFinishedID();
+            if(lastID==null){
+                return NotFound();
+            } else {
+                return lastID.Value;
+            }
 		}
 		[HttpGet("tallylines")]
         /// <summary>

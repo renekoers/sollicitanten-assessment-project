@@ -4,44 +4,36 @@ import "../../css/Statistics.css";
 
 export function Statistics(props){
     const [id, setId] = useState(props.id);
-    const [components, setComponents] = useState(null);
+    const [components, setComponents] = useState([]);
     useEffect(() => {
         setId(props.id);
     },[props.id])
     useEffect(() => {
+        function fetchStatistics(nameApi){
+            return new Promise(function(resolve, reject){
+                if(id===null){
+                    reject(400);
+                }
+                fetch("api/statistics/" + nameApi + "?id=" + id, {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: localStorage.getItem("token")
+                    }
+                })
+                .then(status)
+                .then(data => resolve(data))
+                .catch(error => reject(error))
+            })
+        }
         let dataTally = null;
         setComponents([]);
-        document.querySelector("#loginerror").innerHTML = " ";
-        document.querySelector(".popupButton").style.setProperty("display", none);
-        await fetchStatistics("tallylines")
+        fetchStatistics("tallylines")
         .then(data => dataTally=data)
         .then(fetchStatistics("shortestsolutions"))
         .then(data => addComponent("Lines of Code", dataTally, data))
-        .catch(error => {
-            if(error === 401){
-                document.querySelector("#loginerror").innerHTML = "Oeps! De sessie is verlopen. Log opnieuw in.";
-            } else {
-                document.querySelector("#loginerror").innerHTML = "Oeps! Probeer het later opnieuw.";
-            }
-            document.querySelector(".popupButton").style.removeProperty("display");
-        })
     },[id])
 
-    async function fetchStatistics(nameApi){
-        if(id===null){
-            reject(400);
-        }
-        await fetch("api/statistics/" + nameApi + "?id=" + id, {
-            method: "GET",
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: localStorage.getItem("token")
-            }
-        })
-        .then(status)
-        .then(data => resolve(data))
-        .catch(error => reject(error))
-    }
 
     function status(response){
         return new Promise(function(resolve, reject){
@@ -89,8 +81,9 @@ export function Statistics(props){
 
     return (
         <div>
-            <div className="error" id="loginerror"> </div>
-            <button id="loginbutton" className="popupButton" onClick={this.props.OnInvalidSession}>Naar login</button>
+            {components.map(component => (
+                <div>{component}</div>
+            ))}
         </div>
     );
 }
@@ -112,8 +105,8 @@ const AxisLabel = ({ axisType, x, y, width, height, stroke, children }) => {
 	);
 };
 function LevelBarChart(props){
-    useState [dataTally, setDataTally] = useState([]);
-    useState [nameChart, setNameChart] = useState(props.name)
+    const [dataTally, setDataTally] = useState([]);
+    const [nameChart, setNameChart] = useState(props.name)
     useEffect(() => {
         const _dataTally = [];
 		for (const [_lines, _candidates] of Object.entries(props.tallyData)) {

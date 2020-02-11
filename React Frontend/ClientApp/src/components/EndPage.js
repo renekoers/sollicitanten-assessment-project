@@ -25,7 +25,6 @@ export const EndPage = props => {
 				<Container fluid>
 					<h1 className="display-3">Statistieken</h1>
 					<p>Je bent klaar!</p>
-					<Statistics id={localStorage.getItem("sessionID")} />
 				</Container>
 			</Jumbotron>
 		</div>

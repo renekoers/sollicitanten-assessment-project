@@ -3,10 +3,6 @@ import React, { useEffect } from "react";
 import "../../css/HR.css";
 
 export function AddCandidate(props) {
-    useEffect(() => {
-        document.querySelector("#loginerror").innerHTML = " ";
-        document.querySelector(".popupButton").style.setProperty("display", none);
-    },[])
     function checkenter(event){
         if(event.key === "Enter"){
             addCandidate(event)
@@ -24,10 +20,10 @@ export function AddCandidate(props) {
             body: JSON.stringify(name)
         })
         .then(status)
-        .then(() => credentials.querySelector("#loginerror").innerHTML = name + " is toegevoegd.")
+        .then(() => credentials.querySelector("#noteAdd").innerHTML = name + " is toegevoegd.")
         .catch(error => {
-            credentials.querySelector("#loginerror").innerHTML = "Oeps! " + error;
-            credentials.querySelector(".popupButton").style.removeProperty("display");
+            console.log(error)
+            props.onInvalidSession(error)
         })
     }
     function translateErrorStatusCodeToString(statusCode){
@@ -56,9 +52,8 @@ export function AddCandidate(props) {
                 <div className="credentials">
                     <div>Naam kandidaat: <input placeholder="Naam" type="string" id="username" onKeyPress={checkenter}/></div>
                 </div>
+			    <div className="note" id="noteAdd"> </div>
                 <button id="loginbutton" onClick={addCandidate}>Voeg toe</button>
-                <div className="error" id="loginerror"> </div>
-                <button id="loginbutton" className="popupButton" onClick={this.props.OnInvalidSession}>Naar login</button>
             </div>
         </article>
     );

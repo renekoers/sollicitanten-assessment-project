@@ -1,8 +1,10 @@
 
-import React from "react";
+import React, { useState } from "react";
+import { Redirect } from "react-router-dom";
 import "../../css/HR.css";
 
 export function Login(props) {
+    const [loggedIn, setLoggedIn] = useState(false)
     function checkenter(event){
         if(event.key === "Enter"){
             login(event)
@@ -20,7 +22,10 @@ export function Login(props) {
             body: JSON.stringify({"username":  username, "password": password })
         })
         .then(status)
-        .then(token => props.onLogin(token))
+        .then(token => {
+            localStorage.setItem("token",token);
+            setLoggedIn(true);
+        })
         .catch(error => {
             document.querySelector("#loginerror").innerHTML = "Oeps! " + error;
         })
@@ -43,8 +48,14 @@ export function Login(props) {
             }
         })
     }
+    function redirect(){
+        if(loggedIn){
+			return <Redirect to="/HR" />;
+        }
+    }
     return (
         <article className = "singleBlock">
+            {redirect()}
             <div className="login">Login</div>
             <br/>
             <div>
