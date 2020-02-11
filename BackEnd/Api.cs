@@ -149,6 +149,31 @@ namespace BackEnd
             int totalLevels = Level.TotalLevels;
             return totalLevels;
         }
+        /// <summary>
+        /// This method creates a list of all IDs of candidates that finished a session after a given time
+        /// </summary>
+        /// <returns>List of IDs</returns>
+        public static List<int> GetNewFinishedIDs(long epochTime)
+        {
+            return Repository.GetNewFinishedIDs(epochTime);
+        }
+        /// <summary>
+        /// This method finds the first ID of the candidate that ended the session after the given ID.
+        /// </summary>
+        /// <returns>ID if there exists one</returns>
+        public static int? GetNextFinishedID(int ID)
+        {
+            return Repository.GetNextFinishedID(ID);
+        }
+        /// <summary>
+        /// This method finds the last ID of the candidate that ended the session before the given ID.
+        /// </summary>
+        /// <returns>ID if there exists one</returns>
+        public static int? GetPreviousFinishedID(int ID)
+        {
+            return Repository.GetPreviousFinishedID(ID);
+        }
+
 
         /// <summary>
         /// Gets the number of lines that a candidate needed to solve a specific level

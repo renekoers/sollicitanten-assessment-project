@@ -8,9 +8,9 @@ namespace BackEnd
     {
         private Util() { }
 
-        public static T Min<T>(List<T> list, Func<T, int> getValue) where T : class
+        public static T Min<T>(List<T> list, Func<T, long> getValue) where T : class
         {
-            int? min = null;
+            long? min = null;
             T minT = null;
             foreach (T t in list)
             {
@@ -21,6 +21,30 @@ namespace BackEnd
                 }
             }
             return minT;
+        }
+        public static int? Min(List<int> list)
+        {
+            int? min = null;
+            foreach (int t in list)
+            {
+                if (!min.HasValue || t < min.Value)
+                {
+                    min = t;
+                }
+            }
+            return min;
+        }
+        public static int? Max(List<int> list)
+        {
+            int? max = null;
+            foreach (int t in list)
+            {
+                if (!max.HasValue || t > max.Value)
+                {
+                    max = t;
+                }
+            }
+            return max;
         }
     }
 }

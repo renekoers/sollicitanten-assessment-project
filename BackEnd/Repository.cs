@@ -30,13 +30,8 @@ namespace BackEnd
             UnstartedSessions.Add(ID);
         }
 
-        /// <summary>
-        /// This method should get a session of a candidate in a dictionary.!-- -- This needs to be done after HR page is implemented!!!!!!
-        /// </summary>
-        /// <returns></returns>
         private static int CreateID()
         {
-            Console.WriteLine("This method should get a session of a candidate in a dictionary.!-- -- This needs to be done after HR page is implemented!!!!!!");
             return _currentID++;
         }
         internal static Candidate GetCandidate()
@@ -57,6 +52,30 @@ namespace BackEnd
         {
             Candidates.TryGetValue(ID, out string name);
             return name != null ? UnstartedSessions.Contains(ID) : false;
+        }
+        /// <summary>
+        /// This method creates a list of all IDs of candidates that finished a session after a given time
+        /// </summary>
+        /// <returns>List of IDs</returns>
+        internal static List<int> GetNewFinishedIDs(long epochTime)
+        {
+            return GameSessions.Where(pair => !pair.Value.InProgress && pair.Value.EndTime>epochTime).Select(pair => pair.Key).ToList();
+        }
+        /// <summary>
+        /// This method finds the first ID of the candidate that ended the session after the given ID.
+        /// </summary>
+        /// <returns>ID if there exists one</returns>
+        internal static int? GetNextFinishedID(int ID)
+        {
+            return Util.Min(GameSessions.Where(pair => !pair.Value.InProgress && pair.Key>ID).Select(pair => pair.Key).ToList());
+        }
+        /// <summary>
+        /// This method finds the last ID of the candidate that ended the session before the given ID.
+        /// </summary>
+        /// <returns>ID if there exists one</returns>
+        internal static int? GetPreviousFinishedID(int ID)
+        {
+            return Util.Max(GameSessions.Where(pair => !pair.Value.InProgress && pair.Key<ID).Select(pair => pair.Key).ToList());
         }
         
         [Obsolete("Use StartSession(int ID) instead!")]
