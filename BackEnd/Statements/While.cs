@@ -21,11 +21,9 @@ namespace BackEnd
 			this._isTrue = isTrue;
 			this._statements = statements;
 			this._tempStatements = new List<Statement>();
-			Console.WriteLine("Constructing");
 		}
 		internal override List<State> ExecuteCommand(Puzzle puzzle)
 		{
-			Console.WriteLine("Executing");
 			List<State> states = new List<State>();
 			List<State> oldStates = new List<State>();
 			State newState = null;
