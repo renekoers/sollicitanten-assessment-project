@@ -8,6 +8,7 @@ export function Statistics(props){
     useEffect(() => {
         setId(props.id);
     },[props.id])
+
     useEffect(() => {
         function fetchStatistics(nameApi){
             return new Promise(function(resolve, reject){
@@ -26,63 +27,67 @@ export function Statistics(props){
                 .catch(error => reject(error))
             })
         }
-        let dataTally = null;
-        setComponents([]);
-        fetchStatistics("tallylines")
-        .then(data => dataTally=data)
-        .then(fetchStatistics("shortestsolutions"))
-        .then(data => addComponent("Lines of Code", dataTally, data))
+        function status(response){
+            return new Promise(function(resolve, reject){
+                if(response.status === 200){
+                    resolve(response.json())
+                } else {
+                    reject(response.status)
+                }
+            })
+        }
+        function addComponent(nameData, dataTally, dataCurrent){
+            var oldComponents = components;
+            if (dataTally) {
+                const newComponent = [];
+                for (const [levelNumber, results] of Object.entries(
+                    dataTally
+                )) {
+                    newComponent.push(
+                        <div
+                            className="level-chart-container"
+                            key={"C" + levelNumber}
+                        >
+                            <label
+                                className="level-chart-label"
+                                key={"L" + levelNumber}
+                            >
+                                Level {levelNumber}
+                            </label>
+                            <LevelBarChart
+                                className="level-chart"
+                                key={"D" + levelNumber}
+                                name={nameData}
+                                tallyData={results}
+                                candidateData={
+                                    dataCurrent[levelNumber]
+                                }
+                            />
+                        </div>
+                    );
+                }
+                oldComponents.push(newComponent);
+                setComponents(oldComponents);
+            }
+        }
+        async function getData(){
+            let dataTally = null;
+            await fetchStatistics("tallylines")
+            .then(data => dataTally=data)
+            await fetchStatistics("shortestsolutions")
+            .then(data => addComponent("Lines of Code", dataTally, data))
+        }
+        
+        setComponents([])
+        getData()
     },[id])
 
 
-    function status(response){
-        return new Promise(function(resolve, reject){
-            if(response.status === 200){
-                resolve(response.json())
-            } else {
-                reject(response.status)
-            }
-        })
-    }
-    function addComponent(nameData, dataTally, dataCurrent){
-        var oldComponents = components;
-		if (dataTally) {
-			const newComponent = [];
-			for (const [levelNumber, results] of Object.entries(
-				dataTally
-			)) {
-				newComponent.push(
-					<div
-						className="level-chart-container"
-						key={"C" + levelNumber}
-					>
-						<label
-							className="level-chart-label"
-							key={"L" + levelNumber}
-						>
-							Level {levelNumber}
-						</label>
-						<LevelBarChart
-							className="level-chart"
-                            key={"D" + levelNumber}
-                            name={nameData}
-							tallyData={results}
-							candidateData={
-								dataCurrent[levelNumber]
-							}
-						/>
-					</div>
-				);
-            }
-            oldComponents.push(newComponent);
-			setComponents(oldComponents);
-		}
-    }
 
     return (
         <div>
-            {components.map(component => (
-                <div>{component}</div>
+            {components.map((component, index) => (
+                <div key={index}>{component}</div>
             ))}
         </div>
     );
@@ -111,7 +116,7 @@ function LevelBarChart(props){
         const _dataTally = [];
 		for (const [_lines, _candidates] of Object.entries(props.tallyData)) {
 			_dataTally.push({
-				lines: _lines,
+				lines: Number.parseInt(_lines),
 				candidates: Number.parseInt(_candidates)
 			});
         }
