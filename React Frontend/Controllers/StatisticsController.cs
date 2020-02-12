@@ -47,34 +47,28 @@ namespace React_Frontend.Controllers
             }
 		}
 		[HttpGet("tallylines")]
-		public Dictionary<string, Dictionary<string, int>> TallyEveryoneNumberOfLinesSolvedLevelsOf(int id)
+		public string TallyEveryoneNumberOfLinesSolvedLevelsOf(int id)
 		{
-			int sessionID = id;
-			Dictionary<int, Dictionary<int, int>> totalTally = Api.TallyEveryoneNumberOfLinesSolvedLevelsOf(sessionID);
-			Dictionary<string, Dictionary<string, int>> stringTotalTally = new Dictionary<string, Dictionary<string, int>>();
-			foreach (KeyValuePair<int, Dictionary<int, int>> pair in totalTally)
-			{
-				Dictionary<string, int> stringPair = new Dictionary<string, int>();
-				foreach (KeyValuePair<int, int> subPair in pair.Value)
-				{
-					stringPair.Add(subPair.Key.ToString(), subPair.Value);
-				}
-				stringTotalTally.Add(pair.Key.ToString(), stringPair);
-			}
-			return stringTotalTally;
+			Dictionary<int, Dictionary<int, int>> totalTally = Api.TallyEveryoneNumberOfLinesSolvedLevelsOf(id);
+			return JSON.Serialize(totalTally);
 		}
-		[HttpGet("shortestsolutions")]
-		public Dictionary<string, int> NumberOfLinesSolvedLevelsOf(int id)
+		[HttpGet("candidatelines")]
+		public string NumberOfLinesSolvedLevelsOf(int id)
 		{
-			//int sessionID = int.Parse(id);
-			int sessionID = id;
-			Dictionary<int, int> solutions = Api.NumberOfLinesSolvedLevelsOf(sessionID);
-			Dictionary<string, int> solutionsString = new Dictionary<string, int>();
-			foreach (KeyValuePair<int, int> pair in solutions)
-			{
-				solutionsString.Add(pair.Key.ToString(), pair.Value);
-			}
-			return solutionsString;
+			Dictionary<int, int> solutions = Api.NumberOfLinesSolvedLevelsOf(id);
+			return JSON.Serialize(solutions);
+		}
+		[HttpGet("tallyduration")]
+		public string TallyEveryoneDurationSolvedLevelsOf(int id)
+		{
+			Dictionary<int, Dictionary<int, int>> totalTally = Api.TallyEveryoneDurationSolvedLevelsOf(id);
+			return JSON.Serialize(totalTally);
+		}
+		[HttpGet("candidateduration")]
+		public string DurationSolvedLevelsOf(int id)
+		{
+			Dictionary<int, int> solutions = Api.DurationSolvedLevelsOf(id);
+			return JSON.Serialize(solutions);
 		}
 	}
 }

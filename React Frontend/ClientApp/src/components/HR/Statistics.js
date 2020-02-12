@@ -74,8 +74,13 @@ export function Statistics(props){
             let dataTally = null;
             await fetchStatistics("tallylines")
             .then(data => dataTally=data)
-            await fetchStatistics("shortestsolutions")
-            .then(data => addComponent("Lines of Code", dataTally, data))
+            await fetchStatistics("candidatelines")
+            .then(data => addComponent("Regels code", dataTally, data))
+            await fetchStatistics("tallyduration")
+            .then(data => dataTally=data)
+            await fetchStatistics("candidateduration")
+            .then(data => addComponent("Tijd", dataTally, data))
+            
         }
         
         setComponents([])
@@ -150,7 +155,7 @@ function LevelBarChart(props){
                 }
                 allowDecimals={false}
             />
-            <Bar dataKey="candidates">
+            <Bar dataKey="Kandidaten">
                 {dataTally.map((entry, index) => {
                     return (
                         <Cell
