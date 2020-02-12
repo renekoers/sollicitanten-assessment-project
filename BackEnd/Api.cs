@@ -177,6 +177,39 @@ namespace BackEnd
             return Repository.GetLastFinishedID();
         }
 
+        /// <summary>
+        /// Creates a dictionary with key name of the data, value is dictionary of levelnumbers and info.
+        /// </summary>
+        /// <returns></returns>
+        public static Dictionary<string,Dictionary<int,int>> DataSolvedLevelsOf(int ID)
+        {
+            Dictionary<string,Dictionary<int,int>> dataCandidate = new Dictionary<string, Dictionary<int, int>>();
+            dataCandidate.Add("Regels code", GetStatisticsCandidate(ID, LevelSession.GetLines));
+            dataCandidate.Add("Tijd", GetStatisticsCandidate(ID, LevelSession.GetDuration));
+            dataCandidate.Add("Pogingen", GetStatisticsCandidateFromSession(ID,session => session.NumberOfAttemptsForFirstSolved));
+            return dataCandidate;
+        }
+        /// <summary>
+        /// Creates a dictionary with key name of the data, value is dictionary of tallies of everyone.
+        /// </summary>
+        /// <returns></returns>
+        public static Dictionary<string,Dictionary<int, Dictionary<int, int>>> TallyEveryoneDataSolvedLevelsOf(int ID)
+        {
+            GameSession gameSession = GetSession(ID);
+            ISet<int> solvedLevels = gameSession.SolvedLevelNumbers;
+            Dictionary<string,Dictionary<int, Dictionary<int, int>>> dataTally = new Dictionary<string,Dictionary<int, Dictionary<int, int>>>();
+            dataTally.Add("Regels code", GetStatisticsEveryone(solvedLevels, LevelSession.GetLines));
+            dataTally.Add("Tijd", GetStatisticsEveryone(solvedLevels, LevelSession.GetDuration));
+            dataTally.Add("Pogingen", GetStatisticsEveryoneFromSession(solvedLevels,session => session.NumberOfAttemptsForFirstSolved));
+            return dataTally;
+        }
+        public static Dictionary<string, T> getDataForStatistics<T>(int ID, Func<ISet<int>,T> functionToDictionary) where T : class
+        {
+            Dictionary<string, T> data = new Dictionary<string, T>();
+            data.Add("Regels code", GetStatisticsEveryone(solvedLevels, LevelSession.GetLines));
+            data.Add("Tijd", GetStatisticsEveryone(solvedLevels, LevelSession.GetDuration));
+            data.Add("Pogingen", GetStatisticsEveryoneFromSession(solvedLevels,session => session.NumberOfAttemptsForFirstSolved));
+        }
 
         public static Dictionary<int, int> NumberOfLinesSolvedLevelsOf(int ID)
         {
@@ -220,7 +253,6 @@ namespace BackEnd
                 infoCandidateByLevel.Add(levelNumber, functionToInt(gameSession.GetSession(levelNumber).GetLeastLinesOfCodeSolution()));
             }
             return infoCandidateByLevel;
-
         }
 
         /// <summary>
@@ -237,7 +269,26 @@ namespace BackEnd
                 talliesByLevel.Add(levelNumber, Repository.TallyEveryoneBestSolution(levelNumber, functionToInt));
             }
             return talliesByLevel;
-
+        }
+        
+        private static Dictionary<int, int> GetStatisticsCandidateFromSession(int ID, Func<LevelSession,int> functionToInt)
+        {
+            Dictionary<int, int> infoCandidateByLevel = new Dictionary<int, int>();
+            GameSession gameSession = GetSession(ID);
+            foreach (int levelNumber in gameSession.SolvedLevelNumbers)
+            {
+                infoCandidateByLevel.Add(levelNumber, functionToInt(gameSession.GetSession(levelNumber)));
+            }
+            return infoCandidateByLevel;
+        }
+        private static Dictionary<int, Dictionary<int, int>> GetStatisticsEveryoneFromSession(ISet<int> levelNumbers, Func<LevelSession,int> functionToInt)
+        {
+            Dictionary<int, Dictionary<int, int>> talliesByLevel = new Dictionary<int, Dictionary<int, int>>();
+            foreach (int levelNumber in levelNumbers)
+            {
+                talliesByLevel.Add(levelNumber, Repository.TallyEveryone(levelNumber, functionToInt));
+            }
+            return talliesByLevel;
         }
 
         public static long GetEpochTime()

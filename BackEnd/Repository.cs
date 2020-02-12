@@ -146,12 +146,13 @@ namespace BackEnd
                 }
             }
             return tally;
+            //return TallyEveryone(levelNumber, session => function(session.GetLeastLinesOfCodeSolution()));
         }
         /// <summary>
         /// Tallies a given function of a level session for the given level number over all sessions
         /// </summary>
         /// <param name="levelNumber"></param>
-        /// <param name="function"></param>
+        /// <param name="function">Function that maps a level session to an int.</param>
         /// <returns>A dictionary with as the first int result of function and the second int the number of people that solved the level with the same info</returns>
         public static Dictionary<int, int> TallyEveryone(int levelNumber, Func<LevelSession, int> function)
         {
@@ -163,14 +164,17 @@ namespace BackEnd
                 {
                     continue;
                 }
-                int lines = function(levelSession);
-                if (tally.ContainsKey(lines))
+                if( !levelSession.Solved){
+                    continue;
+                }
+                int info = function(levelSession);
+                if (tally.ContainsKey(info))
                 {
-                    tally[lines]++;
+                    tally[info]++;
                 }
                 else
                 {
-                    tally[lines] = 1;
+                    tally[info] = 1;
                 }
             }
             return tally;

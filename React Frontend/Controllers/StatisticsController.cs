@@ -70,5 +70,17 @@ namespace React_Frontend.Controllers
 			Dictionary<int, int> solutions = Api.DurationSolvedLevelsOf(id);
 			return JSON.Serialize(solutions);
 		}
+		[HttpGet("candidate")]
+		public string GetDataCandidate(int id)
+		{
+			Dictionary<string,Dictionary<int,int>> data = Api.DataSolvedLevelsOf(id);
+			return JSON.Serialize(data);
+		}
+		[HttpGet("tally")]
+		public string GetDataTally(int id)
+		{
+			Dictionary<string,Dictionary<int, Dictionary<int, int>>> data = Api.TallyEveryoneDataSolvedLevelsOf(id);
+			return JSON.Serialize(data);
+		}
 	}
 }

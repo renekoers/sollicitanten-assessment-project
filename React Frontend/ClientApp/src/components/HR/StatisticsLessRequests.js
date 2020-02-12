@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { BarChart, Bar, XAxis, YAxis, Cell, CartesianGrid } from "recharts";
 import "../../css/Statistics.css";
 
-export function Statistics(props){
+export function StatisticsLessRequests(props){
     const [id, setId] = useState(props.id);
     const [components, setComponents] = useState([]);
     useEffect(() => {
@@ -36,10 +36,9 @@ export function Statistics(props){
                 }
             })
         }
-        function addComponent(nameData, dataTally, dataCurrent){
-            var oldComponents = components;
+        function getComponent(nameData, dataTally, dataCurrent){
+            var newComponent = [];
             if (dataTally) {
-                const newComponent = [];
                 for (const [levelNumber, results] of Object.entries(
                     dataTally
                 )) {
@@ -66,23 +65,24 @@ export function Statistics(props){
                         </div>
                     );
                 }
-                oldComponents.push(newComponent);
-                setComponents(oldComponents);
+                return newComponent;
             }
         }
         async function getData(){
             let dataTally = null;
-            await fetchStatistics("tallylines")
+            await fetchStatistics("tally")
             .then(data => dataTally=data)
-            await fetchStatistics("candidatelines")
-            .then(data => addComponent("Regels code", dataTally, data))
-            await fetchStatistics("tallyduration")
-            .then(data => dataTally=data)
-            await fetchStatistics("candidateduration")
-            .then(data => addComponent("Tijd", dataTally, data))
-            
+            await fetchStatistics("candidate")
+            .then(data => {
+                var newComponents = []
+                for (const [nameChart, dictionaryTally] of Object.entries(
+                    dataTally
+                )) {
+                newComponents.push(getComponent(nameChart, dictionaryTally, data[nameChart]));
+                }
+                setComponents(newComponents);
+            })
         }
-        
         setComponents([])
         getData()
     },[id])
