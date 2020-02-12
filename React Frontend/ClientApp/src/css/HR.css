@@ -25,7 +25,7 @@ main{
 /* Button styling */
 #loginbutton{
   color: white;
-  background-color: #4a7ce9;
+  background-color: blue;
   padding: 6px 18px;
   border-radius: 3px;
   border: none;
@@ -33,13 +33,36 @@ main{
   margin:6px 2px;
   cursor: pointer ;
 }
-#loginbutton:hover{
-  background-color: #2967ee;
-}
 #loginbutton:active{
   transform: translateY(3px);
   box-shadow: 0 1px #999;
 }
 .popupButton{
   display: none;
+}
+/* Button styling */
+.upperButton{
+  float: right;
+  color: white;
+  background-color: blue;
+  padding: 6px 18px;
+  border-radius: 3px;
+  border: none;
+  box-shadow: 0 4px #999;
+  margin:6px 2px;
+  cursor: pointer ;
+}
+.upperButton:active{
+  transform: translateY(3px);
+  box-shadow: 0 1px #999;
+}
+.badge {
+  position: relative;
+  float: right;
+  background-color: red;
+  margin: 4px -10px;
+  color: white;
+  font-weight: bold;
+  width: 20px;
+  border-radius: 10px;
 }
