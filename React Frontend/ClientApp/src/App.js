@@ -21,7 +21,7 @@ export default class App extends Component {
 				<Route exact path="/gamesession" component={Game} />
 				<Route path="/overview" component={Overview} />
 				<Route path="/results" component={EndPage} />
-				<Route path="/HR" component={HR} />
+				<Route exact path="/HR" component={HR} />
 				<Route path="/HR/login" component={Login} />
 			</Layout>
 		);
