@@ -24,9 +24,9 @@ namespace BackEnd
         {
             return Repository.GetCandidate(ID);
         }
-        public static bool CheckSessionID(int ID)
+        public static bool IsUnstarted(int ID)
         {
-            return Repository.CheckSessionID(ID);
+            return Repository.IsUnstarted(ID);
         }
         /// <summary>
         /// Start a new session for a new candidate.!-- This method is used in mockdata and tests!!!!
@@ -153,29 +153,29 @@ namespace BackEnd
         /// This method creates a list of all IDs of candidates that finished a session after a given time
         /// </summary>
         /// <returns>List of IDs</returns>
-        public static List<int> GetNewFinishedIDs(long epochTime)
+        public static List<int> GetFinishedIDsAfterEpochTime(long epochTime)
         {
-            return Repository.GetNewFinishedIDs(epochTime);
+            return Repository.GetFinishedIDsAfterEpochTime(epochTime);
         }
         /// <summary>
         /// This method finds the first ID of the candidate that ended the session after the given ID.
         /// </summary>
         /// <returns>ID if there exists one</returns>
-        public static int? GetNextFinishedID(int ID)
+        public static int? GetNextIDWhichIsFinished(int ID)
         {
-            return Repository.GetNextFinishedID(ID);
+            return Repository.GetNextIDWhichIsFinished(ID);
         }
         /// <summary>
         /// This method finds the last ID of the candidate that ended the session before the given ID.
         /// </summary>
         /// <returns>ID if there exists one</returns>
-        public static int? GetPreviousFinishedID(int ID)
+        public static int? GetPreviousIDWhichIsFinished(int ID)
         {
-            return Repository.GetPreviousFinishedID(ID);
+            return Repository.GetPreviousIDWhichIsFinished(ID);
         }
-        public static int? GetLastFinishedID()
+        public static int? GetLastIDWhichIsFinished()
         {
-            return Repository.GetLastFinishedID();
+            return Repository.GetLastIDWhichIsFinished();
         }
 
 

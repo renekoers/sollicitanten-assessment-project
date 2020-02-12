@@ -56,7 +56,7 @@ namespace UnitTest
             Assert.IsNull(Api.GetCandidate());
         }
         [TestMethod]
-        public void GetLastFinishedIDTest()
+        public void GetLastIDWhichIsFinishedTest()
         {
             Api.AddCandidate("Test kandidaat First");
             Api.AddCandidate("Test kandidaat Last");
@@ -66,7 +66,7 @@ namespace UnitTest
             Api.StartSession(lastID);
             Api.EndSession(firstID);
             Api.EndSession(lastID);
-            Assert.AreEqual(lastID,Api.GetLastFinishedID().Value);
+            Assert.AreEqual(lastID,Api.GetLastIDWhichIsFinished().Value);
         }
         [TestMethod]
         public void GetPreviousIDBeforeFirstCandidateIsNullTest()
@@ -75,10 +75,10 @@ namespace UnitTest
             int id = Api.GetCandidate().ID;
             Api.StartSession(id);
             Api.EndSession(id);
-            Assert.IsNull(Api.GetPreviousFinishedID(1));
+            Assert.IsNull(Api.GetPreviousIDWhichIsFinished(1));
         }
         [TestMethod]
-        public void GetPreviousFinishedIDTest()
+        public void GetPreviousIDWhichIsFinishedTest()
         {
             long time = Api.GetEpochTime();
             Api.AddCandidate("Test kandidaat 1");
@@ -100,7 +100,7 @@ namespace UnitTest
             Api.EndSession(id2);
             Api.EndSession(id4);
             Api.EndSession(id5);
-            Assert.AreEqual(id2,Api.GetPreviousFinishedID(id4));
+            Assert.AreEqual(id2,Api.GetPreviousIDWhichIsFinished(id4));
         }
         [TestMethod]
         public void GetNextIDAfterLastCandidateIsNullTest()
@@ -109,10 +109,10 @@ namespace UnitTest
             int id = Api.GetCandidate().ID;
             Api.StartSession(id);
             Api.EndSession(id);
-            Assert.IsNull(Api.GetNextFinishedID(id));
+            Assert.IsNull(Api.GetNextIDWhichIsFinished(id));
         }
         [TestMethod]
-        public void GetNextFinishedIDTest()
+        public void GetNextIDWhichIsFinishedTest()
         {
             Api.AddCandidate("Test kandidaat 1");
             int id1 = Api.GetCandidate().ID;
@@ -133,7 +133,7 @@ namespace UnitTest
             Api.EndSession(id2);
             Api.EndSession(id4);
             Api.EndSession(id5);
-            Assert.AreEqual(id4,Api.GetNextFinishedID(id2).Value);
+            Assert.AreEqual(id4,Api.GetNextIDWhichIsFinished(id2).Value);
         }
     }
 }

@@ -48,7 +48,7 @@ namespace BackEnd
             Candidates.TryGetValue(ID, out string name);
             return name != null ? new Candidate(name,ID) : null;
         }
-        internal static bool CheckSessionID(int ID)
+        internal static bool IsUnstarted(int ID)
         {
             Candidates.TryGetValue(ID, out string name);
             return name != null ? UnstartedSessions.Contains(ID) : false;
@@ -57,7 +57,7 @@ namespace BackEnd
         /// This method creates a list of all IDs of candidates that finished a session after a given time
         /// </summary>
         /// <returns>List of IDs</returns>
-        internal static List<int> GetNewFinishedIDs(long epochTime)
+        internal static List<int> GetFinishedIDsAfterEpochTime(long epochTime)
         {
             return GameSessions.Where(pair => !pair.Value.InProgress && pair.Value.EndTime>epochTime).Select(pair => pair.Key).ToList();
         }
@@ -65,7 +65,7 @@ namespace BackEnd
         /// This method finds the first ID of the candidate that ended the session after the given ID.
         /// </summary>
         /// <returns>ID if there exists one</returns>
-        internal static int? GetNextFinishedID(int ID)
+        internal static int? GetNextIDWhichIsFinished(int ID)
         {
             return Util.Min(GameSessions.Where(pair => !pair.Value.InProgress && pair.Key>ID).Select(pair => pair.Key).ToList());
         }
@@ -73,11 +73,11 @@ namespace BackEnd
         /// This method finds the last ID of the candidate that ended the session before the given ID.
         /// </summary>
         /// <returns>ID if there exists one</returns>
-        internal static int? GetPreviousFinishedID(int ID)
+        internal static int? GetPreviousIDWhichIsFinished(int ID)
         {
             return Util.Max(GameSessions.Where(pair => !pair.Value.InProgress && pair.Key<ID).Select(pair => pair.Key).ToList());
         }
-        internal static int? GetLastFinishedID()
+        internal static int? GetLastIDWhichIsFinished()
         {
             return Util.Max(GameSessions.Where(pair => !pair.Value.InProgress).Select(pair => pair.Key).ToList());
         }
