@@ -10,7 +10,7 @@ namespace BackEnd
     public class Repository
     {
         private Repository() { }
-        private static int _currentID = 0;
+        private static int _currentID = 1;
         private static readonly Dictionary<int, GameSession> GameSessions = new Dictionary<int, GameSession>();
         private static readonly Dictionary<int, string> Candidates = new Dictionary<int, string>();
         private static readonly HashSet<int> UnstartedSessions = new HashSet<int>();

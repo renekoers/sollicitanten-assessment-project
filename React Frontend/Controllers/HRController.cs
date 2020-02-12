@@ -58,15 +58,5 @@ namespace React_Frontend.Controllers
                 return newFinishedIDs;
             }
         }
-        [HttpGet("newFinished")]
-        public ActionResult<List<int>> GetNewFinished(long time)
-        {
-            List<int> newFinishedIDs = Api.GetNewFinishedIDs(time);
-            if(newFinishedIDs.Count==0){
-                return NotFound();
-            } else {
-                return newFinishedIDs;
-            }
-        }
 	}
 }

@@ -10,6 +10,12 @@ namespace React_Frontend.Controllers
 	[Route("api/statistics"), Authorize]
 	public class StatisticsController : Controller
 	{
+        [HttpGet("newFinished")]
+        public ActionResult<List<int>> GetNewFinished(long time)
+        {
+            List<int> newFinishedIDs = Api.GetNewFinishedIDs(time);
+            return newFinishedIDs;
+        }
         [HttpGet("nextFinished")]
         public ActionResult<int> GetNextFinished(int ID)
         {
@@ -41,14 +47,9 @@ namespace React_Frontend.Controllers
             }
 		}
 		[HttpGet("tallylines")]
-        /// <summary>
-        /// This method needs to get the authorization of the request. This will be a token to validate HR!!!!!!!!
-        /// </summary>
-        /// <returns></returns>
-		public Dictionary<string, Dictionary<string, int>> TallyEveryoneNumberOfLinesSolvedLevelsOf()
+		public Dictionary<string, Dictionary<string, int>> TallyEveryoneNumberOfLinesSolvedLevelsOf(int id)
 		{
-            Console.WriteLine("This method needs to get the authorization of the request. This will be a token to validate HR!!!!!!!!");
-			int sessionID = int.Parse(Request.Headers["Authorization"]);
+			int sessionID = id;
 			Dictionary<int, Dictionary<int, int>> totalTally = Api.TallyEveryoneNumberOfLinesSolvedLevelsOf(sessionID);
 			Dictionary<string, Dictionary<string, int>> stringTotalTally = new Dictionary<string, Dictionary<string, int>>();
 			foreach (KeyValuePair<int, Dictionary<int, int>> pair in totalTally)
@@ -63,14 +64,10 @@ namespace React_Frontend.Controllers
 			return stringTotalTally;
 		}
 		[HttpGet("shortestsolutions")]
-        /// <summary>
-        /// This method needs to get the authorization of the request. This will be a token to validate HR!!!!!!!!
-        /// </summary>
-        /// <returns></returns>
-		public Dictionary<string, int> NumberOfLinesSolvedLevelsOf()
+		public Dictionary<string, int> NumberOfLinesSolvedLevelsOf(int id)
 		{
-            Console.WriteLine("This method needs to get the authorization of the request. This will be a token to validate HR!!!!!!!!");
-			int sessionID = int.Parse(Request.Headers["Authorization"]);
+			//int sessionID = int.Parse(id);
+			int sessionID = id;
 			Dictionary<int, int> solutions = Api.NumberOfLinesSolvedLevelsOf(sessionID);
 			Dictionary<string, int> solutionsString = new Dictionary<string, int>();
 			foreach (KeyValuePair<int, int> pair in solutions)

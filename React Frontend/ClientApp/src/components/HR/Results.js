@@ -8,13 +8,16 @@ export function Results(props) {
 	const [name, setName] = useState(null);
 	const [firstID, setFirstID] = useState(1);
 	const [lastID, setLastID] = useState(props.lastID);
-	const [id, setID] = useState(lastID);
+	const [id, setID] = useState(props.id);
 	useEffect(() => {
+		props.onSeen(id)
 		fetch("api/session/candidate/"+id)
 		.then(status)
-		.then(data => setName(data.name))
+		.then(data => {setName(data.name)})
 	},[id])
 	async function getPreviousID(){
+		document.querySelector("#loginerror").innerHTML = " ";
+		document.querySelector(".popupButton").style["display"] = "none";
 		await fetch("api/statistics/previousFinished?ID="+id, {
 			method: "GET",
 			headers: {
@@ -33,6 +36,8 @@ export function Results(props) {
         })
 	}
 	async function getNextID(){
+		document.querySelector("#loginerror").innerHTML = " ";
+		document.querySelector(".popupButton").style["display"] = "none";
 		await fetch("api/statistics/nextFinished?ID="+id, {
 			method: "GET",
 			headers: {
@@ -53,7 +58,7 @@ export function Results(props) {
     function status(response){
         return new Promise(function(resolve, reject){
             if(response.status === 200){
-                resolve("OK")
+                resolve(response.json())
             } else {
                 reject(response.status);
             }
@@ -71,7 +76,7 @@ export function Results(props) {
 			<Jumbotron fluid>
 				<Container fluid>
 					<h1 className="display-3">Statistieken {name}</h1>
-					<Statistics id={id} />
+					<Statistics key={id} id={id} />
 					<StatisticsButtons disabledPrevious={id===firstID} disabledNext={id===lastID} onClickPrevious={getPreviousID} onClickNext={getNextID}  />
 				</Container>
 			</Jumbotron>

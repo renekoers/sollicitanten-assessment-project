@@ -1,5 +1,5 @@
 
-import React, { useEffect } from "react";
+import React from "react";
 import "../../css/HR.css";
 
 export function AddCandidate(props) {
@@ -9,7 +9,12 @@ export function AddCandidate(props) {
         }
     }
     async function addCandidate(event){
-        let credentials = event.target.parentNode.parentNode
+		document.querySelector("#loginerror").innerHTML = " ";
+		document.querySelector(".popupButton").style["display"] = "none";
+        let credentials = event.target
+        while(credentials.className !== "singleBlock"){
+            credentials = credentials.parentNode
+        }
         var name = credentials.querySelector("#username").value;
         fetch("api/HR/candidate", {
             method: "POST",
