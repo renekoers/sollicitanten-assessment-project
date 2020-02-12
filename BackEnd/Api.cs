@@ -8,13 +8,38 @@ namespace BackEnd
 {
     public class Api
     {
+        public static bool ValidateUser(string username, string hashedPass)
+        {
+            return Repository.ValidateUser(username, hashedPass);
+        }
+        public static void AddCandidate(string name)
+        {
+            Repository.AddCandidate(name);
+        }
+        public static Candidate GetCandidate()
+        {
+            return Repository.GetCandidate();
+        }
+        public static Candidate GetCandidate(int ID)
+        {
+            return Repository.GetCandidate(ID);
+        }
+        public static bool IsUnstarted(int ID)
+        {
+            return Repository.IsUnstarted(ID);
+        }
         /// <summary>
-        /// Start a new session for a new candidate
+        /// Start a new session for a new candidate.!-- This method is used in mockdata and tests!!!!
         /// </summary>
         /// <returns>The ID of the newly created candidate used to access their session</returns>
+        [Obsolete("Use StartSession(int ID) instead")]
         public static int StartSession()
         {
             return Repository.CreateSession();
+        }
+        public static bool StartSession(int ID)
+        {
+            return Repository.StartSession(ID);
         }
 
         /// <summary>
@@ -25,6 +50,14 @@ namespace BackEnd
         public static GameSession GetSession(int ID)
         {
             return Repository.GetSession(ID);
+        }
+        public static bool IsStarted(int ID)
+        {
+            GameSession gameSession = Api.GetSession(ID);
+            if(gameSession==null){
+                return false;
+            }
+            return gameSession.InProgress;
         }
 
         /// <summary>
@@ -116,6 +149,35 @@ namespace BackEnd
             int totalLevels = Level.TotalLevels;
             return totalLevels;
         }
+        /// <summary>
+        /// This method creates a list of all IDs of candidates that finished a session after a given time
+        /// </summary>
+        /// <returns>List of IDs</returns>
+        public static List<int> GetFinishedIDsAfterEpochTime(long epochTime)
+        {
+            return Repository.GetFinishedIDsAfterEpochTime(epochTime);
+        }
+        /// <summary>
+        /// This method finds the first ID of the candidate that ended the session after the given ID.
+        /// </summary>
+        /// <returns>ID if there exists one</returns>
+        public static int? GetNextIDWhichIsFinished(int ID)
+        {
+            return Repository.GetNextIDWhichIsFinished(ID);
+        }
+        /// <summary>
+        /// This method finds the last ID of the candidate that ended the session before the given ID.
+        /// </summary>
+        /// <returns>ID if there exists one</returns>
+        public static int? GetPreviousIDWhichIsFinished(int ID)
+        {
+            return Repository.GetPreviousIDWhichIsFinished(ID);
+        }
+        public static int? GetLastIDWhichIsFinished()
+        {
+            return Repository.GetLastIDWhichIsFinished();
+        }
+
 
         /// <summary>
         /// Gets the number of lines that a candidate needed to solve a specific level
@@ -166,66 +228,11 @@ namespace BackEnd
             return talliesByLevel;
         }
 
-        /// <summary>
-        /// Gives the state of the given level and the recommended numbers of lines to use.
-        /// </summary>
-        /// <param name="level"></param>
-        /// <returns>JSON consisting of the state</returns>
-        [Obsolete("Use StartLevelSession instead")]
-        public static IState GetLevel(int level)
-        {
-            return new State(new Puzzle(Level.Get(level)));
-        }
-
-        /// <summary>
-        /// This method runs the given commands for the given level. Returns an arraylist of all the states.
-        /// </summary>
-        /// <param name="level">Current level.</param> 
-        /// <param name="input">String array of commands.</param>
-        /// <returns>Arraylist of all the states.</returns>
-        [Obsolete("Use SubmitSolution instead")]
-        public static List<IState> RunCommands(int level, Statement[] input)
-        {
-            Level currentLevel = Level.Get(level);
-            Puzzle puzzle = new Puzzle(currentLevel);
-            List<IState> states = RunListOfStatements(puzzle, input);
-            if (puzzle.Finished)
-            {
-                Console.WriteLine("User solved level " + level + " in " + CalculateScore(input) + " lines. Par is " + currentLevel.Par + ".");
-            }
-            return states;
-        }
-
-        [Obsolete]
-        public static List<IState> RunCommands(int level, string[] input)
-        {
-            Statement[] commands = ConvertStringToSingleCommands(input);
-            return RunCommands(level, commands);
-
-        }
-
         public static long GetEpochTime()
         {
             return DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
         }
 
-        /// <summary>
-        /// This method runs the given commands for the given level. Returns an arraylist of all the states.
-        /// </summary>
-        /// <param name="level">Current level.</param> 
-        /// <param name="input">String of commands seperated by ';'.</param>
-        /// <returns>Arraylist of all the states.</returns>
-        [Obsolete]
-        private static List<IState> RunListOfStatements(Puzzle puzzle, Statement[] input)
-        {
-            List<IState> states = new List<IState>();
-
-            foreach (Statement statement in input)
-            {
-                states.AddRange(statement.ExecuteCommand(puzzle));
-            }
-            return states;
-        }
         /// <summary>
         /// Converts a string into an array of commands.
         /// </summary>
@@ -242,15 +249,6 @@ namespace BackEnd
             return commands;
         }
 
-        private static int CalculateScore(Statement[] input)
-        {
-            int lines = 0;
-            foreach (Statement statement in input)
-            {
-                lines += statement.GetLines();
-            }
-            return lines;
-        }
 
         /// <summary>
         /// Used to insert some solutions of the levels to see the graphs
@@ -322,13 +320,14 @@ namespace BackEnd
             => StatementParser.ParseStatementTreeJson(statementTreeJson);
 
         /// <summary>
-        /// Receives the commands from the frontend and returns a LevelSolution
+        /// Receives the commands from the frontend and returns a LevelSolution.!-- This method needs to be moved to a different class after draggables are implemented!!!!!!
         /// </summary>
         /// <param name="input">String array of commands.</param>
         /// <returns>LevelSolution.</returns>
         [Obsolete("Use Api.ParseStatementTreeJson(System.Text.Json.JsonElement) instead.")]
         public static LevelSolution ConvertAndSubmit(int ID, int levelnr, string[] input)
         {
+            Console.WriteLine("This method needs to be moved to a different class after draggables are implemented!!!!!!");
             List<List<Statement>> totalStatements = new List<List<Statement>>();
             for (int i = 0; i < input.Length; i++)
             {
