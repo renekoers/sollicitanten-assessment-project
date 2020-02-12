@@ -9,10 +9,25 @@ namespace BackEnd
         public Direction DirectionCharacter { get; }
         public string DirectionCharacterString => DirectionCharacter.ToString();
         public TileState Tile { get; internal set; }
+
         public CharacterState(Direction direction)
         {
             this.DirectionCharacter = direction;
         }
-        public bool Equals(CharacterState otherCharacter) => DirectionCharacter.Equals(otherCharacter.DirectionCharacter) && Tile.Equals(otherCharacter.Tile);
+
+        public override bool Equals(object other)
+        {
+            if(other is CharacterState)
+                return other.GetHashCode() == this.GetHashCode();
+            else
+                return false;
+        }
+
+        public override int GetHashCode()
+        {
+            return DirectionCharacter.GetHashCode()
+                + DirectionCharacterString.GetHashCode()
+                ^ (Tile.GetHashCode() << 4);
+        }
     }
 }
