@@ -113,5 +113,31 @@ namespace UnitTest
             Assert.IsFalse(button.ContainsMovable);
             Assert.AreEqual(item, character.HeldItem);
         }
+
+        [TestMethod]
+        public void MoveForwardUpdatesPosition()
+        {
+            Tile characterStartPosition = new Tile();
+            Tile tileInFronOfPlayer = new Tile();
+            characterStartPosition.SetNeighbour(tileInFronOfPlayer, Direction.North);
+            Character character = new Character(characterStartPosition, Direction.North);
+
+            character.ExecuteCommand(Command.MoveForward);
+
+            Assert.AreEqual(tileInFronOfPlayer, character.Position);
+        }
+
+        [TestMethod]
+        public void MoveBackwardUpdatesPosition()
+        {
+            Tile characterStartPosition = new Tile();
+            Tile tileBehindPlayer = new Tile();
+            characterStartPosition.SetNeighbour(tileBehindPlayer, Direction.East);
+            Character character = new Character(characterStartPosition, Direction.West);
+
+            character.ExecuteCommand(Command.MoveBackward);
+
+            Assert.AreEqual(tileBehindPlayer, character.Position);
+        }
     }
 }

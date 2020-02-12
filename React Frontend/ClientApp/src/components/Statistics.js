@@ -4,10 +4,6 @@ import "../css/Statistics.css";
 
 export class Statistics extends Component {
 	static displayName = Statistics.name;
-	constructor(props) {
-		//expects props.id
-		super(props);
-	}
 
 	state = {
 		dataTallyLines: null,
@@ -15,14 +11,28 @@ export class Statistics extends Component {
 		dataTallyDuration: null,
 		dataCurrentCandidateDuration: null
 	};
-
+	/// <summary>
+	/// Add authorization to every request in order to validate HR. -- This needs to be done after HR page is implemented!!!!!!
+	/// </summary>
+	/// <returns></returns>
 	componentDidMount() {
 		(async () => {
-			const responseTally = await fetch(
-				"api/statistics/tallylines/" + this.props.id
-			);
+			const responseTally = await fetch("api/statistics/tallylines/", {
+				method: "GET",
+				headers: {
+					"Content-Type": "application/json",
+					Authorization: this.props.id
+				}
+			});
 			const responseCurrentCandidate = await fetch(
-				"api/statistics/shortestsolutions/" + this.props.id
+				"api/statistics/shortestsolutions/",
+				{
+					method: "GET",
+					headers: {
+						"Content-Type": "application/json",
+						Authorization: this.props.id
+					}
+				}
 			);
 			const responseTallyDuration = await fetch(
 				"api/statistics/tallyduration/" + this.props.id

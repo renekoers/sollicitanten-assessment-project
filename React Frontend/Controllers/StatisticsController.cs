@@ -1,40 +1,80 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using BackEnd;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 
 namespace React_Frontend.Controllers
 {
-    [ApiController]
-    [Route("api/statistics")]
-    public class StatisticsController : Controller
-    {
-        [HttpGet("tallylines/{id}")]
-        public string TallyEveryoneNumberOfLinesSolvedLevelsOf(int id)
+	[ApiController]
+	[Route("api/statistics"), Authorize]
+	public class StatisticsController : Controller
+	{
+        [HttpGet("newFinished")]
+        public ActionResult<List<int>> GetNewFinished(long time)
         {
-            Dictionary<int, Dictionary<int, int>> totalTally = Api.TallyEveryoneNumberOfLinesSolvedLevelsOf(id);
-            return JSON.Serialize(totalTally);
+            List<int> newFinishedIDs = Api.GetNewFinishedIDs(time);
+            return newFinishedIDs;
         }
-        [HttpGet("shortestsolutions/{id}")]
-        public string NumberOfLinesSolvedLevelsOf(int id)
+        [HttpGet("nextFinished")]
+        public ActionResult<int> GetNextFinished(int ID)
         {
-            Dictionary<int, int> solutions = Api.NumberOfLinesSolvedLevelsOf(id);
-            return JSON.Serialize(solutions);
+            int? nextID = Api.GetNextFinishedID(ID);
+            if(nextID==null){
+                return NotFound();
+            } else {
+                return nextID.Value;
+            }
         }
-        [HttpGet("tallyduration/{id}")]
-        public string TallyEveryoneDurationSolvedLevelsOf(int id)
+        [HttpGet("previousFinished")]
+        public ActionResult<int> GetPreviousFinished(int ID)
         {
-            Dictionary<int, Dictionary<int, int>> totalTally = Api.TallyEveryoneDurationSolvedLevelsOf(id);
-            return JSON.Serialize(totalTally);
+            int? previousID = Api.GetPreviousFinishedID(ID);
+            if(previousID==null){
+                return NotFound();
+            } else {
+                return previousID.Value;
+            }
         }
-        [HttpGet("durationshortestsolutions/{id}")]
-        public string DurationSolvedLevelsOf(int id)
-        {
-            Dictionary<int, int> solutions = Api.DurationSolvedLevelsOf(id);
-            return JSON.Serialize(solutions);
-        }
-    }
+		[HttpGet("lastFinished")]
+		public ActionResult<int> GetLastFinished()
+		{
+			int? lastID =  Api.GetLastFinishedID();
+            if(lastID==null){
+                return NotFound();
+            } else {
+                return lastID.Value;
+            }
+		}
+		[HttpGet("tallylines")]
+		public Dictionary<string, Dictionary<string, int>> TallyEveryoneNumberOfLinesSolvedLevelsOf(int id)
+		{
+			int sessionID = id;
+			Dictionary<int, Dictionary<int, int>> totalTally = Api.TallyEveryoneNumberOfLinesSolvedLevelsOf(sessionID);
+			Dictionary<string, Dictionary<string, int>> stringTotalTally = new Dictionary<string, Dictionary<string, int>>();
+			foreach (KeyValuePair<int, Dictionary<int, int>> pair in totalTally)
+			{
+				Dictionary<string, int> stringPair = new Dictionary<string, int>();
+				foreach (KeyValuePair<int, int> subPair in pair.Value)
+				{
+					stringPair.Add(subPair.Key.ToString(), subPair.Value);
+				}
+				stringTotalTally.Add(pair.Key.ToString(), stringPair);
+			}
+			return stringTotalTally;
+		}
+		[HttpGet("shortestsolutions")]
+		public Dictionary<string, int> NumberOfLinesSolvedLevelsOf(int id)
+		{
+			//int sessionID = int.Parse(id);
+			int sessionID = id;
+			Dictionary<int, int> solutions = Api.NumberOfLinesSolvedLevelsOf(sessionID);
+			Dictionary<string, int> solutionsString = new Dictionary<string, int>();
+			foreach (KeyValuePair<int, int> pair in solutions)
+			{
+				solutionsString.Add(pair.Key.ToString(), pair.Value);
+			}
+			return solutionsString;
+		}
+	}
 }

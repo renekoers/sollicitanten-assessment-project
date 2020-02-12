@@ -28,6 +28,7 @@ namespace BackEnd
             Duration = duration;
             Puzzle puzzle = new Puzzle(Level.Get(number));
             States = new List<IState>();
+            States.Add(new State(puzzle));
             States.AddRange(Code.ExecuteCommand(puzzle));
             Solved = puzzle.Finished;
         }

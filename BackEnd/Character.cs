@@ -24,6 +24,9 @@ namespace BackEnd
                 case Command.MoveForward:
                     MoveForward();
                     break;
+                case Command.MoveBackward:
+                    MoveBackward();
+                    break;
                 case Command.RotateLeft:
                     RotateLeft();
                     break;
@@ -56,6 +59,16 @@ namespace BackEnd
             if (tileInFront.Passable)
             {
                 Position = tileInFront;
+                return true;
+            }
+            return false;
+        }
+        protected virtual bool MoveBackward()
+        {
+            Tile tileBehind = Position.GetNeighbour(Direction.Opposite());
+            if (tileBehind.Passable)
+            {
+                Position = tileBehind;
                 return true;
             }
             return false;
