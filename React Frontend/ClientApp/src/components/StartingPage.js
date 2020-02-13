@@ -105,22 +105,6 @@ export const StartingPage = () => {
 				isStarted = data;
 			});
 		return isStarted;
-	}
-
-	const isAlreadyStarted = async () => {
-		let isStarted;
-		await fetch("api/session/isStarted", {
-			method: "GET",
-			headers: {
-				"Content-Type": "application/json",
-				Authorization: localStorage.getItem("sessionID")
-			}
-		})
-			.then(response => response.json())
-			.then(data => {
-				isStarted = data;
-			});
-		return isStarted;
 	};
 
 	const gameSessionRedirect = () => {
