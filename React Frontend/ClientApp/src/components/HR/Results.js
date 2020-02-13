@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import "../../css/HR.css";
 import { Jumbotron, Container } from "reactstrap";
-//import { Statistics } from "./Statistics";
-import { StatisticsLessRequests as Statistics} from "./StatisticsLessRequests";
+import { Statistics } from "./Statistics";
+//import { StatisticsLessRequests as Statistics} from "./StatisticsLessRequests";
 import { StatisticsButtons } from "./StatisticsButtons";
 
 export function Results(props) {

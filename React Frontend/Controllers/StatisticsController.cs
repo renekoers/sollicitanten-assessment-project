@@ -46,40 +46,16 @@ namespace React_Frontend.Controllers
                 return lastID.Value;
             }
 		}
-		[HttpGet("tallylines")]
-		public string TallyEveryoneNumberOfLinesSolvedLevelsOf(int id)
-		{
-			Dictionary<int, Dictionary<int, int>> totalTally = Api.TallyEveryoneNumberOfLinesSolvedLevelsOf(id);
-			return JSON.Serialize(totalTally);
-		}
-		[HttpGet("candidatelines")]
-		public string NumberOfLinesSolvedLevelsOf(int id)
-		{
-			Dictionary<int, int> solutions = Api.NumberOfLinesSolvedLevelsOf(id);
-			return JSON.Serialize(solutions);
-		}
-		[HttpGet("tallyduration")]
-		public string TallyEveryoneDurationSolvedLevelsOf(int id)
-		{
-			Dictionary<int, Dictionary<int, int>> totalTally = Api.TallyEveryoneDurationSolvedLevelsOf(id);
-			return JSON.Serialize(totalTally);
-		}
-		[HttpGet("candidateduration")]
-		public string DurationSolvedLevelsOf(int id)
-		{
-			Dictionary<int, int> solutions = Api.DurationSolvedLevelsOf(id);
-			return JSON.Serialize(solutions);
-		}
 		[HttpGet("candidate")]
 		public string GetDataCandidate(int id)
 		{
-			Dictionary<string,Dictionary<int,int>> data = Api.DataSolvedLevelsOf(id);
+			Dictionary<int,Dictionary<string,int>> data = Api.StatisticsCandidate(id);
 			return JSON.Serialize(data);
 		}
 		[HttpGet("tally")]
 		public string GetDataTally(int id)
 		{
-			Dictionary<string,Dictionary<int, Dictionary<int, int>>> data = Api.TallyEveryoneDataSolvedLevelsOf(id);
+			Dictionary<int,Dictionary<string, Dictionary<int, int>>> data = Api.StatisticsEveryone(id);
 			return JSON.Serialize(data);
 		}
 	}
