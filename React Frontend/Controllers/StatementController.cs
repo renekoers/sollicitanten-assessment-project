@@ -18,7 +18,6 @@ namespace React_Frontend.Controllers
         public string PostStatements(int levelId, [FromBody] JsonElement statementTreeJson)
         {
             int sessionID = int.Parse(Request.Headers["Authorization"]);
-            Console.WriteLine(statementTreeJson);
             IEnumerable<Statement> statements = Api.ParseStatementTreeJson(statementTreeJson);
             return JSON.Serialize(Api.SubmitSolution(sessionID, levelId, statements.ToArray()));
         }

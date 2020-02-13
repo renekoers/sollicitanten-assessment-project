@@ -39,7 +39,7 @@ export class Game extends Component {
 	}
 
 	async getLevel(level) {
-		await fetch("api/session/retrieveLevel?levelNumber=" + level, {
+		await fetch("api/session/retrieveLevel/" + level, {
 			method: "GET",
 			headers: {
 				"Content-Type": "application/json",
@@ -98,9 +98,7 @@ export class Game extends Component {
 				body: JSON.stringify(statementTree)
 			}
 		);
-		console.log(levelSolutionResponse);
 		const levelSolution = await levelSolutionResponse.json();
-		console.log(levelSolution);
 		this.updateGridFromLevelSolution(levelSolution);
 	}
 
