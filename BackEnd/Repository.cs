@@ -81,6 +81,32 @@ namespace BackEnd
             }
             return tally;
         }
+        /// <summary>
+        /// This method creates a dictionary consisting of the number of candidates that did not solve a certain level.
+        /// </summary>
+        /// <returns></returns>
+        public static Dictionary<int,int> NumberOfCandidatesNotSolvedPerLevel()
+        {
+            Dictionary<int,int> amountUnsolved = new Dictionary<int, int>();
+            for(int levelNumber=1; levelNumber<=Level.TotalLevels;levelNumber++)
+            {
+                amountUnsolved[levelNumber] = 0;
+            }
+            foreach(GameSession gameSession in GameSessions.Values)
+            {
+                for(int levelNumber=1; levelNumber<=Level.TotalLevels;levelNumber++)
+                {
+                    LevelSession levelSession = gameSession.GetSession(levelNumber);
+                    if (levelSession is null || levelSession.Solved)
+                    {
+                        continue;
+                    }
+                    amountUnsolved[levelNumber]++;
+                }
+            }
+            return amountUnsolved;
+        }
+        /// <summary>
         /// This method creates a list of all IDs of candidates that finished a session after a given time
         /// </summary>
         /// <returns>List of IDs</returns>

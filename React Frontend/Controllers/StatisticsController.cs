@@ -53,10 +53,16 @@ namespace React_Frontend.Controllers
 			return JSON.Serialize(data);
 		}
 		[HttpGet("tally")]
-		public string GetDataTally(int id)
+		public string GetDataTally()
 		{
-			Dictionary<int,Dictionary<string, Dictionary<int, int>>> data = Api.StatisticsEveryone(id);
+			Dictionary<int,Dictionary<string, Dictionary<int, int>>> data = Api.StatisticsEveryone();
 			return JSON.Serialize(data);
 		}
+        [HttpGet("unsolved")]
+        public string GetDataUnsolved()
+        {
+            Dictionary<int,int> amountUnsolvedPerLevel = Api.NumberOfCandidatesNotSolvedPerLevel();
+            return JSON.Serialize(amountUnsolvedPerLevel);
+        }
 	}
 }

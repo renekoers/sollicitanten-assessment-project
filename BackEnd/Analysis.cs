@@ -52,13 +52,11 @@ namespace BackEnd
         /// Creates a dictionary consisting of all statistics of all candidates.
         /// </summary>
         /// <returns>Dictionary with for every level has a dictionary of name of the statistic and the combination of data and number of candidates.</returns>
-        public static Dictionary<int,Dictionary<string, Dictionary<int, int>>> StatisticsEveryone(int ID)
+        public static Dictionary<int,Dictionary<string, Dictionary<int, int>>> StatisticsEveryone()
         {
-            GameSession gameSession = Repository.GetSession(ID);
-            ISet<int> solvedLevels = gameSession.SolvedLevelNumbers;
             Dictionary<string,Func<LevelSession,int>> statisticsFunctions = GetStatisticsFunctions();
             Dictionary<int,Dictionary<string, Dictionary<int, int>>> dataEveryone = new Dictionary<int,Dictionary<string, Dictionary<int, int>>>();
-            foreach (int levelNumber in solvedLevels)
+            for (int levelNumber=1; levelNumber<=Level.TotalLevels;levelNumber++)
             {
                 Dictionary<string,Dictionary<int, int>> dataSingleLevel = new Dictionary<string, Dictionary<int, int>>();
                 foreach(KeyValuePair<string,Func<LevelSession,int>> nameDataAndFunctionToIntPair in statisticsFunctions){
@@ -70,6 +68,7 @@ namespace BackEnd
         }
         /// <summary>
         /// Creates a list of functions that maps a levelSession to an int. This function are used in constructing dictionaries that represents the statistics.
+        /// Add here extra functions in order to add extra statistics.
         /// </summary>
         /// <returns>Dictionary with for name of the statistic creates data that represents the statistic of the given level.</returns>
         private static Dictionary<string,Func<LevelSession,int>> GetStatisticsFunctions()
