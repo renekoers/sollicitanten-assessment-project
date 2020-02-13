@@ -1,45 +1,66 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using BackEnd;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 
 namespace React_Frontend.Controllers
 {
 	[ApiController]
-	[Route("api/statistics")]
+	[Route("api/statistics"), Authorize]
 	public class StatisticsController : Controller
 	{
-		[HttpGet("tallylines")]
-		public Dictionary<string, Dictionary<string, int>> TallyEveryoneNumberOfLinesSolvedLevelsOf()
+        [HttpGet("newFinished")]
+        public ActionResult<List<int>> GetNewFinished(long time)
+        {
+            List<int> newFinishedIDs = Api.GetFinishedIDsAfterEpochTime(time);
+            return newFinishedIDs;
+        }
+        [HttpGet("nextFinished")]
+        public ActionResult<int> GetNextFinished(int ID)
+        {
+            int? nextID = Api.GetNextIDWhichIsFinished(ID);
+            if(nextID==null){
+                return NotFound();
+            } else {
+                return nextID.Value;
+            }
+        }
+        [HttpGet("previousFinished")]
+        public ActionResult<int> GetPreviousFinished(int ID)
+        {
+            int? previousID = Api.GetPreviousIDWhichIsFinished(ID);
+            if(previousID==null){
+                return NotFound();
+            } else {
+                return previousID.Value;
+            }
+        }
+		[HttpGet("lastFinished")]
+		public ActionResult<int> GetLastFinished()
 		{
-			int sessionID = int.Parse(Request.Headers["Authorization"]);
+			int? lastID =  Api.GetLastIDWhichIsFinished();
+            if(lastID==null){
+                return NotFound();
+            } else {
+                return lastID.Value;
+            }
+		}
+		[HttpGet("tallylines")]
+		public string TallyEveryoneNumberOfLinesSolvedLevelsOf(string id)
+		{
+			System.Console.WriteLine(id);
+			System.Console.WriteLine(id.GetType());
+			int sessionID = int.Parse(id);
 			Dictionary<int, Dictionary<int, int>> totalTally = Api.TallyEveryoneNumberOfLinesSolvedLevelsOf(sessionID);
-			Dictionary<string, Dictionary<string, int>> stringTotalTally = new Dictionary<string, Dictionary<string, int>>();
-			foreach (KeyValuePair<int, Dictionary<int, int>> pair in totalTally)
-			{
-				Dictionary<string, int> stringPair = new Dictionary<string, int>();
-				foreach (KeyValuePair<int, int> subPair in pair.Value)
-				{
-					stringPair.Add(subPair.Key.ToString(), subPair.Value);
-				}
-				stringTotalTally.Add(pair.Key.ToString(), stringPair);
-			}
-			return stringTotalTally;
+			return JSON.Serialize(totalTally);
 		}
 		[HttpGet("shortestsolutions")]
-		public Dictionary<string, int> NumberOfLinesSolvedLevelsOf()
+		public string NumberOfLinesSolvedLevelsOf(string id)
 		{
-			int sessionID = int.Parse(Request.Headers["Authorization"]);
+			int sessionID = int.Parse(id);
 			Dictionary<int, int> solutions = Api.NumberOfLinesSolvedLevelsOf(sessionID);
-			Dictionary<string, int> solutionsString = new Dictionary<string, int>();
-			foreach (KeyValuePair<int, int> pair in solutions)
-			{
-				solutionsString.Add(pair.Key.ToString(), pair.Value);
-			}
-			return solutionsString;
+			return JSON.Serialize(solutions);
 		}
 	}
 }

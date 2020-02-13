@@ -9,7 +9,10 @@ export class Statistics extends Component {
 		dataTally: null,
 		dataCurrentCandidate: null
 	};
-
+	/// <summary>
+	/// Add authorization to every request in order to validate HR. -- This needs to be done after HR page is implemented!!!!!!
+	/// </summary>
+	/// <returns></returns>
 	componentDidMount() {
 		(async () => {
 			const responseTally = await fetch("api/statistics/tallylines/", {
@@ -29,6 +32,7 @@ export class Statistics extends Component {
 					}
 				}
 			);
+			console.log("Add authorization to every request in order to validate HR. -- This needs to be done after HR page is implemented!!!!!!");
 			this.setState({
 				dataTally: await responseTally.json(),
 				dataCurrentCandidate: await responseCurrentCandidate.json()

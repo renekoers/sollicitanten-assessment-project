@@ -1,6 +1,5 @@
 ﻿import React from "react";
 import { Jumbotron, Container } from "reactstrap";
-import { Statistics } from "./Statistics";
 
 export const EndPage = props => {
 	// const [sessionID, setSessionID] = useState(-1);
@@ -25,7 +24,6 @@ export const EndPage = props => {
 				<Container fluid>
 					<h1 className="display-3">Statistieken</h1>
 					<p>Je bent klaar!</p>
-					<Statistics id={localStorage.getItem("sessionID")} />
 				</Container>
 			</Jumbotron>
 		</div>
