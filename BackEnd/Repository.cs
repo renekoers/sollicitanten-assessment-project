@@ -115,40 +115,6 @@ namespace BackEnd
         }
 
         /// <summary>
-        /// Tallies a given function of the best solution for the given level number over all sessions
-        /// </summary>
-        /// <param name="levelNumber"></param>
-        /// <param name="function"></param>
-        /// <returns>A dictionary with as the first int result of function(leastLinesSolution) and the second int the number of people that solved the level with the same info</returns>
-        public static Dictionary<int, int> TallyEveryoneBestSolution(int levelNumber, Func<LevelSolution,int> function)
-        {
-            Dictionary<int, int> tally = new Dictionary<int, int>();
-            foreach (GameSession gameSession in GameSessions.Values)
-            {
-                LevelSession levelSession = gameSession.GetSession(levelNumber);
-                if (levelSession is null)
-                {
-                    continue;
-                }
-                LevelSolution leastLinesSolution = levelSession.GetLeastLinesOfCodeSolution();
-                if (leastLinesSolution is null)
-                {
-                    continue;
-                }
-                int info = function(leastLinesSolution);
-                if (tally.ContainsKey(info))
-                {
-                    tally[info]++;
-                }
-                else
-                {
-                    tally[info] = 1;
-                }
-            }
-            return tally;
-            //return TallyEveryone(levelNumber, session => function(session.GetLeastLinesOfCodeSolution()));
-        }
-        /// <summary>
         /// Tallies a given function of a level session for the given level number over all sessions
         /// </summary>
         /// <param name="levelNumber"></param>
@@ -160,11 +126,8 @@ namespace BackEnd
             foreach (GameSession gameSession in GameSessions.Values)
             {
                 LevelSession levelSession = gameSession.GetSession(levelNumber);
-                if (levelSession is null)
+                if (levelSession is null || !levelSession.Solved)
                 {
-                    continue;
-                }
-                if( !levelSession.Solved){
                     continue;
                 }
                 int info = function(levelSession);
