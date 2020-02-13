@@ -32,16 +32,53 @@ namespace BackEnd
         /// <returns>Dictionary with for every level has a dictionary of name of the statistic and the data.</returns>
         public static Dictionary<int,Dictionary<string,int>> StatisticsCandidate(int ID)
         {
-            return null;
+            GameSession gameSession = Repository.GetSession(ID);
+            ISet<int> solvedLevels = gameSession.SolvedLevelNumbers;
+            Dictionary<string,Func<LevelSession,int>> statisticsFunctions = GetStatisticsFunctions();
+            Dictionary<int,Dictionary<string,int>> dataCandidate = new Dictionary<int,Dictionary<string,int>>();
+            foreach (int levelNumber in solvedLevels)
+            {
+                LevelSession levelSession = gameSession.GetSession(levelNumber);
+                Dictionary<string,int> dataSingleLevel = new Dictionary<string, int>();
+                foreach(KeyValuePair<string,Func<LevelSession,int>> nameDataAndFunctionToIntPair in statisticsFunctions){
+                    dataSingleLevel.Add(nameDataAndFunctionToIntPair.Key, nameDataAndFunctionToIntPair.Value(levelSession));
+                }
+                dataCandidate.Add(levelNumber,dataSingleLevel);
+                
+            }
+            return dataCandidate;
         }
         /// <summary>
-        /// Creates a dictionary consisting of all statistics of a candidate.
+        /// Creates a dictionary consisting of all statistics of all candidates.
         /// </summary>
         /// <returns>Dictionary with for every level has a dictionary of name of the statistic and the combination of data and number of candidates.</returns>
         public static Dictionary<int,Dictionary<string, Dictionary<int, int>>> StatisticsEveryone(int ID)
         {
-            return null;
+            GameSession gameSession = Repository.GetSession(ID);
+            ISet<int> solvedLevels = gameSession.SolvedLevelNumbers;
+            Dictionary<string,Func<LevelSession,int>> statisticsFunctions = GetStatisticsFunctions();
+            Dictionary<int,Dictionary<string, Dictionary<int, int>>> dataEveryone = new Dictionary<int,Dictionary<string, Dictionary<int, int>>>();
+            foreach (int levelNumber in solvedLevels)
+            {
+                Dictionary<string,Dictionary<int, int>> dataSingleLevel = new Dictionary<string, Dictionary<int, int>>();
+                foreach(KeyValuePair<string,Func<LevelSession,int>> nameDataAndFunctionToIntPair in statisticsFunctions){
+                    dataSingleLevel.Add(nameDataAndFunctionToIntPair.Key, Repository.TallyEveryone(levelNumber, nameDataAndFunctionToIntPair.Value));
+                }
+                dataEveryone.Add(levelNumber, dataSingleLevel);
+            }
+            return dataEveryone;
         }
-        private static Dictionary<string,T> 
+        /// <summary>
+        /// Creates a list of functions that maps a levelSession to an int. This function are used in constructing dictionaries that represents the statistics.
+        /// </summary>
+        /// <returns>Dictionary with for name of the statistic creates data that represents the statistic of the given level.</returns>
+        private static Dictionary<string,Func<LevelSession,int>> GetStatisticsFunctions()
+        {
+            Dictionary<string,Func<LevelSession,int>> statisticsFunctions = new Dictionary<string,Func<LevelSession, int>>();
+            statisticsFunctions.Add("Regels code kortste oplossing", LevelSession.GetLines);
+            statisticsFunctions.Add("Tijd tot korste oplossing", LevelSession.GetDuration);
+            statisticsFunctions.Add("Pogingen tot korste oplossing", session => session.NumberOfAttemptsForFirstSolved);
+            return statisticsFunctions;
+        }
     }
 }
