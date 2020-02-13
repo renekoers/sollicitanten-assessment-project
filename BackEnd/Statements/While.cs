@@ -33,7 +33,6 @@ namespace BackEnd
 				newState = states.Count>0 ? states[states.Count - 1] : null;
 				if (oldStates.Contains(newState) || newState==null)
 				{
-					Console.WriteLine("It's an infinite loop!");
 					this.IsInfiniteLoop = true;
 					return states;
 				}
