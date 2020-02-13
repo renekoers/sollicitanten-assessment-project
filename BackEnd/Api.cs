@@ -203,13 +203,6 @@ namespace BackEnd
             dataTally.Add("Pogingen", GetStatisticsEveryoneFromSession(solvedLevels,session => session.NumberOfAttemptsForFirstSolved));
             return dataTally;
         }
-        public static Dictionary<string, T> getDataForStatistics<T>(int ID, Func<ISet<int>,T> functionToDictionary) where T : class
-        {
-            Dictionary<string, T> data = new Dictionary<string, T>();
-            data.Add("Regels code", GetStatisticsEveryone(solvedLevels, LevelSession.GetLines));
-            data.Add("Tijd", GetStatisticsEveryone(solvedLevels, LevelSession.GetDuration));
-            data.Add("Pogingen", GetStatisticsEveryoneFromSession(solvedLevels,session => session.NumberOfAttemptsForFirstSolved));
-        }
 
         public static Dictionary<int, int> NumberOfLinesSolvedLevelsOf(int ID)
         {
