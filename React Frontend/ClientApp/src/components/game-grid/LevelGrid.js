@@ -64,7 +64,6 @@ export class LevelGrid extends Component {
 	render() {
 		return (
 			<div>
-
 				<div
 					className="game-grid-container"
 					style={{

@@ -21,7 +21,7 @@ export class Timer extends Component {
 	async updateTime() {
 		let milliseconds = 0;
 		const id = localStorage.getItem("sessionID");
-		await fetch("api/session/remainingtime", {
+		await fetch("api/session/remainingTime", {
 			method: "GET",
 			headers: {
 				"Content-Type": "application/json",
