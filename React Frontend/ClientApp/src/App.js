@@ -7,6 +7,7 @@ import { StartingPage } from "./components/StartingPage";
 import { EndPage } from "./components/EndPage";
 import { MainPage as HR} from "./components/HR/MainPage"; 
 import { Login } from "./components/HR/Login"; 
+import { Tutorial } from "./components/Tutorial";
 
 import "./css/custom.css";
 
@@ -17,6 +18,7 @@ export default class App extends Component {
 		return (
 			<Layout>
 				<Route exact path="/" component={StartingPage} />
+				<Route path="/tutorialsession" component={Tutorial} />
 				<Route exact path="/gamesession/:level" component={Game} />
 				<Route exact path="/gamesession" component={Game} />
 				<Route path="/overview" component={Overview} />
