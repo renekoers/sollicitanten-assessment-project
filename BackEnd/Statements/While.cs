@@ -30,8 +30,8 @@ namespace BackEnd
 			while (puzzle.Character.CheckCondition(_parameter, _value) == _isTrue)
 			{
 				states.AddRange(_statements.ExecuteCommand(puzzle));
-				newState = states[states.Count - 1];
-				if (oldStates.Contains(newState))
+				newState = states.Count>0 ? states[states.Count - 1] : null;
+				if (oldStates.Contains(newState) || newState==null)
 				{
 					Console.WriteLine("It's an infinite loop!");
 					this.IsInfiniteLoop = true;
