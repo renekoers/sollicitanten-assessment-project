@@ -48,7 +48,7 @@ export const Game = props => {
 				SylveonBlocks.clearWorkspace();
 			});
 
-		await fetch("api/session/levelIsSolved?levelNumber=" + level, {
+		await fetch("api/session/levelIsSolved/" + level, {
 			method: "GET",
 			headers: {
 				"Content-Type": "application/json",
