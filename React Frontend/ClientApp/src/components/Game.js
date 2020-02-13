@@ -3,6 +3,8 @@ import { Statement } from "./Statement";
 import React, { Component } from "react";
 import LevelGrid from "./game-grid/LevelGrid";
 import { SkipButton } from "./SkipButton";
+import SylveonBlocks from "../blockly/SylveonBlocks";
+
 
 export class Game extends Component {
 	_currentStateTimeoutID = null;
@@ -49,6 +51,7 @@ export class Game extends Component {
 			.then(response => response.json())
 			.then(data => {
 				this.setState({ level: data, levelNumber: data.puzzleLevel });
+				SylveonBlocks.clearWorkspace();
 			});
 		await fetch("api/session/levelIsSolved?levelNumber=" + level, {
 			method: "GET",
