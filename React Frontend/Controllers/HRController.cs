@@ -51,7 +51,7 @@ namespace React_Frontend.Controllers
         {
             ClaimsIdentity identity = (ClaimsIdentity)User.Identity;
             long time = long.Parse(identity.FindFirst("Time").Value);
-            List<int> newFinishedIDs = Api.GetNewFinishedIDs(time);
+            List<int> newFinishedIDs = Api.GetFinishedIDsAfterEpochTime(time);
             if(newFinishedIDs.Count==0){
                 return NotFound();
             } else {

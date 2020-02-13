@@ -36,9 +36,12 @@ namespace BackEnd
 
 		private static IEnumerable<Statement> ParseStatementArrayJson(JsonElement statementArray)
 		{
-			JsonElement.ArrayEnumerator arrayEnumerator = statementArray.EnumerateArray();
-			foreach (JsonElement statementJsonElement in arrayEnumerator)
-				yield return ParseStatementJson(statementJsonElement);
+			if (statementArray.ValueKind == JsonValueKind.Array)
+			{
+				JsonElement.ArrayEnumerator arrayEnumerator = statementArray.EnumerateArray();
+				foreach (JsonElement statementJsonElement in arrayEnumerator)
+					yield return ParseStatementJson(statementJsonElement);
+			}
 		}
 
 		private static SingleCommand ParseCommandStatementJson(string statementAction, JsonElement statementElement)

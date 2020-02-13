@@ -46,6 +46,10 @@ export function MainPage() {
     useEffect(() => {
         document.querySelector("#loginerror").innerHTML = " ";
 		document.querySelector(".popupButton").style["display"] = "none";
+		getLastID();
+	},[token])
+	
+	async function getLastID(){
 		fetch("api/statistics/lastFinished", {
 			method: "GET",
 			headers: {
@@ -55,8 +59,7 @@ export function MainPage() {
 		})
 		.then(status)
 		.then(setLastID)
-	},[token])
-	
+	}
 	
 	useEffect(() => {
 		const id = setInterval(() => getNewFinished(), 20000);
@@ -125,7 +128,7 @@ export function MainPage() {
 	function getPage(){
 		if(isValid){
 			if(atResults){
-				let id = lastID;
+				let id=lastID;
 				if(newFinishedIDs.length>0){
 					id=newFinishedIDs[0];
 				}
@@ -156,7 +159,7 @@ export function MainPage() {
 	}
 	return (
 		<div>
-			{getPage()}
+			{ getPage()}
 			<div className="error" id="loginerror"> </div>
 			<Link to="HR/login" className="popupButton"><button id="loginbutton">Naar login</button></Link>
 			{!isValid && isValid!==null && token===null &&<Redirect to="/HR/login"/>}

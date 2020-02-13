@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import "../../css/HR.css";
 import { Jumbotron, Container } from "reactstrap";
 import { Statistics } from "./Statistics";
-//import { StatisticsLessRequests as Statistics} from "./StatisticsLessRequests";
 import { StatisticsButtons } from "./StatisticsButtons";
 
 export function Results(props) {
@@ -11,11 +10,30 @@ export function Results(props) {
 	const [lastID, setLastID] = useState(props.lastID);
 	const [id, setID] = useState(props.id);
 	useEffect(() => {
+		if(id===0){
+			getLastID();
+		}
 		props.onSeen(id)
 		fetch("api/session/candidate/"+id)
 		.then(status)
 		.then(data => {setName(data.name)})
 	},[id])
+	
+	async function getLastID(){
+		fetch("api/statistics/lastFinished", {
+			method: "GET",
+			headers: {
+				"Content-Type": "application/json",
+				Authorization: localStorage.getItem("token")
+			}
+		})
+		.then(status)
+		.then(data => {
+			setLastID(data)
+			setID(data)
+		})
+	}
+
 	async function getPreviousID(){
 		document.querySelector("#loginerror").innerHTML = " ";
 		document.querySelector(".popupButton").style["display"] = "none";
@@ -71,7 +89,10 @@ export function Results(props) {
         } else {
             return "Er is iets mis gegaan. Probeer het later opnieuw."
         }
-    }
+	}
+	if(id===0){
+		return <div/>
+	}
     return (
 		<div>
 			<Jumbotron fluid>

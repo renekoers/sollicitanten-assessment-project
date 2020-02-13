@@ -2,21 +2,20 @@
 import { Timer } from "./Timer";
 import "../css/Header.css";
 
-export class Header extends Component {
-	constructor(props) {
-		super(props);
-		this.state = {};
-	}
+export const Header = props => {
+	const timer = () => {
+		if (props.hasTimer) {
+			return <Timer key="timer" />;
+		} else {
+			return;
+		}
+	};
 
-	render() {
-		return (
-			<div>
-				<div className="header-container">
-					<div className="header-content">
-						<Timer key="timer" />
-					</div>
-				</div>
+	return (
+		<div>
+			<div className="header-container">
+				<div className="header-content">{timer()}</div>
 			</div>
-		);
-	}
-}
+		</div>
+	);
+};

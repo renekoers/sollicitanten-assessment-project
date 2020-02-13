@@ -13,13 +13,13 @@ namespace React_Frontend.Controllers
         [HttpGet("newFinished")]
         public ActionResult<List<int>> GetNewFinished(long time)
         {
-            List<int> newFinishedIDs = Api.GetNewFinishedIDs(time);
+            List<int> newFinishedIDs = Api.GetFinishedIDsAfterEpochTime(time);
             return newFinishedIDs;
         }
         [HttpGet("nextFinished")]
         public ActionResult<int> GetNextFinished(int ID)
         {
-            int? nextID = Api.GetNextFinishedID(ID);
+            int? nextID = Api.GetNextIDWhichIsFinished(ID);
             if(nextID==null){
                 return NotFound();
             } else {
@@ -29,7 +29,7 @@ namespace React_Frontend.Controllers
         [HttpGet("previousFinished")]
         public ActionResult<int> GetPreviousFinished(int ID)
         {
-            int? previousID = Api.GetPreviousFinishedID(ID);
+            int? previousID = Api.GetPreviousIDWhichIsFinished(ID);
             if(previousID==null){
                 return NotFound();
             } else {
@@ -39,7 +39,7 @@ namespace React_Frontend.Controllers
 		[HttpGet("lastFinished")]
 		public ActionResult<int> GetLastFinished()
 		{
-			int? lastID =  Api.GetLastFinishedID();
+			int? lastID =  Api.GetLastIDWhichIsFinished();
             if(lastID==null){
                 return NotFound();
             } else {

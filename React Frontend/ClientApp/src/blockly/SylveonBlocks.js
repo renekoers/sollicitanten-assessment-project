@@ -85,6 +85,11 @@ class SylveonBlocks
             return "null";
     }
 
+    static clearWorkspace() 
+    {
+        Blockly.mainWorkspace.clear();
+    }
+
     static get moveForwardAction()
     {
         return {

@@ -48,72 +48,11 @@ namespace BackEnd
             Candidates.TryGetValue(ID, out string name);
             return name != null ? new Candidate(name,ID) : null;
         }
-        internal static bool CheckSessionID(int ID)
+        internal static bool IsUnstarted(int ID)
         {
             Candidates.TryGetValue(ID, out string name);
             return name != null ? UnstartedSessions.Contains(ID) : false;
         }
-        /// <summary>
-        /// This method creates a list of all IDs of candidates that finished a session after a given time
-        /// </summary>
-        /// <returns>List of IDs</returns>
-        internal static List<int> GetNewFinishedIDs(long epochTime)
-        {
-            return GameSessions.Where(pair => !pair.Value.InProgress && pair.Value.EndTime>epochTime).Select(pair => pair.Key).ToList();
-        }
-        /// <summary>
-        /// This method finds the first ID of the candidate that ended the session after the given ID.
-        /// </summary>
-        /// <returns>ID if there exists one</returns>
-        internal static int? GetNextFinishedID(int ID)
-        {
-            return Util.Min(GameSessions.Where(pair => !pair.Value.InProgress && pair.Key>ID).Select(pair => pair.Key).ToList());
-        }
-        /// <summary>
-        /// This method finds the last ID of the candidate that ended the session before the given ID.
-        /// </summary>
-        /// <returns>ID if there exists one</returns>
-        internal static int? GetPreviousFinishedID(int ID)
-        {
-            return Util.Max(GameSessions.Where(pair => !pair.Value.InProgress && pair.Key<ID).Select(pair => pair.Key).ToList());
-        }
-        internal static int? GetLastFinishedID()
-        {
-            return Util.Max(GameSessions.Where(pair => !pair.Value.InProgress).Select(pair => pair.Key).ToList());
-        }
-        
-        [Obsolete("Use StartSession(int ID) instead!")]
-        public static int CreateSession()
-        {
-            int ID = CreateID();
-            GameSessions.Add(ID, new GameSession());
-            return ID;
-        }
-        public static bool StartSession(int ID)
-        {
-            if(UnstartedSessions.Remove(ID)){
-                GameSessions.Add(ID, new GameSession());
-                return true;
-            } else {
-                return false;
-            }
-        }
-
-        public static GameSession GetSession(int ID)
-        {
-            return GameSessions.TryGetValue(ID, out GameSession session) ? session : null;
-        }
-
-        public static bool UpdateSession(int ID, GameSession session)
-        {
-            if (GameSessions.ContainsKey(ID))
-            {
-                GameSessions[ID] = session;
-                return true;
-            }
-            return false;
-        }
-
         /// <summary>
         /// Tallies a given function of a level session for the given level number over all sessions
         /// </summary>
@@ -141,7 +80,78 @@ namespace BackEnd
                 }
             }
             return tally;
-
         }
-    }
+        /// This method creates a list of all IDs of candidates that finished a session after a given time
+        /// </summary>
+        /// <returns>List of IDs</returns>
+        internal static List<int> GetFinishedIDsAfterEpochTime(long epochTime)
+        {
+            return GameSessions.Where(pair => !pair.Value.InProgress && pair.Value.EndTime>epochTime).Select(pair => pair.Key).ToList();
+        }
+        /// <summary>
+        /// This method finds the first ID of the candidate that ended the session after the given ID.
+        /// </summary>
+        /// <returns>ID if there exists one</returns>
+        internal static int? GetNextIDWhichIsFinished(int ID)
+        {
+            return Util.Min(GameSessions.Where(pair => !pair.Value.InProgress && pair.Key>ID).Select(pair => pair.Key).ToList());
+        }
+        /// <summary>
+        /// This method finds the last ID of the candidate that ended the session before the given ID.
+        /// </summary>
+        /// <returns>ID if there exists one</returns>
+        internal static int? GetPreviousIDWhichIsFinished(int ID)
+        {
+            return Util.Max(GameSessions.Where(pair => !pair.Value.InProgress && pair.Key<ID).Select(pair => pair.Key).ToList());
+        }
+        internal static int? GetLastIDWhichIsFinished()
+        {
+            return Util.Max(GameSessions.Where(pair => !pair.Value.InProgress).Select(pair => pair.Key).ToList());
+        }
+        
+        [Obsolete("Use StartSession(int ID) instead!")]
+        public static int CreateSession()
+        {
+            int ID = CreateID();
+            GameSessions.Add(ID, new GameSession());
+            return ID;
+        }
+        public static bool StartSession(int ID)
+        {
+            if(UnstartedSessions.Remove(ID)){
+                GameSessions.Add(ID, new GameSession());
+                return true;
+            } else {
+                return false;
+            }
+        }
+
+		public static void CreateTutorialSession()
+		{
+			if (!GameSessions.ContainsKey(0))
+			{
+				GameSessions.Add(0, new GameSession());
+			}
+			else
+			{
+				GameSessions[0] = new GameSession();
+			}
+
+		}
+
+		public static GameSession GetSession(int ID)
+		{
+			return GameSessions.TryGetValue(ID, out GameSession session) ? session : null;
+		}
+
+		public static bool UpdateSession(int ID, GameSession session)
+		{
+			if (GameSessions.ContainsKey(ID))
+			{
+				GameSessions[ID] = session;
+				return true;
+			}
+			return false;
+		}
+	}
 }
