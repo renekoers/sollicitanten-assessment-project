@@ -10,7 +10,6 @@ export const Game = props => {
 
 	const STATE_CHANGE_ANIMATION_INTERVAL_TIME = 1000;
 
-	const [gameOver, setGameOver] = useState(false);
 	const [level, setLevel] = useState(null);
 	const [solved, setSolved] = useState(false);
 	const [levelNumber, setLevelNumber] = useState(1);
