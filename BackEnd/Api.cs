@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections;
 using System.Linq;
 using Newtonsoft.Json.Linq;
+using MongoDB.Driver;
 
 namespace BackEnd
 {
@@ -41,6 +42,12 @@ namespace BackEnd
         {
             return Repository.StartSession(ID);
         }
+		private static IMongoDatabase GetDatabase()
+		{
+			var client = new MongoClient("mongodb+srv://sylveon-client:development@sylveon-xf66r.azure.mongodb.net/test?retryWrites=true&w=majority");
+			var database = client.GetDatabase("sylveon");
+			return database;
+		}
 
         /// <summary>
         /// Obtain the session from a candidate. This session should at some point be stopped, and can be used to check the duration etc.
