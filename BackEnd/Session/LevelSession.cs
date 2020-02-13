@@ -44,9 +44,8 @@ namespace BackEnd
             }
 
         }
-        
-        public static int GetLines(LevelSolution solution) => solution.Lines;
-        public static Func<LevelSolution,int> GetDurationPerPeriod(int period) => (solution => GetDuration(solution)/period*period);
-        public static int GetDuration(LevelSolution solution) => (int)solution.Duration/1000;
+        public static int GetLines(LevelSession session) => session.GetLeastLinesOfCodeSolution().Lines;
+        public static Func<LevelSession,int> GetDurationPerPeriod(int period) => (session => GetDuration(session)/period*period);
+        public static int GetDuration(LevelSession session) => (int)session.GetLeastLinesOfCodeSolution().Duration/1000;
     }
 }
