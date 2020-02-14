@@ -82,24 +82,30 @@ namespace React_Frontend.Controllers
 			}
 		}
 		[HttpGet("levelIsSolved/{levelNumber}")]
-		public bool IsSolved(string levelNumber)
+		public ActionResult<bool> IsSolved(string levelNumber)
 		{
-			int level = int.Parse(levelNumber);
-			int sessionID = int.Parse(Request.Headers["Authorization"]);
-			return Api.LevelIsSolved(sessionID, level);
+			if(int.TryParse(levelNumber, out int level) && int.TryParse(Request.Headers["Authorization"], out int sessionID))
+			{
+				return Api.LevelIsSolved(sessionID, level);
+			} else {
+				return BadRequest();
+			}
 		}
 		[HttpGet("retrieveLevel/{levelNumber}")]
-		public string GetLevel(string levelNumber)
+		public ActionResult<string> GetLevel(string levelNumber)
 		{
-			int level = int.Parse(levelNumber);
-			int sessionID = int.Parse(Request.Headers["Authorization"]);
-			if (Api.LevelHasBeenStarted(sessionID, level))
+			if(int.TryParse(levelNumber, out int level) && int.TryParse(Request.Headers["Authorization"], out int sessionID))
 			{
-				return JSON.Serialize(Api.ContinueLevelSession(sessionID, level));
-			}
-			else
-			{
-				return JSON.Serialize(Api.StartLevelSession(sessionID, level));
+				if (Api.LevelHasBeenStarted(sessionID, level))
+				{
+					return JSON.Serialize(Api.ContinueLevelSession(sessionID, level));
+				}
+				else
+				{
+					return JSON.Serialize(Api.StartLevelSession(sessionID, level));
+				}
+			} else {
+				return BadRequest();
 			}
 		}
 		[HttpPost("pauseLevel")]

@@ -54,11 +54,7 @@ namespace BackEnd
 		public static bool IsStarted(int ID)
 		{
 			GameSession gameSession = Api.GetSession(ID);
-			if (gameSession == null)
-			{
-				return false;
-			}
-			return gameSession.InProgress;
+			return gameSession != null && gameSession.InProgress;
 		}
 		///<summary>
 		/// Makes a tutorial session.
@@ -133,17 +129,16 @@ namespace BackEnd
 		public static bool LevelHasBeenStarted(int ID, int levelNumber)
 		{
 			GameSession gameSession = GetSession(ID);
-			return gameSession.GetSession(levelNumber) != null;
+			return gameSession!=null && gameSession.GetSession(levelNumber) != null;
 		}
 		public static bool LevelIsSolved(int ID, int levelNumber)
 		{
 			GameSession gameSession = GetSession(ID);
-			LevelSession levelSession = gameSession.GetSession(levelNumber);
-			if (levelSession == null)
-			{
+			if(gameSession==null){
 				return false;
 			}
-			return levelSession.Solved;
+			LevelSession levelSession = gameSession.GetSession(levelNumber);
+			return levelSession != null && levelSession.Solved;
 		}
 
 		/// <summary>
