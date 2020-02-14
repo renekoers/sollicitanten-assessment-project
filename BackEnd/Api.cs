@@ -38,9 +38,9 @@ namespace BackEnd
 		{
 			return Repository.CreateSession();
 		}
-		public static bool StartSession(string ID)
+		async public static Task<bool> StartSession(string ID)
 		{
-			return Repository.StartSession(ID);
+			return await Repository.StartSession(ID);
 		}
 
 		/// <summary>

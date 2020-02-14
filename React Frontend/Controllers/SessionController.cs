@@ -38,10 +38,10 @@ namespace React_Frontend.Controllers
 
 		}
 		[HttpGet("startsession")]
-		public ActionResult StartSession()
+		async public Task<ActionResult> StartSession()
 		{
 			string sessionID = Request.Headers["Authorization"];
-			if (Api.StartSession(sessionID))
+			if (await Api.StartSession(sessionID))
 			{
 				return Ok();
 			}

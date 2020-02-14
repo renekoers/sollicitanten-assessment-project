@@ -6,6 +6,9 @@ using Newtonsoft.Json.Linq;
 using System.Threading.Tasks;
 using MongoDB.Driver;
 using MongoDB.Entities;
+using MongoDB.Bson;
+ using MongoDB.Driver;
+    using MongoDB.Driver.Linq;
 
 namespace BackEnd
 {
@@ -39,10 +42,17 @@ namespace BackEnd
 
 		async internal static Task<CandidateEntity> GetCandidate(string ID)
 		{
-			Console.WriteLine("Getting candidate...");
 			CandidateEntity candidate = await DB.Find<CandidateEntity>().OneAsync(ID);
-
 			return candidate;
+		}
+		async internal static Task<bool> StartSession(string ID)
+		{
+			await DB.Update<CandidateEntity>()
+				.Match(a => a.ID == ID && a.started == new DateTime())
+				.Modify(a => a.started, DateTime.Now)
+				.ExecuteAsync();
+			DateTime startedTime = DB.Find<CandidateEntity>().One(ID).started;
+			return startedTime > new DateTime();
 		}
 	}
 }

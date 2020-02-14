@@ -88,9 +88,9 @@ namespace BackEnd
 			GameSessions.Add("1", new GameSession());
 			return ID;
 		}
-		public static bool StartSession(string ID)
+		async public static Task<bool> StartSession(string ID)
 		{
-			if (UnstartedSessions.Remove(ID))
+			if (UnstartedSessions.Remove(ID) && await Database.StartSession(ID))
 			{
 				GameSessions.Add(ID, new GameSession());
 				return true;
