@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using System.Collections;
 using System.Linq;
 using Newtonsoft.Json.Linq;
@@ -12,46 +13,46 @@ namespace BackEnd
 		{
 			return Repository.ValidateUser(username, hashedPass);
 		}
-		public static void AddCandidate(string name)
+		async public static Task<bool> AddCandidate(string name)
 		{
-			Repository.AddCandidate(name);
+			return await Repository.AddCandidate(name);
 		}
-		public static Candidate GetCandidate()
+		async public static Task<CandidateEntity> GetCandidate()
 		{
-			return Repository.GetCandidate();
+			return await Repository.GetCandidate();
 		}
-		public static Candidate GetCandidate(int ID)
+		async public static Task<CandidateEntity> GetCandidate(string ID)
 		{
-			return Repository.GetCandidate(ID);
+			return await Repository.GetCandidate(ID);
 		}
-		public static bool IsUnstarted(int ID)
+		async public static Task<bool> IsUnstarted(string ID)
 		{
-			return Repository.IsUnstarted(ID);
+			return await Repository.IsUnstarted(ID);
 		}
 		/// <summary>
-		/// Start a new session for a new candidate.!-- This method is used in mockdata and tests!!!!
+		/// Start a new session for a new CandidateEntity.!-- This method is used in mockdata and tests!!!!
 		/// </summary>
-		/// <returns>The ID of the newly created candidate used to access their session</returns>
-		[Obsolete("Use StartSession(int ID) instead")]
-		public static int StartSession()
+		/// <returns>The ID of the newly created CandidateEntity used to access their session</returns>
+		[Obsolete("Use StartSession(string ID) instead")]
+		public static string StartSession()
 		{
 			return Repository.CreateSession();
 		}
-		public static bool StartSession(int ID)
+		public static bool StartSession(string ID)
 		{
 			return Repository.StartSession(ID);
 		}
 
 		/// <summary>
-		/// Obtain the session from a candidate. This session should at some point be stopped, and can be used to check the duration etc.
+		/// Obtain the session from a CandidateEntity. This session should at some point be stopped, and can be used to check the duration etc.
 		/// </summary>
 		/// <param name="ID"></param>
 		/// <returns></returns>
-		public static GameSession GetSession(int ID)
+		public static GameSession GetSession(string ID)
 		{
 			return Repository.GetSession(ID);
 		}
-		public static bool IsStarted(int ID)
+		public static bool IsStarted(string ID)
 		{
 			GameSession gameSession = Api.GetSession(ID);
 			if (gameSession == null)
@@ -74,7 +75,7 @@ namespace BackEnd
 		/// <param name="ID"></param>
 		/// <param name="levelNumber"></param>
 		/// <returns></returns>
-		public static IState StartLevelSession(int ID, int levelNumber)
+		public static IState StartLevelSession(string ID, int levelNumber)
 		{
 			GameSession gameSession = GetSession(ID);
 			LevelSession levelSession = new LevelSession(levelNumber);
@@ -91,7 +92,7 @@ namespace BackEnd
 		/// <param name="levelNumber"></param>
 		/// <param name="statements"></param>
 		/// <returns>A LevelSolution object which contains amongst other things a list of IState objects and whether the level was solved or not</returns>
-		public static LevelSolution SubmitSolution(int ID, int levelNumber, Statement[] statements)
+		public static LevelSolution SubmitSolution(string ID, int levelNumber, Statement[] statements)
 		{
 			GameSession gameSession = GetSession(ID);
 			LevelSession levelSession = gameSession.GetSession(levelNumber);
@@ -101,14 +102,14 @@ namespace BackEnd
 			return solution;
 		}
 
-		public static void PauseLevelSession(int ID, int levelNumber)
+		public static void PauseLevelSession(string ID, int levelNumber)
 		{
 			GameSession gameSession = GetSession(ID);
 			LevelSession levelSession = gameSession.GetSession(levelNumber);
 			levelSession.Pause();
 			Repository.UpdateSession(ID, gameSession);
 		}
-		public static IState ContinueLevelSession(int ID, int levelNumber)
+		public static IState ContinueLevelSession(string ID, int levelNumber)
 		{
 			GameSession gameSession = GetSession(ID);
 			LevelSession levelSession = gameSession.GetSession(levelNumber);
@@ -117,7 +118,7 @@ namespace BackEnd
 			return new State(new Puzzle(Level.Get(levelNumber)));
 		}
 
-		public static void EndLevelSession(int ID, int levelNumber)
+		public static void EndLevelSession(string ID, int levelNumber)
 		{
 			GameSession gameSession = GetSession(ID);
 			LevelSession levelSession = gameSession.GetSession(levelNumber);
@@ -125,18 +126,18 @@ namespace BackEnd
 			Repository.UpdateSession(ID, gameSession);
 		}
 
-		public static void EndSession(int ID)
+		public static void EndSession(string ID)
 		{
 			GameSession gameSession = GetSession(ID);
 			gameSession.End();
 			Repository.UpdateSession(ID, gameSession);
 		}
-		public static bool LevelHasBeenStarted(int ID, int levelNumber)
+		public static bool LevelHasBeenStarted(string ID, int levelNumber)
 		{
 			GameSession gameSession = GetSession(ID);
 			return gameSession.GetSession(levelNumber) != null;
 		}
-		public static bool LevelIsSolved(int ID, int levelNumber)
+		public static bool LevelIsSolved(string ID, int levelNumber)
 		{
 			GameSession gameSession = GetSession(ID);
 			LevelSession levelSession = gameSession.GetSession(levelNumber);
@@ -151,12 +152,12 @@ namespace BackEnd
 		/// This method creates a list of all IDs of candidates that finished a session after a given time
 		/// </summary>
 		/// <returns>List of IDs</returns>
-		public static List<int> GetFinishedIDsAfterEpochTime(long epochTime)
+		public static List<string> GetFinishedIDsAfterEpochTime(long epochTime)
 		{
 			return Repository.GetFinishedIDsAfterEpochTime(epochTime);
 		}
 		/// <summary>
-		/// This method finds the first ID of the candidate that ended the session after the given ID.
+		/// This method finds the first ID of the CandidateEntity that ended the session after the given ID.
 		/// </summary>
 		/// <returns>ID if there exists one</returns>
 		public static int? GetNextIDWhichIsFinished(int ID)
@@ -164,7 +165,7 @@ namespace BackEnd
 			return Repository.GetNextIDWhichIsFinished(ID);
 		}
 		/// <summary>
-		/// This method finds the last ID of the candidate that ended the session before the given ID.
+		/// This method finds the last ID of the CandidateEntity that ended the session before the given ID.
 		/// </summary>
 		/// <returns>ID if there exists one</returns>
 		public static int? GetPreviousIDWhichIsFinished(int ID)
@@ -180,23 +181,23 @@ namespace BackEnd
 			int totalLevels = Level.TotalLevels;
 			return totalLevels;
 		}
-		public static Overview GetOverview(int ID)
+		public static Overview GetOverview(string ID)
 		{
 			return new Overview(GetSession(ID));
 		}
 
 		/// <summary>
-		/// Gets the number of lines that a candidate needed to solve a specific level
+		/// Gets the number of lines that a CandidateEntity needed to solve a specific level
 		/// </summary>
 		/// <param name="ID"></param>
 		/// <param name="levelNumber"></param>
 		/// <returns></returns>
-		public static int NumberOfLinesSolved(int ID, int levelNumber)
+		public static int NumberOfLinesSolved(string ID, int levelNumber)
 		{
 			return GetSession(ID).GetSession(levelNumber).GetLeastLinesOfCodeSolution().Lines;
 		}
 
-		public static Dictionary<int, int> NumberOfLinesSolvedLevelsOf(int ID)
+		public static Dictionary<int, int> NumberOfLinesSolvedLevelsOf(string ID)
 		{
 			Dictionary<int, int> amountOfLinesByLevel = new Dictionary<int, int>();
 			GameSession gameSession = GetSession(ID);
@@ -228,7 +229,7 @@ namespace BackEnd
 		/// </summary>
 		/// <param name="ID"></param>
 		/// <returns></returns>
-		public static Dictionary<int, Dictionary<int, int>> TallyEveryoneNumberOfLinesSolvedLevelsOf(int ID)
+		public static Dictionary<int, Dictionary<int, int>> TallyEveryoneNumberOfLinesSolvedLevelsOf(string ID)
 		{
 			GameSession gameSession = GetSession(ID);
 			ISet<int> solvedLevels = gameSession.SolvedLevelNumbers;
@@ -272,7 +273,7 @@ namespace BackEnd
 		/// </summary>
 		private static void InsertMockData()
 		{
-			int id = StartSession();
+			string id = StartSession();
 			StartLevelSession(id, 1);
 			SubmitSolution(id, 1, new Statement[]
 			{
@@ -312,7 +313,7 @@ namespace BackEnd
 			});
 			EndLevelSession(id, 2);
 			EndSession(id);
-			int idOther = StartSession();
+			string idOther = StartSession();
 			StartLevelSession(idOther, 1);
 			SubmitSolution(idOther, 1, new Statement[]
 			{

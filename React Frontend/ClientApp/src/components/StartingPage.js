@@ -47,6 +47,7 @@ export const StartingPage = () => {
 		await fetch("api/session/candidate")
 			.then(checkStatus)
 			.then(data => {
+				console.log(data);
 				setName(data.name);
 				localStorage.setItem("sessionID", data.id);
 			});

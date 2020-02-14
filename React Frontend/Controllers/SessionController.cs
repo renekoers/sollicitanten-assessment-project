@@ -1,6 +1,7 @@
 ﻿using System;
 using BackEnd;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 namespace React_Frontend.Controllers
 {
@@ -9,9 +10,9 @@ namespace React_Frontend.Controllers
 	public class SessionController : Controller
 	{
 		[HttpGet("candidate")]
-		public ActionResult<string> getCandidate()
+		async public Task<ActionResult<string>> getCandidate()
 		{
-			Candidate candidate = Api.GetCandidate();
+			CandidateEntity candidate = await Api.GetCandidate();
 			if (candidate == null)
 			{
 				return NotFound();
@@ -23,10 +24,9 @@ namespace React_Frontend.Controllers
 
 		}
 		[HttpGet("candidate/{id}")]
-		public ActionResult<string> getCandidateName(string id)
+		async public Task<ActionResult<string>> getCandidateName(string id)
 		{
-			int sessionID = int.Parse(id);
-			Candidate candidate = Api.GetCandidate(sessionID);
+			CandidateEntity candidate = await Api.GetCandidate(id);
 			if (candidate == null)
 			{
 				return NotFound();
@@ -40,7 +40,7 @@ namespace React_Frontend.Controllers
 		[HttpGet("startsession")]
 		public ActionResult StartSession()
 		{
-			int sessionID = int.Parse(Request.Headers["Authorization"]);
+			string sessionID = Request.Headers["Authorization"];
 			if (Api.StartSession(sessionID))
 			{
 				return Ok();
@@ -59,29 +59,29 @@ namespace React_Frontend.Controllers
 		}
 
 		[HttpGet("sessionIDValidation")]
-		public bool IsSessionValid()
+		async public Task<bool> IsSessionValid()
 		{
-			int sessionID = int.Parse(Request.Headers["Authorization"]);
-			return Api.IsUnstarted(sessionID);
+			string sessionID = Request.Headers["Authorization"];
+			return await Api.IsUnstarted(sessionID);
 		}
 		[HttpGet("isStarted")]
 		public bool isStarted()
 		{
-			int sessionID = int.Parse(Request.Headers["Authorization"]);
+			string sessionID = Request.Headers["Authorization"];
 			return Api.IsStarted(sessionID);
 		}
 		[HttpGet("levelIsSolved/{levelNumber}")]
 		public bool IsSolved(string levelNumber)
 		{
 			int level = int.Parse(levelNumber);
-			int sessionID = int.Parse(Request.Headers["Authorization"]);
+			string sessionID = Request.Headers["Authorization"];
 			return Api.LevelIsSolved(sessionID, level);
 		}
 		[HttpGet("retrieveLevel/{levelNumber}")]
 		public string GetLevel(string levelNumber)
 		{
 			int level = int.Parse(levelNumber);
-			int sessionID = int.Parse(Request.Headers["Authorization"]);
+			string sessionID = Request.Headers["Authorization"];
 			if (Api.LevelHasBeenStarted(sessionID, level))
 			{
 				return JSON.Serialize(Api.ContinueLevelSession(sessionID, level));
@@ -95,7 +95,7 @@ namespace React_Frontend.Controllers
 		public StatusCodeResult PauseLevel([FromBody]object levelNumber)
 		{
 			int level = int.Parse(levelNumber.ToString());
-			int sessionID = int.Parse(Request.Headers["Authorization"]);
+			string sessionID = Request.Headers["Authorization"];
 			Api.PauseLevelSession(sessionID, level);
 			return Ok();
 		}
@@ -107,7 +107,7 @@ namespace React_Frontend.Controllers
 		[HttpPost("endSession")]
 		public StatusCodeResult EndSession()
 		{
-			int sessionID = int.Parse(Request.Headers["Authorization"]);
+			string sessionID = Request.Headers["Authorization"];
 			Api.EndSession(sessionID);
 			return Ok();
 
@@ -115,7 +115,7 @@ namespace React_Frontend.Controllers
 		[HttpGet("getOverview")]
 		public string GetOverview()
 		{
-			int sessionID = int.Parse(Request.Headers["Authorization"]);
+			string sessionID = Request.Headers["Authorization"];
 			return JSON.Serialize(Api.GetOverview(sessionID));
 		}
 
@@ -127,7 +127,7 @@ namespace React_Frontend.Controllers
 		[HttpGet("remainingTime")]
 		public ActionResult<long> GetRemainingTime()
 		{
-			int sessionID = int.Parse(Request.Headers["Authorization"]);
+			string sessionID = Request.Headers["Authorization"];
 			GameSession session = Api.GetSession(sessionID);
 			if (session == null)
 			{
