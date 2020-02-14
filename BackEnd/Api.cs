@@ -197,7 +197,7 @@ namespace BackEnd
         /// <returns>Dictionary with for every level has a dictionary of name of the statistic and the combination of data and number of candidates.</returns>
         public static Dictionary<int,Dictionary<string, Dictionary<int, int>>> StatisticsEveryone()
         {
-            return Analysis.MakeStatisticsEveryone(ID);
+            return Analysis.MakeStatisticsEveryone();
         }
         /// <summary>
         /// This method creates a dictionary consisting of the number of candidates that did not solve a certain level.

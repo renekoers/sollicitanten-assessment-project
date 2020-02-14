@@ -52,7 +52,7 @@ namespace BackEnd
         /// Creates a dictionary consisting of all statistics of all candidates.
         /// </summary>
         /// <returns>Dictionary with for every level has a dictionary of name of the statistic and the combination of data and number of candidates.</returns>
-        public static Dictionary<int,Dictionary<string, Dictionary<int, int>>> MakeStatisticsEveryone(int ID)
+        public static Dictionary<int,Dictionary<string, Dictionary<int, int>>> MakeStatisticsEveryone()
         {
             Dictionary<string,Func<LevelSession,int>> statisticsFunctions = GetStatisticsFunctions();
             Dictionary<int,Dictionary<string, Dictionary<int, int>>> dataEveryone = new Dictionary<int,Dictionary<string, Dictionary<int, int>>>();
