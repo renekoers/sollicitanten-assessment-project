@@ -105,11 +105,14 @@ namespace React_Frontend.Controllers
 			return Api.GetTotalLevelAmount();
 		}
 		[HttpPost("endSession")]
-		public StatusCodeResult EndSession()
+		async public Task<StatusCodeResult> EndSession()
 		{
 			string sessionID = Request.Headers["Authorization"];
-			Api.EndSession(sessionID);
-			return Ok();
+			if(await Api.EndSession(sessionID))
+			{
+				return Ok();
+			}
+			return Conflict();
 
 		}
 		[HttpGet("getOverview")]

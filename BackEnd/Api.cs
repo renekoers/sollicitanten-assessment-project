@@ -126,11 +126,17 @@ namespace BackEnd
 			Repository.UpdateSession(ID, gameSession);
 		}
 
-		public static void EndSession(string ID)
+		async public static Task<bool> EndSession(string ID)
 		{
-			GameSession gameSession = GetSession(ID);
-			gameSession.End();
-			Repository.UpdateSession(ID, gameSession);
+			if(await Database.EndSession(ID))
+			{
+				GameSession gameSession = GetSession(ID);
+				gameSession.End();
+				Repository.UpdateSession(ID, gameSession);
+				return true;
+			} else {
+				return false;
+			}
 		}
 		public static bool LevelHasBeenStarted(string ID, int levelNumber)
 		{

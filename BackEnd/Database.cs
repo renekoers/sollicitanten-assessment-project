@@ -47,12 +47,24 @@ namespace BackEnd
 		}
 		async internal static Task<bool> StartSession(string ID)
 		{
+			DateTime defaultTime = new DateTime();
 			await DB.Update<CandidateEntity>()
-				.Match(a => a.ID == ID && a.started == new DateTime())
+				.Match(a => a.ID == ID && a.started == defaultTime)
 				.Modify(a => a.started, DateTime.Now)
 				.ExecuteAsync();
-			DateTime startedTime = DB.Find<CandidateEntity>().One(ID).started;
-			return startedTime > new DateTime();
+			CandidateEntity candidate = DB.Find<CandidateEntity>().One(ID);
+			return candidate != null && candidate.started > defaultTime;
 		}
+		async internal static Task<bool> EndSession(string ID)
+		{
+			DateTime defaultTime = new DateTime();
+			await DB.Update<CandidateEntity>()
+				.Match(a => a.ID == ID && a.started > defaultTime && a.finished == defaultTime)
+				.Modify(a => a.finished, DateTime.Now)
+				.ExecuteAsync();
+			CandidateEntity candidate = DB.Find<CandidateEntity>().One(ID);
+			return candidate != null && candidate.finished > defaultTime;
+		}
+		
 	}
 }
