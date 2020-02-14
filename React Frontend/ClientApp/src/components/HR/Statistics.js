@@ -60,7 +60,7 @@ export function Statistics(props){
         function getLevelComponents(levelNumber, levelStatisticsEveryone, levelStatisticsCandidate, amountUnsolved){
             var statisticComponents = [];
             for(const[nameData, results] of Object.entries(levelStatisticsEveryone)){
-                var singleStatisticCandidate = levelStatisticsCandidate!==undefined ? levelStatisticsCandidate[nameData] : "unsolved"
+                var singleStatisticCandidate = levelStatisticsCandidate!==undefined ? levelStatisticsCandidate[nameData] : "onopgelost"
                 statisticComponents.push(
                     <LevelBarChart
                         className="level-chart"
@@ -134,7 +134,7 @@ function LevelBarChart(props){
 				candidates: Number.parseInt(_candidates)
 			});
         }
-        _dataTally.push({lines: "unsolved", candidates: props.unsolved})
+        _dataTally.push({lines: "onopgelost", candidates: props.unsolved})
         setDataTally(_dataTally);
     },[props.tallyData])
 
@@ -171,9 +171,13 @@ function LevelBarChart(props){
                         <Cell
                             key={`cell-${index}`}
                             fill={
-                                entry.lines === "" + props.candidateData
+                                entry.lines==="onopgelost" ?
+                                (entry.lines === "" + props.candidateData
+                                    ? "#AA0000"
+                                    : "#A18383")
+                                : (entry.lines === "" + props.candidateData
                                     ? "#00AA00"
-                                    : "#8CA183"
+                                    : "#8CA183")
                             }
                         />
                     );
