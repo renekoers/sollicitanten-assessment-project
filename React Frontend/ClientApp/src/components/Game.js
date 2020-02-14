@@ -1,46 +1,39 @@
 ﻿import { Header } from "./Header";
 import { Statement } from "./Statement";
-import React, { Component } from "react";
+import React, { useState, useEffect } from "react";
 import LevelGrid from "./game-grid/LevelGrid";
 import { SkipButton } from "./SkipButton";
 import SylveonBlocks from "../blockly/SylveonBlocks";
 
+export const Game = props => {
+	let _currentStateTimeoutID = null;
 
-export class Game extends Component {
-	_currentStateTimeoutID = null;
+	const STATE_CHANGE_ANIMATION_INTERVAL_TIME = 1000;
 
-	static get STATE_CHANGE_ANIMATION_INTERVAL_TIME() { //Closest thing we have to a constant class member in JS.
-		return 1000;
-	}
-	constructor(props) {
-		super(props);
-		this.state = {
-			gameOver: false,
-			level: null,
-			solved: false,
-			levelNumber: 1,
-			totalLevels: 0
-		};
-	}
+	const [gameOver, setGameOver] = useState(false);
+	const [level, setLevel] = useState(null);
+	const [solved, setSolved] = useState(false);
+	const [levelNumber, setLevelNumber] = useState(1);
+	const [totalLevels, setTotalLevels] = useState(0);
 
-	async componentDidMount() {
-		this.getTotalAmountLevels();
-		if (this.props.match.params.level) {
-			this.getLevel(this.props.match.params.level);
+	useEffect(() => {
+		getTotalLevelAmount();
+		if (props.match.params.level) {
+			getLevel(props.match.params.level);
 		} else {
-			this.getLevel(1);
+			getLevel(1);
 		}
-	}
+	}, []);
 
-	async getTotalAmountLevels() {
+	const getTotalLevelAmount = async () => {
 		await fetch("api/session/totalAmountLevels")
 			.then(response => response.json())
 			.then(data => {
-				this.setState({ totalLevels: data });
+				setTotalLevels(data);
 			});
-	}
+	};
 
-	async getLevel(level) {
+	const getLevel = async level => {
 		await fetch("api/session/retrieveLevel/" + level, {
 			method: "GET",
 			headers: {
@@ -50,10 +43,12 @@ export class Game extends Component {
 		})
 			.then(response => response.json())
 			.then(data => {
-				this.setState({ level: data, levelNumber: data.puzzleLevel });
+				setLevel(data);
+				setLevelNumber(data.puzzleLevel);
 				SylveonBlocks.clearWorkspace();
 			});
-		await fetch("api/session/levelIsSolved?levelNumber=" + level, {
+
+		await fetch("api/session/levelIsSolved/" + level, {
 			method: "GET",
 			headers: {
 				"Content-Type": "application/json",
@@ -62,36 +57,36 @@ export class Game extends Component {
 		})
 			.then(response => response.json())
 			.then(data => {
-				this.setState({ solved: data });
+				setSolved(data);
 			});
-	}
-	async pauseLevel() {
+	};
+	const pauseLevel = async () => {
 		await fetch("api/session/pauseLevel", {
 			method: "POST",
 			headers: {
 				"Content-Type": "application/json",
 				Authorization: localStorage.getItem("sessionID")
 			},
-			body: JSON.stringify(this.state.levelNumber)
+			body: JSON.stringify(levelNumber)
 		});
-	}
-	async nextLevel() {
-		if (this.state.levelNumber !== this.state.totalLevels) {
-			await this.pauseLevel();
-			this.getLevel(this.state.level.puzzleLevel + 1);
+	};
+	const nextLevel = async () => {
+		if (levelNumber !== totalLevels) {
+			await pauseLevel();
+			getLevel(level.puzzleLevel + 1);
 		}
-	}
-	async previousLevel() {
-		if (this.state.levelNumber !== 1) {
-			await this.pauseLevel();
-			this.getLevel(this.state.level.puzzleLevel - 1);
+	};
+	const previousLevel = async () => {
+		if (levelNumber !== 1) {
+			await pauseLevel();
+			getLevel(level.puzzleLevel - 1);
 		}
-	}
+	};
 
-	async onReceiveStatementTree(statementTree) {
+	const onReceiveStatementTree = async statementTree => {
 		const sessionId = localStorage.getItem("sessionID");
 		const levelSolutionResponse = await fetch(
-			"api/statement/" + this.state.levelNumber,
+			"api/statement/" + levelNumber,
 			{
 				method: "POST",
 				headers: {
@@ -102,77 +97,74 @@ export class Game extends Component {
 			}
 		);
 		const levelSolution = await levelSolutionResponse.json();
-		this.updateGridFromLevelSolution(levelSolution);
-	}
+		updateGridFromLevelSolution(levelSolution);
+	};
 
 	/**
 	 * @param {*} levelSolution The LevelSolution as returned by the API (See: BackEnd.Api.SubmitSolution(int, int, Statement[]))
 	 */
-	updateGridFromLevelSolution(levelSolution) {
-		console.log(levelSolution);
-		if (this._currentStateTimeoutID !== null)
-			clearTimeout(this._currentStateTimeoutID);
-		this._updateGridFromLevelSolutionAtStateIndex(levelSolution, 0);
-	}
+	const updateGridFromLevelSolution = levelSolution => {
+		if (_currentStateTimeoutID !== null)
+			clearTimeout(_currentStateTimeoutID);
+		_updateGridFromLevelSolutionAtStateIndex(levelSolution, 0);
+	};
 
-	_updateGridFromLevelSolutionAtStateIndex(levelSolution, currentStateIndex) {
+	const _updateGridFromLevelSolutionAtStateIndex = (
+		levelSolution,
+		currentStateIndex
+	) => {
 		const isFinalState =
 			currentStateIndex === levelSolution.states.length - 1;
 		const solved = isFinalState && levelSolution.solved;
 		const currentState = levelSolution.states[currentStateIndex];
 
-		this.setState({
-			solved: solved,
-			level: currentState
-		});
+		setSolved(solved);
+		setLevel(currentState);
 
 		if (!isFinalState) {
-			this._currentStateTimeoutID = setTimeout(
+			_currentStateTimeoutID = setTimeout(
 				() =>
-					this._updateGridFromLevelSolutionAtStateIndex(
+					_updateGridFromLevelSolutionAtStateIndex(
 						levelSolution,
 						currentStateIndex + 1
 					),
-				Game.STATE_CHANGE_ANIMATION_INTERVAL_TIME
+				STATE_CHANGE_ANIMATION_INTERVAL_TIME
 			);
 		} // Set to null to indicate the sequence has been completed (and avoid potential conflicts with other timeouts).
-		else this._currentStateTimeoutID = null;
-	}
+		else _currentStateTimeoutID = null;
+	};
 
-	render() {
+	/**
+	 * @returns JSX Levelgrid depending on the current levelnumber
+	 */
+	const renderLevelGrid = () => {
 		let levelGrid;
-		if (this.state.level !== null) {
-			levelGrid = (
-				<LevelGrid
-					puzzle={this.state.level}
-					isComplete={this.state.solved}
-				/>
-			);
+		if (level !== null) {
+			levelGrid = <LevelGrid puzzle={level} isComplete={solved} />;
 		}
-		return (
+		return levelGrid;
+	};
+
+	return (
+		<div>
+			<Header hasTimer={true} />
 			<div>
-				<Header />
-				<div>
-					<div style={{ width: "50%", float: "left" }}>
-						<Statement
-							levelNumber={this.state.levelNumber}
-							onRunCode={this.onReceiveStatementTree.bind(this)}
-						/>
-					</div>
-					<div style={{ width: "50%", float: "right" }}>
-						{levelGrid}
-						<SkipButton
-							onClickPrevious={this.previousLevel.bind(this)}
-							onClickNext={this.nextLevel.bind(this)}
-							disabledPrevious={this.state.levelNumber === 1}
-							lastLevel={
-								this.state.levelNumber ===
-								this.state.totalLevels
-							}
-						/>
-					</div>
+				<div style={{ width: "50%", float: "left" }}>
+					<Statement
+						levelNumber={levelNumber}
+						onRunCode={onReceiveStatementTree.bind(this)}
+					/>
+				</div>
+				<div style={{ width: "50%", float: "right" }}>
+					{renderLevelGrid()}
+					<SkipButton
+						onClickPrevious={previousLevel.bind(this)}
+						onClickNext={nextLevel.bind(this)}
+						disabledPrevious={levelNumber === 1}
+						lastLevel={levelNumber === totalLevels}
+					/>
 				</div>
 			</div>
-		);
-	}
-}
+		</div>
+	);
+};

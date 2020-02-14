@@ -60,6 +60,13 @@ namespace BackEnd
 			}
 			return gameSession.InProgress;
 		}
+		///<summary>
+		/// Makes a tutorial session.
+		/// </summary>
+		public static void StartTutorialSession()
+		{
+			Repository.CreateTutorialSession();
+		}
 
 		/// <summary>
 		/// Begin a new level session.
@@ -140,16 +147,6 @@ namespace BackEnd
 			return levelSession.Solved;
 		}
 
-		public static Overview GetOverview(int ID)
-		{
-			return new Overview(GetSession(ID));
-		}
-
-		public static int GetTotalLevelAmount()
-		{
-			int totalLevels = Level.TotalLevels;
-			return totalLevels;
-		}
 		/// <summary>
 		/// This method creates a list of all IDs of candidates that finished a session after a given time
 		/// </summary>
@@ -178,7 +175,15 @@ namespace BackEnd
 		{
 			return Repository.GetLastIDWhichIsFinished();
 		}
-
+		public static int GetTotalLevelAmount()
+		{
+			int totalLevels = Level.TotalLevels;
+			return totalLevels;
+		}
+		public static Overview GetOverview(int ID)
+		{
+			return new Overview(GetSession(ID));
+		}
 
 		/// <summary>
 		/// Gets the number of lines that a candidate needed to solve a specific level
@@ -203,18 +208,6 @@ namespace BackEnd
 		}
 
 		/// <summary>
-		/// Creates a dictionary containing only the solved levels of ID with tallies for the shortest code solution
-		/// </summary>
-		/// <param name="ID"></param>
-		/// <returns></returns>
-		public static Dictionary<int, Dictionary<int, int>> TallyEveryoneNumberOfLinesSolvedLevelsOf(int ID)
-		{
-			GameSession gameSession = GetSession(ID);
-			ISet<int> solvedLevels = gameSession.SolvedLevelNumbers;
-			return TallyEveryoneNumberOfLines(solvedLevels);
-		}
-
-		/// <summary>
 		/// Creates a dictionary labeled by level number with as entries the tallies for the shortest code solutions
 		/// </summary>
 		/// <param name="levelNumbers"></param>
@@ -228,6 +221,20 @@ namespace BackEnd
 			}
 			return talliesByLevel;
 		}
+
+
+		/// <summary>
+		/// Creates a dictionary containing only the solved levels of ID with tallies for the shortest code solution
+		/// </summary>
+		/// <param name="ID"></param>
+		/// <returns></returns>
+		public static Dictionary<int, Dictionary<int, int>> TallyEveryoneNumberOfLinesSolvedLevelsOf(int ID)
+		{
+			GameSession gameSession = GetSession(ID);
+			ISet<int> solvedLevels = gameSession.SolvedLevelNumbers;
+			return TallyEveryoneNumberOfLines(solvedLevels);
+		}
+
 
 		public static long GetEpochTime()
 		{
@@ -250,6 +257,15 @@ namespace BackEnd
 			return commands;
 		}
 
+		private static int CalculateScore(Statement[] input)
+		{
+			int lines = 0;
+			foreach (Statement statement in input)
+			{
+				lines += statement.GetLines();
+			}
+			return lines;
+		}
 
 		/// <summary>
 		/// Used to insert some solutions of the levels to see the graphs
@@ -316,96 +332,7 @@ namespace BackEnd
 			EndLevelSession(idOther, 1);
 			EndSession(idOther);
 		}
-
 		public static IEnumerable<Statement> ParseStatementTreeJson(System.Text.Json.JsonElement statementTreeJson)
-			=> StatementParser.ParseStatementTreeJson(statementTreeJson);
-
-		/// <summary>
-		/// Receives the commands from the frontend and returns a LevelSolution.!-- This method needs to be moved to a different class after draggables are implemented!!!!!!
-		/// </summary>
-		/// <param name="input">String array of commands.</param>
-		/// <returns>LevelSolution.</returns>
-		[Obsolete("Use Api.ParseStatementTreeJson(System.Text.Json.JsonElement) instead.")]
-		public static LevelSolution ConvertAndSubmit(int ID, int levelnr, string[] input)
-		{
-			Console.WriteLine("This method needs to be moved to a different class after draggables are implemented!!!!!!");
-			List<List<Statement>> totalStatements = new List<List<Statement>>();
-			for (int i = 0; i < input.Length; i++)
-			{
-				totalStatements.Add(new List<Statement>());
-			}
-			Stack<Statement> st = new Stack<Statement>();
-			string[] singleCommands = { "MoveForward", "RotateLeft", "RotateRight", "PickUp", "Drop" };
-			//["MoveForward", "RotateLeft", "RotateRight", "PickUp","Drop",
-			// "--While--","--If--","--Else--","--End--","TileFront","Passable","Button","Box"];
-			int counter = 0;
-			for (int i = 0; i < input.Length; i++)
-			{
-				var item = input[i];
-				if (singleCommands.Any(item.Contains))
-				{
-					totalStatements.ElementAt(counter).Add(new SingleCommand((Command)Enum.Parse(typeof(Command), item.Trim())));
-				}
-				else
-				{
-					if (item.Equals("While"))
-					{
-						counter++;
-						Statement temp = new While(
-							(ConditionParameter)Enum.Parse(typeof(ConditionParameter), input[i + 1].Trim()),
-							(ConditionValue)Enum.Parse(typeof(ConditionValue), input[i + 2].Trim()),
-							true,
-							(Statement[])null
-							);
-						i = i + 2;
-						st.Push(temp);
-						totalStatements.ElementAt(counter).Add(temp);
-					}
-					else if (item.Equals("If"))
-					{
-						counter++;
-						Statement temp = new IfElse(
-							(ConditionParameter)Enum.Parse(typeof(ConditionParameter), input[i + 1].Trim()),
-							(ConditionValue)Enum.Parse(typeof(ConditionValue), input[i + 2].Trim()),
-							true,
-							(Statement[])null
-							);
-						i = i + 2;
-						st.Push(temp);
-						totalStatements.ElementAt(counter).Add(temp);
-					}
-					else if (item.Equals("End"))
-					{
-						int count = st.Count();
-						Statement endLoop = st.Pop();
-						if (endLoop is IfElse)
-						{
-							IfElse ifl = (IfElse)endLoop;
-							foreach (var sub in totalStatements.ElementAt(count))
-							{
-								if (sub is IfElse) continue;
-								else ifl.AddTrueStatement(sub);
-							}
-							totalStatements[count - 1].Add(ifl);
-							totalStatements[count] = new List<Statement>();
-						}
-						else if (endLoop is While)
-						{
-							While wh = (While)endLoop;
-							foreach (var sub in totalStatements.ElementAt(count))
-							{
-								if (sub is While) continue;
-								else wh.AddStatement(sub);
-							}
-							totalStatements[count - 1].Add(wh);
-							totalStatements[count] = new List<Statement>();
-						}
-						counter--;
-					}
-				}
-			}
-			Statement[] statements = (Statement[])totalStatements.ElementAt(0).ToArray();
-			return SubmitSolution(ID, levelnr, statements);
-		}
+	   => StatementParser.ParseStatementTreeJson(statementTreeJson);
 	}
 }

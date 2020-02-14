@@ -4,16 +4,36 @@ import "../css/StartingPage.css";
 import { Redirect } from "react-router-dom";
 
 export const StartingPage = () => {
+	const [isTutorialSessionStarted, setTutorialSessionStatus] = useState(
+		false
+	);
 	const [sessionStarted, setSessionStatus] = useState(false);
-	const [name, setName] = useState(null)
-	useEffect(() => {getCandidate()},[])
+	const [name, setName] = useState(null);
+
+	useEffect(() => {
+		getCandidate();
+	}, []);
+
+	const startTutorialSession = async () => {
+		await fetch("api/session/startTutorialSession")
+			.then(response => {
+				if (response.ok) {
+					setTutorialSessionStatus(true);
+				} else {
+					throw Error("Error whilst fetching session, no OK");
+				}
+			})
+			.catch(error => {
+				console.log(error);
+			});
+	};
 
 	const getCandidate = async () => {
-		if(IsSessionIdAvailable()){
-			if(await isAlreadyStarted()){
+		if (IsSessionIdAvailable()) {
+			if (await isAlreadyStarted()) {
 				getCandidateName();
 				setSessionStatus(true);
-			} else if(await isSessionIDValid()){
+			} else if (await isSessionIDValid()) {
 				getCandidateName();
 			} else {
 				getNewCandidate();
@@ -21,49 +41,39 @@ export const StartingPage = () => {
 		} else {
 			getNewCandidate();
 		}
-	}
-	const getNewCandidate = async() => {
+	};
+
+	const getNewCandidate = async () => {
 		await fetch("api/session/candidate")
 			.then(checkStatus)
 			.then(data => {
 				setName(data.name);
-				localStorage.setItem("sessionID", data.id)
-			})
-	}
-	const getCandidateName = async() => {
-		if(name !== null){
+				localStorage.setItem("sessionID", data.id);
+			});
+	};
+
+	const getCandidateName = async () => {
+		if (name !== null) {
 			return;
 		}
-		await fetch("api/session/candidate/"+localStorage.getItem("sessionID"))
+		await fetch(
+			"api/session/candidate/" + localStorage.getItem("sessionID")
+		)
 			.then(checkStatus)
 			.then(data => {
 				setName(data.name);
-			})
-	}
-
-	// const startSession = async () => {
-	// 	if (!IsSessionIdAvailable()) {
-	// 		await getNewCandidate();
-	// 	} else if (!(await isSessionIDValid())) {
-	// 		await getNewCandidate();
-	// 	}
-	// 	await startGameSession();
-	// };
+			});
+	};
 
 	const IsSessionIdAvailable = () => {
 		const id = localStorage.getItem("sessionID");
 		return id !== null;
 	};
 
-	const startSession = async () => {
-		await fetch("api/session/startsession", {
-			method: "GET",
-			headers: {
-				"Content-Type": "application/json",
-				Authorization: localStorage.getItem("sessionID")
-			}
-		})
-			.then(response => setSessionStatus(response.status===200));
+	const tutorialSessionRedirect = () => {
+		if (isTutorialSessionStarted) {
+			return <Redirect to="/tutorialsession" />;
+		}
 	};
 
 	const isSessionIDValid = async () => {
@@ -81,6 +91,7 @@ export const StartingPage = () => {
 			});
 		return sessionExists;
 	};
+
 	const isAlreadyStarted = async () => {
 		let isStarted;
 		await fetch("api/session/isStarted", {
@@ -95,25 +106,28 @@ export const StartingPage = () => {
 				isStarted = data;
 			});
 		return isStarted;
-	}
+	};
 
 	const gameSessionRedirect = () => {
 		if (sessionStarted) {
 			return <Redirect to="/gamesession" />;
 		}
 	};
+
 	const checkStatus = response => {
-        return new Promise(function(resolve, reject){
-            if(response.status === 200){
-                resolve(response.json())
-            } else {
-                reject(response)
-            }
-        })
-	}
-	if(name){
+		return new Promise(function(resolve, reject) {
+			if (response.status === 200) {
+				resolve(response.json());
+			} else {
+				reject(response);
+			}
+		});
+	};
+
+	if (name) {
 		return (
 			<div>
+				{tutorialSessionRedirect()}
 				{gameSessionRedirect()}
 				<Jumbotron fluid>
 					<Container fluid>
@@ -121,19 +135,22 @@ export const StartingPage = () => {
 						<p className="lead">
 							Wanneer je op start drukt volgt een tutorial van het
 							sollicitatieprogrammeerspel. De bedoeling is om jouw
-							karakter op de finish te laten eindigen aan de hand van
-							commando's die jij het geeft. Hierbij is het van belang
-							dit met zo min mogelijk commando's te doen.
+							karakter op de finish te laten eindigen aan de hand
+							van commando's die jij het geeft. Hierbij is het van
+							belang dit met zo min mogelijk commando's te doen.
 						</p>
 						<p className="lead">Veel geluk pik.</p>
 					</Container>
 				</Jumbotron>
-				<Button color="primary start-button" onClick={() => startSession()}>
-					Start Spel
+				<Button
+					color="primary start-button"
+					onClick={() => startTutorialSession()}
+				>
+					Start tutorial
 				</Button>
 			</div>
 		);
 	} else {
-		return <div> Er is geen sessie beschikbaar op dit moment. </div>
+		return <div> Er is geen sessie beschikbaar op dit moment. </div>;
 	}
 };
