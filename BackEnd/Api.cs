@@ -84,22 +84,21 @@ namespace BackEnd
 			return new State(new Puzzle(Level.Get(levelNumber)));
 		}
 
-		/// <summary>
-		/// Submit a new solution attempt
-		/// </summary>
-		/// <param name="ID"></param>
-		/// <param name="levelNumber"></param>
-		/// <param name="statements"></param>
-		/// <returns>A LevelSolution object which contains amongst other things a list of IState objects and whether the level was solved or not</returns>
-		public static LevelSolution SubmitSolution(int ID, int levelNumber, Statement[] statements)
-		{
-			GameSession gameSession = GetSession(ID);
-			LevelSession levelSession = gameSession.GetSession(levelNumber);
-			LevelSolution solution = new LevelSolution(levelNumber, statements);
-			levelSession.Attempt(solution);
-			Repository.UpdateSession(ID, gameSession);
-			return solution;
-		}
+        /// <summary>
+        /// Submit a new solution attempt
+        /// </summary>
+        /// <param name="ID"></param>
+        /// <param name="levelNumber"></param>
+        /// <param name="statements"></param>
+        /// <returns>A LevelSolution object which contains amongst other things a list of IState objects and whether the level was solved or not</returns>
+        public static LevelSolution SubmitSolution(int ID, int levelNumber, Statement[] statements)
+        {
+            GameSession gameSession = GetSession(ID);
+            LevelSession levelSession = gameSession.GetSession(levelNumber);
+            LevelSolution solution = levelSession.Attempt(statements);
+            Repository.UpdateSession(ID, gameSession);
+            return solution;
+        }
 
 		public static void PauseLevelSession(int ID, int levelNumber)
 		{
@@ -184,57 +183,22 @@ namespace BackEnd
 		{
 			return new Overview(GetSession(ID));
 		}
-
-		/// <summary>
-		/// Gets the number of lines that a candidate needed to solve a specific level
-		/// </summary>
-		/// <param name="ID"></param>
-		/// <param name="levelNumber"></param>
-		/// <returns></returns>
-		public static int NumberOfLinesSolved(int ID, int levelNumber)
-		{
-			return GetSession(ID).GetSession(levelNumber).GetLeastLinesOfCodeSolution().Lines;
-		}
-
-		public static Dictionary<int, int> NumberOfLinesSolvedLevelsOf(int ID)
-		{
-			Dictionary<int, int> amountOfLinesByLevel = new Dictionary<int, int>();
-			GameSession gameSession = GetSession(ID);
-			foreach (int levelNumber in gameSession.SolvedLevelNumbers)
-			{
-				amountOfLinesByLevel.Add(levelNumber, NumberOfLinesSolved(ID, levelNumber));
-			}
-			return amountOfLinesByLevel;
-		}
-
-		/// <summary>
-		/// Creates a dictionary labeled by level number with as entries the tallies for the shortest code solutions
-		/// </summary>
-		/// <param name="levelNumbers"></param>
-		/// <returns></returns>
-		public static Dictionary<int, Dictionary<int, int>> TallyEveryoneNumberOfLines(ISet<int> levelNumbers)
-		{
-			Dictionary<int, Dictionary<int, int>> talliesByLevel = new Dictionary<int, Dictionary<int, int>>();
-			foreach (int levelNumber in levelNumbers)
-			{
-				talliesByLevel.Add(levelNumber, Repository.TallyEveryoneNumberOfLines(levelNumber));
-			}
-			return talliesByLevel;
-		}
-
-
-		/// <summary>
-		/// Creates a dictionary containing only the solved levels of ID with tallies for the shortest code solution
-		/// </summary>
-		/// <param name="ID"></param>
-		/// <returns></returns>
-		public static Dictionary<int, Dictionary<int, int>> TallyEveryoneNumberOfLinesSolvedLevelsOf(int ID)
-		{
-			GameSession gameSession = GetSession(ID);
-			ISet<int> solvedLevels = gameSession.SolvedLevelNumbers;
-			return TallyEveryoneNumberOfLines(solvedLevels);
-		}
-
+        /// <summary>
+        /// Creates a dictionary consisting of all statistics of a candidate.
+        /// </summary>
+        /// <returns>Dictionary with for every level has a dictionary of name of the statistic and the data.</returns>
+        public static Dictionary<int,Dictionary<string,int>> StatisticsCandidate(int ID)
+        {
+            return Analysis.MakeStatisticsCandidate(ID);
+        }
+        /// <summary>
+        /// Creates a dictionary consisting of all statistics of all candidates.
+        /// </summary>
+        /// <returns>Dictionary with for every level has a dictionary of name of the statistic and the combination of data and number of candidates.</returns>
+        public static Dictionary<int,Dictionary<string, Dictionary<int, int>>> StatisticsEveryone(int ID)
+        {
+            return Analysis.MakeStatisticsEveryone(ID);
+        }
 
 		public static long GetEpochTime()
 		{

@@ -30,16 +30,22 @@ namespace BackEnd
             LevelNumber = levelNumber;
         }
 
-        public void Attempt(LevelSolution solution)
+        public LevelSolution Attempt(Statement[] statements)
         {
             if (InProgress)
             {
+                LevelSolution solution = new LevelSolution(LevelNumber, new StatementBlock(statements), CurrentDuration);
                 Solutions.Add(solution);
+                return solution;
             }
             else
             {
                 throw new InvalidOperationException("Level session has already ended.");
             }
+
         }
+        public static int GetLines(LevelSession session) => session.GetLeastLinesOfCodeSolution().Lines;
+        public static Func<LevelSession,int> GetDurationPerPeriod(int period) => (session => GetDuration(session)/period*period);
+        public static int GetDuration(LevelSession session) => (int)session.GetLeastLinesOfCodeSolution().Duration/1000;
     }
 }

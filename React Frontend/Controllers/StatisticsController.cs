@@ -46,21 +46,17 @@ namespace React_Frontend.Controllers
                 return lastID.Value;
             }
 		}
-		[HttpGet("tallylines")]
-		public string TallyEveryoneNumberOfLinesSolvedLevelsOf(string id)
+		[HttpGet("candidate")]
+		public string GetDataCandidate(int id)
 		{
-			System.Console.WriteLine(id);
-			System.Console.WriteLine(id.GetType());
-			int sessionID = int.Parse(id);
-			Dictionary<int, Dictionary<int, int>> totalTally = Api.TallyEveryoneNumberOfLinesSolvedLevelsOf(sessionID);
-			return JSON.Serialize(totalTally);
+			Dictionary<int,Dictionary<string,int>> data = Api.StatisticsCandidate(id);
+			return JSON.Serialize(data);
 		}
-		[HttpGet("shortestsolutions")]
-		public string NumberOfLinesSolvedLevelsOf(string id)
+		[HttpGet("tally")]
+		public string GetDataTally(int id)
 		{
-			int sessionID = int.Parse(id);
-			Dictionary<int, int> solutions = Api.NumberOfLinesSolvedLevelsOf(sessionID);
-			return JSON.Serialize(solutions);
+			Dictionary<int,Dictionary<string, Dictionary<int, int>>> data = Api.StatisticsEveryone(id);
+			return JSON.Serialize(data);
 		}
 	}
 }
