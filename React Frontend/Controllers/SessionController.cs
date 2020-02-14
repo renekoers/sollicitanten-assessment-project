@@ -12,36 +12,39 @@ namespace React_Frontend.Controllers
 		public ActionResult<string> getCandidate()
 		{
 			Candidate candidate = Api.GetCandidate();
-			if (candidate == null)
+			if (candidate != null)
 			{
-				return NotFound();
+				return JSON.Serialize(candidate);
 			}
 			else
 			{
-				return JSON.Serialize(candidate);
+				return NotFound();
 			}
 
 		}
 		[HttpGet("candidate/{id}")]
-		public ActionResult<string> getCandidateName(string id)
+		public ActionResult<string> getCandidate(string id)
 		{
-			int sessionID = int.Parse(id);
-			Candidate candidate = Api.GetCandidate(sessionID);
-			if (candidate == null)
+			if(int.TryParse(id, out int sessionID))
 			{
-				return NotFound();
-			}
-			else
-			{
-				return JSON.Serialize(candidate);
+				Candidate candidate = Api.GetCandidate(sessionID);
+				if (candidate != null)
+				{
+					return JSON.Serialize(candidate);
+				}
+				else
+				{
+					return NotFound();
+				}
+			} else {
+				return BadRequest();
 			}
 
 		}
 		[HttpGet("startsession")]
 		public ActionResult StartSession()
 		{
-			int sessionID = int.Parse(Request.Headers["Authorization"]);
-			if (Api.StartSession(sessionID))
+			if(int.TryParse(Request.Headers["Authorization"], out int sessionID) && Api.StartSession(sessionID))
 			{
 				return Ok();
 			}
@@ -59,16 +62,24 @@ namespace React_Frontend.Controllers
 		}
 
 		[HttpGet("sessionIDValidation")]
-		public bool IsSessionValid()
+		public ActionResult<bool> IsSessionValid()
 		{
-			int sessionID = int.Parse(Request.Headers["Authorization"]);
-			return Api.IsUnstarted(sessionID);
+			if(int.TryParse(Request.Headers["Authorization"], out int sessionID))
+			{
+				return Api.IsUnstarted(sessionID);
+			} else {
+				return BadRequest();
+			}
 		}
 		[HttpGet("isStarted")]
-		public bool isStarted()
+		public ActionResult<bool> isStarted()
 		{
-			int sessionID = int.Parse(Request.Headers["Authorization"]);
-			return Api.IsStarted(sessionID);
+			if(int.TryParse(Request.Headers["Authorization"], out int sessionID))
+			{
+				return Api.IsStarted(sessionID);
+			} else {
+				return BadRequest();
+			}
 		}
 		[HttpGet("levelIsSolved/{levelNumber}")]
 		public bool IsSolved(string levelNumber)

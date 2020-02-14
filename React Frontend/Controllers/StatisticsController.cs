@@ -47,10 +47,14 @@ namespace React_Frontend.Controllers
             }
 		}
 		[HttpGet("candidate")]
-		public string GetDataCandidate(int id)
+		public ActionResult<string> GetDataCandidate(int id)
 		{
 			Dictionary<int,Dictionary<string,int>> data = Api.StatisticsCandidate(id);
-			return JSON.Serialize(data);
+            if(data!=null){
+			    return JSON.Serialize(data);
+            } else {
+                return NotFound();
+            }
 		}
 		[HttpGet("tally")]
 		public string GetDataTally()

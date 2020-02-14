@@ -33,6 +33,9 @@ namespace BackEnd
         public static Dictionary<int,Dictionary<string,int>> MakeStatisticsCandidate(int ID)
         {
             GameSession gameSession = Repository.GetSession(ID);
+            if(gameSession==null){
+                return null;
+            }
             ISet<int> solvedLevels = gameSession.SolvedLevelNumbers;
             Dictionary<string,Func<LevelSession,int>> statisticsFunctions = GetStatisticsFunctions();
             Dictionary<int,Dictionary<string,int>> dataCandidate = new Dictionary<int,Dictionary<string,int>>();
