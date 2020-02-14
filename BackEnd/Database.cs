@@ -50,7 +50,7 @@ namespace BackEnd
 			DateTime defaultTime = new DateTime();
 			await DB.Update<CandidateEntity>()
 				.Match(a => a.ID == ID && a.started == defaultTime)
-				.Modify(a => a.started, DateTime.Now)
+				.Modify(a => a.started, DateTime.UtcNow)
 				.ExecuteAsync();
 			CandidateEntity candidate = DB.Find<CandidateEntity>().One(ID);
 			return candidate != null && candidate.started > defaultTime;
@@ -60,11 +60,20 @@ namespace BackEnd
 			DateTime defaultTime = new DateTime();
 			await DB.Update<CandidateEntity>()
 				.Match(a => a.ID == ID && a.started > defaultTime && a.finished == defaultTime)
-				.Modify(a => a.finished, DateTime.Now)
+				.Modify(a => a.finished, DateTime.UtcNow)
 				.ExecuteAsync();
 			CandidateEntity candidate = DB.Find<CandidateEntity>().One(ID);
 			return candidate != null && candidate.finished > defaultTime;
 		}
-		
+		// async internal static Task<List<int>> GetFinishedIDsAfterEpochTime(long epochTime)
+		// {
+		// 	var newFinishedIds = DB.Find<CandidateEntity>()
+        //             .Match(a => a.Age > 30)
+        //             .Sort(a => a.Age, Order.Descending)
+        //             .Sort(a => a.Name, Order.Ascending)
+        //             .Skip(1).Limit(1)
+        //             .Project(a => new Author { Name = a.Name })
+        //             .Execute();
+		// }
 	}
 }
