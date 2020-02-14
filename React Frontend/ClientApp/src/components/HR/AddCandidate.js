@@ -15,6 +15,7 @@ export function AddCandidate(props) {
         while(credentials.className !== "singleBlock"){
             credentials = credentials.parentNode
         }
+        credentials.querySelector("#noteAdd").innerHTML = " ";
         var name = credentials.querySelector("#username").value;
         fetch("api/HR/candidate", {
             method: "POST",
@@ -27,8 +28,12 @@ export function AddCandidate(props) {
         .then(status)
         .then(() => credentials.querySelector("#noteAdd").innerHTML = name + " is toegevoegd.")
         .catch(error => {
-            console.log(error)
-            props.onInvalidSession(error)
+            const errorMessage = translateErrorStatusCodeToString(error);
+            if(error===400){
+                credentials.querySelector("#noteAdd").innerHTML = errorMessage;
+            } else {
+                props.onInvalidSession(errorMessage)
+            }
         })
     }
     function translateErrorStatusCodeToString(statusCode){
@@ -45,7 +50,7 @@ export function AddCandidate(props) {
             if(response.status === 200){
                 resolve("OK")
             } else {
-                reject(translateErrorStatusCodeToString(response.status))
+                reject(response.status)
             }
         })
     }

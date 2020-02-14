@@ -12,9 +12,9 @@ namespace BackEnd
 		{
 			return Repository.ValidateUser(username, hashedPass);
 		}
-		public static void AddCandidate(string name)
+		public static bool AddCandidate(string name)
 		{
-			Repository.AddCandidate(name);
+			return Repository.AddCandidate(name);
 		}
 		public static Candidate GetCandidate()
 		{

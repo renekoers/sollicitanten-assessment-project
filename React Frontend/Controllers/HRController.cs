@@ -43,8 +43,12 @@ namespace React_Frontend.Controllers
         [HttpPost("candidate")]
         public StatusCodeResult AddCandidate([FromBody] string name)
         {
-            Api.AddCandidate(name);
-            return Ok();
+            if(Api.AddCandidate(name))
+            {
+                return Ok();
+            } else {
+                return BadRequest();
+            }
         }
         [HttpGet("newFinished")]
         public ActionResult<List<int>> GetNewFinished()
