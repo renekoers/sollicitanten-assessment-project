@@ -30,7 +30,7 @@ namespace BackEnd
         /// Creates a dictionary consisting of all statistics of a candidate.
         /// </summary>
         /// <returns>Dictionary with for every level has a dictionary of name of the statistic and the data.</returns>
-        public static Dictionary<int,Dictionary<string,int>> StatisticsCandidate(int ID)
+        public static Dictionary<int,Dictionary<string,int>> MakeStatisticsCandidate(int ID)
         {
             GameSession gameSession = Repository.GetSession(ID);
             ISet<int> solvedLevels = gameSession.SolvedLevelNumbers;
@@ -52,7 +52,7 @@ namespace BackEnd
         /// Creates a dictionary consisting of all statistics of all candidates.
         /// </summary>
         /// <returns>Dictionary with for every level has a dictionary of name of the statistic and the combination of data and number of candidates.</returns>
-        public static Dictionary<int,Dictionary<string, Dictionary<int, int>>> StatisticsEveryone(int ID)
+        public static Dictionary<int,Dictionary<string, Dictionary<int, int>>> MakeStatisticsEveryone(int ID)
         {
             GameSession gameSession = Repository.GetSession(ID);
             ISet<int> solvedLevels = gameSession.SolvedLevelNumbers;
