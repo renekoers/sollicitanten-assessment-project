@@ -27,8 +27,8 @@ namespace BackEnd
             do
             {
                 states.AddRange(_statements.ExecuteCommand(puzzle));
-                newState = states[states.Count-1];
-                if(oldStates.Contains(newState))
+				newState = states.Count>0 ? states[states.Count - 1] : null;
+				if (oldStates.Contains(newState) || newState==null)
                 {
                     this.IsInfiniteLoop = true;
                     return states;
