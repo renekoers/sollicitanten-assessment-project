@@ -11,16 +11,19 @@ export function Statistics(props){
 
     useEffect(() => {
         async function getData(){
+            let unsolved = null;
             let dataEveryone = null;
+            await fetchStatistics("unsolved")
+            .then(data => unsolved=data)
             await fetchStatistics("tally")
             .then(data => dataEveryone=data)
-            await fetchStatistics("candidate")
+            await fetchStatistics("candidate?id=" + id)
             .then(dataCandidate => {
                 var newComponents = []
                 for (const [levelNumber, dictionaryEveryone] of Object.entries(
                     dataEveryone
                 )) {
-                newComponents.push(getLevelComponents(levelNumber, dictionaryEveryone, dataCandidate[levelNumber]));
+                newComponents.push(getLevelComponents(levelNumber, dictionaryEveryone, dataCandidate[levelNumber], unsolved[levelNumber]));
                 }
                 setComponents(newComponents);
             })
@@ -31,7 +34,7 @@ export function Statistics(props){
                 if(id===null){
                     reject(400);
                 }
-                fetch("api/statistics/" + nameApi + "?id=" + id, {
+                fetch("api/statistics/" + nameApi, {
                     method: "GET",
                     headers: {
                         "Content-Type": "application/json",
@@ -54,9 +57,10 @@ export function Statistics(props){
             })
         }
 
-        function getLevelComponents(levelNumber, levelStatisticsEveryone, levelStatisticsCandidate){
+        function getLevelComponents(levelNumber, levelStatisticsEveryone, levelStatisticsCandidate, amountUnsolved){
             var statisticComponents = [];
             for(const[nameData, results] of Object.entries(levelStatisticsEveryone)){
+                var singleStatisticCandidate = levelStatisticsCandidate!==undefined ? levelStatisticsCandidate[nameData] : "onopgelost"
                 statisticComponents.push(
                     <LevelBarChart
                         className="level-chart"
@@ -64,8 +68,9 @@ export function Statistics(props){
                         name={nameData}
                         tallyData={results}
                         candidateData={
-                            levelStatisticsCandidate[nameData]
+                            singleStatisticCandidate
                         }
+                        unsolved = {amountUnsolved}
                     />
                 )
             }
@@ -125,10 +130,11 @@ function LevelBarChart(props){
         const _dataTally = [];
 		for (const [_lines, _candidates] of Object.entries(props.tallyData)) {
 			_dataTally.push({
-				lines: Number.parseInt(_lines),
+				lines: _lines,
 				candidates: Number.parseInt(_candidates)
 			});
         }
+        _dataTally.push({lines: "onopgelost", candidates: props.unsolved})
         setDataTally(_dataTally);
     },[props.tallyData])
 
@@ -165,9 +171,13 @@ function LevelBarChart(props){
                         <Cell
                             key={`cell-${index}`}
                             fill={
-                                entry.lines === props.candidateData
+                                entry.lines==="onopgelost" ?
+                                (entry.lines === "" + props.candidateData
+                                    ? "#AA0000"
+                                    : "#A18383")
+                                : (entry.lines === "" + props.candidateData
                                     ? "#00AA00"
-                                    : "#8CA183"
+                                    : "#8CA183")
                             }
                         />
                     );
