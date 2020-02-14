@@ -23,11 +23,16 @@ namespace BackEnd
         {
             return true;
         }
-        internal static void AddCandidate(string name)
+        internal static bool AddCandidate(string name)
         {
+            
+			if(name=="" || name == null){
+				return false;
+			}
             int ID = CreateID();
             Candidates.Add(ID, name);
             UnstartedSessions.Add(ID);
+            return true;
         }
 
         private static int CreateID()
