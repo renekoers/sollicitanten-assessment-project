@@ -65,6 +65,59 @@ namespace BackEnd
 				return false;
 			}
 		}
+        /// <summary>
+        /// Tallies a given function of a level session for the given level number over all sessions
+        /// </summary>
+        /// <param name="levelNumber"></param>
+        /// <param name="function">Function that maps a level session to an int.</param>
+        /// <returns>A dictionary with as the first int result of function and the second int the number of people that solved the level with the same info</returns>
+        public static Dictionary<int, int> TallyEveryone(int levelNumber, Func<LevelSession, int> function)
+        {
+            Dictionary<int, int> tally = new Dictionary<int, int>();
+            foreach (GameSession gameSession in GameSessions.Values)
+            {
+                LevelSession levelSession = gameSession.GetSession(levelNumber);
+                if (levelSession is null || !levelSession.Solved)
+                {
+                    continue;
+                }
+                int info = function(levelSession);
+                if (tally.ContainsKey(info))
+                {
+                    tally[info]++;
+                }
+                else
+                {
+                    tally[info] = 1;
+                }
+            }
+            return tally;
+        }
+        /// <summary>
+        /// This method creates a dictionary consisting of the number of candidates that did not solve a certain level.
+        /// </summary>
+        /// <returns></returns>
+        public static Dictionary<int,int> NumberOfCandidatesNotSolvedPerLevel()
+        {
+            Dictionary<int,int> amountUnsolved = new Dictionary<int, int>();
+            for(int levelNumber=1; levelNumber<=Level.TotalLevels;levelNumber++)
+            {
+                amountUnsolved[levelNumber] = 0;
+            }
+            foreach(GameSession gameSession in GameSessions.Values)
+            {
+                for(int levelNumber=1; levelNumber<=Level.TotalLevels;levelNumber++)
+                {
+                    LevelSession levelSession = gameSession.GetSession(levelNumber);
+                    if (levelSession is null || levelSession.Solved)
+                    {
+                        continue;
+                    }
+                    amountUnsolved[levelNumber]++;
+                }
+            }
+            return amountUnsolved;
+        }
 
 		public static void CreateTutorialSession()
 		{
@@ -92,39 +145,6 @@ namespace BackEnd
 				return true;
 			}
 			return false;
-		}
-
-		/// <summary>
-		/// Tallies the number of lines of the best solution for the given level number over all sessions
-		/// </summary>
-		/// <param name="levelNumber"></param>
-		/// <returns>A dictionary with as the first int the number of lines and the second int the number of people that solved the level in said amount of lines</returns>
-		public static Dictionary<int, int> TallyEveryoneNumberOfLines(int levelNumber)
-		{
-			Dictionary<int, int> tally = new Dictionary<int, int>();
-			foreach (GameSession gameSession in GameSessions.Values)
-			{
-				LevelSession levelSession = gameSession.GetSession(levelNumber);
-				if (levelSession is null)
-				{
-					continue;
-				}
-				LevelSolution leastLinesSolution = levelSession.GetLeastLinesOfCodeSolution();
-				if (leastLinesSolution is null)
-				{
-					continue;
-				}
-				int lines = leastLinesSolution.Lines;
-				if (tally.ContainsKey(lines))
-				{
-					tally[lines]++;
-				}
-				else
-				{
-					tally[lines] = 1;
-				}
-			}
-			return tally;
 		}
 	}
 }

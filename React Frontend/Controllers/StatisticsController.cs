@@ -67,19 +67,23 @@ namespace React_Frontend.Controllers
 				return lastID.Value;
 			}
 		}
-		[HttpGet("tallylines")]
-		public string TallyEveryoneNumberOfLinesSolvedLevelsOf(string id)
+		[HttpGet("candidate")]
+		public string GetDataCandidate(int id)
 		{
-			string sessionID = id;
-			Dictionary<int, Dictionary<int, int>> totalTally = Api.TallyEveryoneNumberOfLinesSolvedLevelsOf(sessionID);
-			return JSON.Serialize(totalTally);
+			Dictionary<int,Dictionary<string,int>> data = Api.StatisticsCandidate(id);
+			return JSON.Serialize(data);
 		}
-		[HttpGet("shortestsolutions")]
-		public string NumberOfLinesSolvedLevelsOf(string id)
+		[HttpGet("tally")]
+		public string GetDataTally()
 		{
-			string sessionID = id;
-			Dictionary<int, int> solutions = Api.NumberOfLinesSolvedLevelsOf(sessionID);
-			return JSON.Serialize(solutions);
+			Dictionary<int,Dictionary<string, Dictionary<int, int>>> data = Api.StatisticsEveryone();
+			return JSON.Serialize(data);
 		}
+        [HttpGet("unsolved")]
+        public string GetDataUnsolved()
+        {
+            Dictionary<int,int> amountUnsolvedPerLevel = Api.NumberOfCandidatesNotSolvedPerLevel();
+            return JSON.Serialize(amountUnsolvedPerLevel);
+        }
 	}
 }

@@ -117,7 +117,6 @@ export const StartingPage = () => {
 			});
 		return sessionExists;
 	};
-
 	const isAlreadyStarted = async () => {
 		let isStarted;
 		await fetch("api/session/isStarted", {

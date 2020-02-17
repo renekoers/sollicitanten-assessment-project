@@ -140,7 +140,7 @@ export function MainPage() {
 				return (
 					<div>
 						<button className="upperButton" onClick={changePage}>Voeg kandidaat toe</button>
-						<Results onInvalidSession={toLogin} id={id} lastID={lastID} onSeen={removeIDFromNewFinishedIDs} onRequestLast={getLastID}/>
+						<Results onInvalidSession={toLogin} id={id} lastID={lastID} onSeen={removeIDFromNewFinishedIDs}/>
 					</div>
 				);
 			} else {
