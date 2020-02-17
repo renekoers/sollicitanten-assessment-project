@@ -29,6 +29,11 @@ namespace BackEnd
 		{
 			return await Repository.IsUnstarted(ID);
 		}
+		async public static Task<List<CandidateEntity>> GetAllUnstartedCandidate()
+		{
+			return await Database.GetAllUnstartedCandidate();
+		}
+
 		/// <summary>
 		/// Start a new session for a new CandidateEntity.!-- This method is used in mockdata and tests!!!!
 		/// </summary>

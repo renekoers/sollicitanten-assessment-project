@@ -41,8 +41,13 @@ namespace BackEnd
 		{
 			Console.WriteLine("Getting candidate...");
 			CandidateEntity candidate = await DB.Find<CandidateEntity>().OneAsync(ID);
-
 			return candidate;
+		}
+
+		async internal static Task<List<CandidateEntity>> GetAllUnstartedCandidate()
+		{
+			return (await GetDatabase().Find<CandidateEntity>()
+			.ManyAsync(a => a.started == new DateTime())).ToList();
 		}
 	}
 }
