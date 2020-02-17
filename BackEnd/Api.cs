@@ -199,7 +199,7 @@ namespace BackEnd
         /// Creates a dictionary consisting of all statistics of a candidate.
         /// </summary>
         /// <returns>Dictionary with for every level has a dictionary of name of the statistic and the data.</returns>
-        public static Dictionary<int,Dictionary<string,int>> StatisticsCandidate(int ID)
+        public static Dictionary<int,Dictionary<string,int>> StatisticsCandidate(string ID)
         {
             return Analysis.MakeStatisticsCandidate(ID);
         }
