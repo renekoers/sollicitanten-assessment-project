@@ -158,9 +158,9 @@ namespace BackEnd
 		/// This method creates a list of all IDs of candidates that finished a session after a given time
 		/// </summary>
 		/// <returns>List of IDs</returns>
-		public static List<string> GetFinishedIDsAfterEpochTime(long epochTime)
+		async public static Task<List<string>> GetFinishedIDsAfterTime(DateTime time)
 		{
-			return Repository.GetFinishedIDsAfterEpochTime(epochTime);
+			return await Database.GetFinishedIDsAfterTime(time);
 		}
 		/// <summary>
 		/// This method finds the first ID of the CandidateEntity that ended the session after the given ID.

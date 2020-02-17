@@ -19,7 +19,7 @@ export function MainPage() {
 
 	useEffect(() => {
 		async function validate(){
-			fetch("api/HR/validate", {
+			await fetch("api/HR/validate", {
 				method: "GET",
 				headers: {
 					"Content-Type": "application/json",
@@ -82,9 +82,9 @@ export function MainPage() {
 		.then(status)
 		.then(data => {
 			let maxID = lastID;
-			if(data.length>0){
+			if(data.IDs.length>0){
 				var arrayID = newFinishedIDs;
-				data.forEach(id => {
+				data.IDs.forEach(id => {
 					arrayID.push(id);
 					if(id>maxID){
 						maxID=id;
@@ -95,7 +95,12 @@ export function MainPage() {
 			if(maxID>lastID){
 				setLastID(maxID)
 			}
-			setLastCheck(Date.now())
+			setLastCheck(data.time)
+		})
+		.catch(async(error) => {
+			if(error.status === 404){
+				setLastCheck(await error.text())
+			}
 		})
 	}	
     function status(response){
@@ -103,7 +108,7 @@ export function MainPage() {
             if(response.status === 200){
                 resolve(response.json())
             } else {
-                reject(response.status)
+                reject(response)
             }
         })
 	}

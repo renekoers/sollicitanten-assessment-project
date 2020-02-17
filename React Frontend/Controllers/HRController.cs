@@ -4,8 +4,6 @@ using JSonWebToken;
 using Microsoft.AspNetCore.Authorization;
 using System.Threading.Tasks;
 using System.Text.Json;
-using System.Collections.Generic;
-using System.Security.Claims;
 
 namespace React_Frontend.Controllers
 {
@@ -57,21 +55,6 @@ namespace React_Frontend.Controllers
 				return BadRequest();
 			}
 
-		}
-		[HttpGet("newFinished")]
-		public ActionResult<List<string>> GetNewFinished()
-		{
-			ClaimsIdentity identity = (ClaimsIdentity)User.Identity;
-			long time = long.Parse(identity.FindFirst("Time").Value);
-			List<string> newFinishedIDs = Api.GetFinishedIDsAfterEpochTime(time);
-			if (newFinishedIDs.Count == 0)
-			{
-				return NotFound();
-			}
-			else
-			{
-				return newFinishedIDs;
-			}
 		}
 	}
 }
