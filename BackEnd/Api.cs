@@ -15,19 +15,19 @@ namespace BackEnd
 		}
 		async public static Task<bool> AddCandidate(string name)
 		{
-			return await Repository.AddCandidate(name);
+			return await Database.AddNewCandidate(name) != null;
 		}
 		async public static Task<CandidateEntity> GetCandidate()
 		{
-			return await Repository.GetCandidate();
+			return await Database.GetCandidate();
 		}
 		async public static Task<CandidateEntity> GetCandidate(string ID)
 		{
-			return await Repository.GetCandidate(ID);
+			return await Database.GetCandidate(ID);
 		}
 		async public static Task<bool> IsUnstarted(string ID)
 		{
-			return await Repository.IsUnstarted(ID);
+			return await Database.IsUnstarted(ID);
 		}
 		async public static Task<List<CandidateEntity>> GetAllUnstartedCandidate()
 		{

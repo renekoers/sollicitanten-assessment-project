@@ -38,17 +38,29 @@ namespace BackEnd
 			await GetDatabase().SaveAsync(candidate);
 			return candidate.ID;
 		}
+		async internal static Task<CandidateEntity> GetCandidate()
+		{
+			List<CandidateEntity> unstartedCandidates = await DB.Find<CandidateEntity>()
+				.Match(candidate => candidate.started == new DateTime())
+				.Limit(1)
+				.ExecuteAsync();
+			return unstartedCandidates.Count!=0 ? unstartedCandidates.First() : null;
+		}
 
 		async internal static Task<CandidateEntity> GetCandidate(string ID)
 		{
 			CandidateEntity candidate = await DB.Find<CandidateEntity>().OneAsync(ID);
 			return candidate;
 		}
-
 		async internal static Task<List<CandidateEntity>> GetAllUnstartedCandidate()
 		{
 			return (await GetDatabase().Find<CandidateEntity>()
 			.ManyAsync(a => a.started == new DateTime())).ToList();
+		}
+		async internal static Task<bool> IsUnstarted(string ID)
+		{
+			CandidateEntity candidate = await GetCandidate(ID);
+			return candidate != null ? candidate.started > new DateTime() : false;
 		}
 		async internal static Task<bool> StartSession(string ID)
 		{

@@ -13,9 +13,6 @@ namespace BackEnd
 	{
 		private Repository() { }
 		private static readonly Dictionary<string, GameSession> GameSessions = new Dictionary<string, GameSession>();
-		[Obsolete]
-		private static readonly Dictionary<int, string> Candidates = new Dictionary<int, string>();
-		private static readonly HashSet<string> UnstartedSessions = new HashSet<string>();
 
 		/// <summary>
 		/// This method should validate the credentials of HR. This will later be implemented!!!!!!
@@ -24,39 +21,7 @@ namespace BackEnd
 		internal static bool ValidateUser(string username, string hashedPassword)
 		{
 			return true;
-		}
-		async internal static Task<bool> AddCandidate(string name)
-		{
-			string ID = await Database.AddNewCandidate(name);
-			return UnstartedSessions.Add(ID);
-		}
-		async internal static Task<CandidateEntity> GetCandidate()
-		{
-			if (UnstartedSessions.Count == 0)
-			{
-				return null;
-			}
-			string ID = UnstartedSessions.First();
-			return await Database.GetCandidate(ID);
-
-		}
-		async internal static Task<CandidateEntity> GetCandidate(string ID)
-		{
-			return await Database.GetCandidate(ID);
-		}
-		async internal static Task<bool> IsUnstarted(string ID)
-		{
-			CandidateEntity candidate = await Database.GetCandidate(ID);
-			return candidate != null ? UnstartedSessions.Contains(ID) : false;
-		}
-		/// <summary>
-		/// This method creates a list of all IDs of candidates that finished a session after a given time
-		/// </summary>
-		/// <returns>List of IDs</returns>
-		internal static List<string> GetFinishedIDsAfterEpochTime(long epochTime)
-		{
-			return GameSessions.Where(pair => !pair.Value.InProgress && pair.Value.EndTime > epochTime).Select(pair => pair.Key).ToList();
-		}
+		}		
 		/// <summary>
 		/// This method finds the first ID of the candidate that ended the session after the given ID.
 		/// </summary>
@@ -90,7 +55,7 @@ namespace BackEnd
 		}
 		async public static Task<bool> StartSession(string ID)
 		{
-			if (UnstartedSessions.Remove(ID) && await Database.StartSession(ID))
+			if (await Database.StartSession(ID))
 			{
 				GameSessions.Add(ID, new GameSession());
 				return true;
