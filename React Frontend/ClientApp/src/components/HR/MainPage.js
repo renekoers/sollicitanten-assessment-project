@@ -81,19 +81,12 @@ export function MainPage() {
 		})
 		.then(status)
 		.then(data => {
-			let maxID = lastID;
 			if(data.IDs.length>0){
 				var arrayID = newFinishedIDs;
 				data.IDs.forEach(id => {
 					arrayID.push(id);
-					if(id>maxID){
-						maxID=id;
-					}
 				});
 				setNewFinishedIds(arrayID);
-			}
-			if(maxID>lastID){
-				setLastID(maxID)
 			}
 			setLastCheck(data.time)
 		})
@@ -102,6 +95,7 @@ export function MainPage() {
 				setLastCheck(await error.text())
 			}
 		})
+		await getLastID();
 	}	
     function status(response){
         return new Promise(function(resolve, reject){

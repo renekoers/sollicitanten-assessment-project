@@ -66,7 +66,7 @@ namespace UnitTest
 			Api.StartSession(lastID);
 			Api.EndSession(firstID);
 			Api.EndSession(lastID);
-			Assert.AreEqual(lastID, Api.GetLastIDWhichIsFinished().Value);
+			Assert.AreEqual(lastID, Api.GetLastFinishedID().Value);
 		}
 		[TestMethod]
 		public void GetPreviousIDBeforeFirstCandidateIsNullTest()
@@ -75,7 +75,7 @@ namespace UnitTest
 			int id = Api.GetCandidate().ID;
 			Api.StartSession(id);
 			Api.EndSession(id);
-			Assert.IsNull(Api.GetPreviousIDWhichIsFinished(1));
+			Assert.IsNull(Api.GetPreviousFinishedID(1));
 		}
 		[TestMethod]
 		public void GetPreviousIDWhichIsFinishedTest()
@@ -100,7 +100,7 @@ namespace UnitTest
 			Api.EndSession(id2);
 			Api.EndSession(id4);
 			Api.EndSession(id5);
-			Assert.AreEqual(id2, Api.GetPreviousIDWhichIsFinished(id4));
+			Assert.AreEqual(id2, Api.GetPreviousFinishedID(id4));
 		}
 		[TestMethod]
 		public void GetNextIDAfterLastCandidateIsNullTest()
@@ -109,7 +109,7 @@ namespace UnitTest
 			int id = Api.GetCandidate().ID;
 			Api.StartSession(id);
 			Api.EndSession(id);
-			Assert.IsNull(Api.GetNextIDWhichIsFinished(id));
+			Assert.IsNull(Api.GetNextFinishedID(id));
 		}
 		[TestMethod]
 		public void GetNextIDWhichIsFinishedTest()
@@ -133,7 +133,7 @@ namespace UnitTest
 			Api.EndSession(id2);
 			Api.EndSession(id4);
 			Api.EndSession(id5);
-			Assert.AreEqual(id4, Api.GetNextIDWhichIsFinished(id2).Value);
+			Assert.AreEqual(id4, Api.GetNextFinishedID(id2).Value);
 		}
 	}
 }

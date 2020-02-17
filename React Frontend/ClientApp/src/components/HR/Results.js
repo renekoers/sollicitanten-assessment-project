@@ -12,6 +12,7 @@ export function Results(props) {
 	useEffect(() => {
 		if(id===0){
 			getLastID();
+			setID(lastID)
 		}
 		props.onSeen(id)
 		fetch("api/session/candidate/"+id)

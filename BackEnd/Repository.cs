@@ -21,24 +21,6 @@ namespace BackEnd
 		internal static bool ValidateUser(string username, string hashedPassword)
 		{
 			return true;
-		}		
-		/// <summary>
-		/// This method finds the first ID of the candidate that ended the session after the given ID.
-		/// </summary>
-		/// <returns>ID if there exists one</returns>
-		internal static int? GetNextIDWhichIsFinished(int ID)
-		{
-			return null;
-			// Util.Min(GameSessions.Where(pair => !pair.Value.InProgress && pair.Key > ID).Select(pair => pair.Key).ToList());
-		}
-		/// <summary>
-		/// This method finds the last ID of the candidate that ended the session before the given ID.
-		/// </summary>
-		/// <returns>ID if there exists one</returns>
-		internal static int? GetPreviousIDWhichIsFinished(int ID)
-		{
-			return null;
-			// Util.Max(GameSessions.Where(pair => !pair.Value.InProgress && pair.Key < ID).Select(pair => pair.Key).ToList());
 		}
 		internal static int? GetLastIDWhichIsFinished()
 		{

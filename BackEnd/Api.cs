@@ -170,21 +170,21 @@ namespace BackEnd
 		/// This method finds the first ID of the CandidateEntity that ended the session after the given ID.
 		/// </summary>
 		/// <returns>ID if there exists one</returns>
-		public static int? GetNextIDWhichIsFinished(int ID)
+		async public static Task<string> GetNextFinishedID(string ID)
 		{
-			return Repository.GetNextIDWhichIsFinished(ID);
+			return await Database.GetNextFinishedID(ID);
 		}
 		/// <summary>
 		/// This method finds the last ID of the CandidateEntity that ended the session before the given ID.
 		/// </summary>
 		/// <returns>ID if there exists one</returns>
-		public static int? GetPreviousIDWhichIsFinished(int ID)
+		async public static Task<string> GetPreviousFinishedID(string ID)
 		{
-			return Repository.GetPreviousIDWhichIsFinished(ID);
+			return await Database.GetPreviousFinishedID(ID);
 		}
-		public static int? GetLastIDWhichIsFinished()
+		async public static Task<string> GetLastFinishedID()
 		{
-			return Repository.GetLastIDWhichIsFinished();
+			return await Database.GetLastFinishedID();
 		}
 		public static int GetTotalLevelAmount()
 		{

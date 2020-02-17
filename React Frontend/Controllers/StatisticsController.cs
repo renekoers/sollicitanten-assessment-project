@@ -29,48 +29,48 @@ namespace React_Frontend.Controllers
 			}
 		}
 		[HttpGet("nextFinished")]
-		public ActionResult<int> GetNextFinished(int ID)
+		async public Task<ActionResult<string>> GetNextFinished(string ID)
 		{
-			int? nextID = Api.GetNextIDWhichIsFinished(ID);
+			string nextID = await Api.GetNextFinishedID(ID);
 			if (nextID == null)
 			{
 				return NotFound();
 			}
 			else
 			{
-				return nextID.Value;
+				return nextID;
 			}
 		}
 		[HttpGet("previousFinished")]
-		public ActionResult<int> GetPreviousFinished(int ID)
+		async public Task<ActionResult<string>> GetPreviousFinished(string ID)
 		{
-			int? previousID = Api.GetPreviousIDWhichIsFinished(ID);
+			string previousID = await Api.GetPreviousFinishedID(ID);
 			if (previousID == null)
 			{
 				return NotFound();
 			}
 			else
 			{
-				return previousID.Value;
+				return previousID;
 			}
 		}
 		[HttpGet("lastFinished")]
-		public ActionResult<int> GetLastFinished()
+		async public Task<ActionResult<string>> GetLastFinished()
 		{
-			int? lastID = Api.GetLastIDWhichIsFinished();
+			string lastID = await Api.GetLastFinishedID();
 			if (lastID == null)
 			{
 				return NotFound();
 			}
 			else
 			{
-				return lastID.Value;
+				return lastID;
 			}
 		}
 		[HttpGet("candidate")]
-		public string GetDataCandidate(string id)
+		public string GetDataCandidate(string ID)
 		{
-			Dictionary<int,Dictionary<string,int>> data = Api.StatisticsCandidate(id);
+			Dictionary<int,Dictionary<string,int>> data = Api.StatisticsCandidate(ID);
 			return JSON.Serialize(data);
 		}
 		[HttpGet("tally")]
