@@ -22,11 +22,6 @@ namespace BackEnd
 		{
 			return true;
 		}
-		internal static int? GetLastIDWhichIsFinished()
-		{
-			return null;
-			// Util.Max(GameSessions.Where(pair => !pair.Value.InProgress).Select(pair => pair.Key).ToList());
-		}
 
 		[Obsolete("Use StartSession(int ID) instead!")]
 		public static string CreateSession()
@@ -58,6 +53,10 @@ namespace BackEnd
             Dictionary<int, int> tally = new Dictionary<int, int>();
             foreach (GameSession gameSession in GameSessions.Values)
             {
+				if(gameSession.InProgress)
+				{
+					continue;
+				}
                 LevelSession levelSession = gameSession.GetSession(levelNumber);
                 if (levelSession is null || !levelSession.Solved)
                 {
@@ -88,6 +87,10 @@ namespace BackEnd
             }
             foreach(GameSession gameSession in GameSessions.Values)
             {
+				if(gameSession.InProgress)
+				{
+					continue;
+				}
                 for(int levelNumber=1; levelNumber<=Level.TotalLevels;levelNumber++)
                 {
                     LevelSession levelSession = gameSession.GetSession(levelNumber);
