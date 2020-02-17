@@ -125,6 +125,12 @@ export const StartingPage = () => {
 		});
 	};
 
+	const [candidateDropdownOpen, setCandidateDropdownOpen] = useState(false);
+
+	const toggleCandidateDropdown = () => {
+		setCandidateDropdownOpen(!candidateDropdownOpen);
+	};
+
 	if (name) {
 		return (
 			<div>
@@ -152,6 +158,20 @@ export const StartingPage = () => {
 			</div>
 		);
 	} else {
-		return <div> Er is geen sessie beschikbaar op dit moment. </div>;
+		return (
+			<div>
+				<Jumbotron fluid>
+					<Container fluid>
+						<h1 className="display-2">Kies kandidaat</h1>
+					</Container>
+				</Jumbotron>
+				<Button
+					color="primary start-button"
+					onClick={() => startTutorialSession()}
+				>
+					Start tutorial
+				</Button>
+			</div>
+		);
 	}
 };
