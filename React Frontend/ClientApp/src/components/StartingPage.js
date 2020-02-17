@@ -1,5 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { Jumbotron, Button, Container } from "reactstrap";
+import {
+	Jumbotron,
+	Button,
+	Container,
+	Form,
+	FormGroup,
+	Label,
+	Input
+} from "reactstrap";
 import "../css/StartingPage.css";
 import { Redirect } from "react-router-dom";
 
@@ -11,7 +19,24 @@ export const StartingPage = () => {
 	const [name, setName] = useState(null);
 
 	useEffect(() => {
-		getCandidate();
+		if (localStorage.getItem("sessionID") === null) {
+			fetch("api/session/candidate/getUnstartedCandidates")
+				.then(response => response.json())
+				.then(data => {
+					console.log(data);
+					setAvailableCandidates(data);
+					let candidateOptions = data.map((candidate, index) => {
+						return (
+							<option value={candidate.id} key={index}>
+								{candidate.name}
+							</option>
+						);
+					});
+					setAvailableCandidateOptions(candidateOptions);
+				});
+		} else {
+			getCandidate();
+		}
 	}, []);
 
 	const startTutorialSession = async () => {
@@ -125,6 +150,29 @@ export const StartingPage = () => {
 		});
 	};
 
+	// Select a candidate page
+	const [dropdownValue, setDropdownValue] = useState();
+	const [availableCandidateOptions, setAvailableCandidateOptions] = useState(
+		null
+	);
+	const [availableCandidates, setAvailableCandidates] = useState(null);
+
+	// useEffect(() => {}, []);
+
+	// const toggleCandidateDropdown = () => {
+	// 	setCandidateDropdownOpen(!candidateDropdownOpen);
+	// };
+
+	const handleCandidateSelection = () => {
+		localStorage.setItem("sessionID", dropdownValue);
+		const selectedCandidateName = availableCandidates.map(candidate => {
+			if (candidate.id === dropdownValue) {
+				return candidate.name;
+			}
+		});
+		setName(selectedCandidateName);
+	};
+
 	if (name) {
 		return (
 			<div>
@@ -152,6 +200,39 @@ export const StartingPage = () => {
 			</div>
 		);
 	} else {
-		return <div> Er is geen sessie beschikbaar op dit moment. </div>;
+		return (
+			<div>
+				<Jumbotron fluid>
+					<Container fluid>
+						<h1 className="display-2">Kies kandidaat</h1>
+						<Form>
+							<FormGroup>
+								<Label for="selectCandidate">
+									Selecteer kandidaat
+								</Label>
+								<Input
+									type="select"
+									name="select"
+									id="candidateSelect"
+									onChange={e =>
+										setDropdownValue(e.target.value)
+									}
+									value={dropdownValue}
+								>
+									{availableCandidateOptions}
+								</Input>
+							</FormGroup>
+						</Form>
+
+						<Button
+							color="primary start-button"
+							onClick={() => handleCandidateSelection()}
+						>
+							Selecteer kandidaat
+						</Button>
+					</Container>
+				</Jumbotron>
+			</div>
+		);
 	}
 };

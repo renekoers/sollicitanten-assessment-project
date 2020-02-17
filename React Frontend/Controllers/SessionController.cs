@@ -2,6 +2,7 @@
 using BackEnd;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 
 namespace React_Frontend.Controllers
 {
@@ -36,6 +37,11 @@ namespace React_Frontend.Controllers
 				return JSON.Serialize(candidate);
 			}
 
+		}
+		[HttpGet("candidate/getUnstartedCandidates")]
+		async public Task<List<CandidateEntity>> GetAllUnstartedCandidates()
+		{
+			return await Api.GetAllUnstartedCandidate();
 		}
 		[HttpGet("startsession")]
 		async public Task<ActionResult> StartSession()
