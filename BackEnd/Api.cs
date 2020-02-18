@@ -223,32 +223,6 @@ namespace BackEnd
 		}
 
 		/// <summary>
-		/// Converts a string into an array of commands.
-		/// </summary>
-		/// <param name="input">String of commands seperated by ';'.</param>
-		/// <returns>Array of commands.</returns>
-		/// <exception cref="ArgumentException">Throws exception if the string is not a command.</exception>
-		private static SingleCommand[] ConvertStringToSingleCommands(string[] input)
-		{
-			SingleCommand[] commands = new SingleCommand[input.Length];
-			for (int index = 0; index < input.Length; index++)
-			{
-				commands[index] = new SingleCommand((Command)Enum.Parse(typeof(Command), input[index].Trim()));
-			}
-			return commands;
-		}
-
-		private static int CalculateScore(Statement[] input)
-		{
-			int lines = 0;
-			foreach (Statement statement in input)
-			{
-				lines += statement.GetLines();
-			}
-			return lines;
-		}
-
-		/// <summary>
 		/// Used to insert some solutions of the levels to see the graphs
 		/// </summary>
 		private static void InsertMockData()

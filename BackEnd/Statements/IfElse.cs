@@ -55,16 +55,6 @@ namespace BackEnd
             return 1 + _statementsTrue.GetLines() + _statementsFalse.GetLines();
         }
 
-        public void AddTrueStatement(Statement s){
-            this._tempTrue.Add(s);
-            this.ConvertStatementBlock();
-        }
-
-        public void AddFalseStatement(Statement s){
-            this._tempFalse.Add(s);
-            this.ConvertStatementBlock();
-        }
-
         public void ConvertStatementBlock(){
             this._statementsFalse = new StatementBlock(this._tempFalse.ToArray());
             this._statementsTrue = new StatementBlock(this._tempTrue.ToArray());

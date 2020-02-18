@@ -53,12 +53,6 @@ namespace BackEnd
 			return 1 + _statements.GetLines();
 		}
 
-		public void AddStatement(Statement s)
-		{
-			this._tempStatements.Add(s);
-			ConvertStatements();
-		}
-
 		private void ConvertStatements()
 		{
 			this._statements = new StatementBlock(this._tempStatements.ToArray());
