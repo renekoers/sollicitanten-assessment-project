@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace BackEnd
 {
@@ -21,30 +20,6 @@ namespace BackEnd
                 }
             }
             return minT;
-        }
-        public static int? Min(List<int> list)
-        {
-            int? min = null;
-            foreach (int t in list)
-            {
-                if (!min.HasValue || t < min.Value)
-                {
-                    min = t;
-                }
-            }
-            return min;
-        }
-        public static int? Max(List<int> list)
-        {
-            int? max = null;
-            foreach (int t in list)
-            {
-                if (!max.HasValue || t > max.Value)
-                {
-                    max = t;
-                }
-            }
-            return max;
         }
     }
 }

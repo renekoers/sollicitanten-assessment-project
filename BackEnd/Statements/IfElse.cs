@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 
 namespace BackEnd
 {
@@ -55,16 +53,6 @@ namespace BackEnd
         internal override int GetLines()
         {
             return 1 + _statementsTrue.GetLines() + _statementsFalse.GetLines();
-        }
-
-        public void AddTrueStatement(Statement s){
-            this._tempTrue.Add(s);
-            this.ConvertStatementBlock();
-        }
-
-        public void AddFalseStatement(Statement s){
-            this._tempFalse.Add(s);
-            this.ConvertStatementBlock();
         }
 
         public void ConvertStatementBlock(){

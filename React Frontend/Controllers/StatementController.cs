@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Text.Json;
 using System.Linq;
-using BackEnd;
+using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
-using System.Text.Json;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
+using BackEnd;
 
 namespace React_Frontend.Controllers
 {
