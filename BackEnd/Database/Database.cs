@@ -34,8 +34,7 @@ namespace BackEnd
 
 		async internal static Task<CandidateEntity> GetCandidate(string ID)
 		{
-			CandidateEntity candidate = await DB.Find<CandidateEntity>().OneAsync(ID);
-			return candidate;
+			return await DB.Find<CandidateEntity>().OneAsync(ID);
 		}
 		async internal static Task<IEnumerable<CandidateEntity>> GetAllUnstartedCandidate()
 		{
@@ -45,28 +44,14 @@ namespace BackEnd
 
 		async internal static Task<bool> HasCandidateNotYetStarted(string ID)
 		{
-			CandidateEntity candidate = await GetDatabase().Find<CandidateEntity>().OneAsync(ID);
-			if (candidate != null && candidate.started == new DateTime() && candidate.finished == new DateTime())
-			{
-				return true;
-			}
-			else
-			{
-				return false;
-			}
+			CandidateEntity candidate = await GetCandidate(ID);
+			return candidate != null && candidate.started == new DateTime() && candidate.finished == new DateTime();
 		}
 
 		async internal static Task<bool> IsCandidateStillActive(string ID)
 		{
-			CandidateEntity candidate = await GetDatabase().Find<CandidateEntity>().OneAsync(ID);
-			if (candidate != null && candidate.started == new DateTime() && candidate.finished != new DateTime())
-			{
-				return true;
-			}
-			else
-			{
-				return false;
-			}
+			CandidateEntity candidate = await GetCandidate(ID);
+			return candidate != null && candidate.started == new DateTime() && candidate.finished != new DateTime();
 		}
 		async internal static Task<bool> IsUnstarted(string ID)
 		{

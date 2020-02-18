@@ -95,14 +95,9 @@ namespace BackEnd
 		/// <param name="ID"></param>
 		/// <param name="levelNumber"></param>
 		/// <returns></returns>
-		public static IState StartLevelSession(string ID, int levelNumber)
+		async public static Task<IState> StartLevelSession(string ID, int levelNumber)
 		{
-			GameSession gameSession = GetSession(ID);
-			LevelSession levelSession = new LevelSession(levelNumber);
-			gameSession.AddLevel(levelSession);
-			Repository.UpdateSession(ID, gameSession);
-
-			return new State(new Puzzle(Level.Get(levelNumber)));
+			return await Sessionn.StartLevel(ID, levelNumber) ? new State(new Puzzle(Level.Get(levelNumber))) : null;
 		}
 
 		/// <summary>
@@ -128,13 +123,9 @@ namespace BackEnd
 			levelSession.Pause();
 			Repository.UpdateSession(ID, gameSession);
 		}
-		public static IState ContinueLevelSession(string ID, int levelNumber)
+		async public static Task<IState> ContinueLevelSession(string ID, int levelNumber)
 		{
-			GameSession gameSession = GetSession(ID);
-			LevelSession levelSession = gameSession.GetSession(levelNumber);
-			levelSession.Restart();
-			Repository.UpdateSession(ID, gameSession);
-			return new State(new Puzzle(Level.Get(levelNumber)));
+			return await Sessionn.ContinueLevel(ID, levelNumber) ? new State(new Puzzle(Level.Get(levelNumber))) : null;
 		}
 
 		public static void EndLevelSession(string ID, int levelNumber)
@@ -159,10 +150,9 @@ namespace BackEnd
 				return false;
 			}
 		}
-		public static bool LevelHasBeenStarted(string ID, int levelNumber)
+		async public static Task<bool> LevelHasBeenStarted(string ID, int levelNumber)
 		{
-			GameSession gameSession = GetSession(ID);
-			return gameSession.GetSession(levelNumber) != null;
+			return await Sessionn.LevelHasBeenStarted(ID, levelNumber);
 		}
 		public static bool LevelIsSolved(string ID, int levelNumber)
 		{

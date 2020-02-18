@@ -96,17 +96,28 @@ namespace React_Frontend.Controllers
 			return Api.LevelIsSolved(sessionID, level);
 		}
 		[HttpGet("retrieveLevel/{levelNumber}")]
-		public string GetLevel(string levelNumber)
+		async public Task<ActionResult<string>> GetLevel(string levelNumber)
 		{
 			int level = int.Parse(levelNumber);
+			if(level < 0 || level > Level.TotalLevels){
+				return BadRequest();
+			}
 			string sessionID = Request.Headers["Authorization"];
-			if (Api.LevelHasBeenStarted(sessionID, level))
+			IState levelState = null;
+			if (await Api.LevelHasBeenStarted(sessionID, level))
 			{
-				return JSON.Serialize(Api.ContinueLevelSession(sessionID, level));
+				levelState = await Api.ContinueLevelSession(sessionID, level);
 			}
 			else
 			{
-				return JSON.Serialize(Api.StartLevelSession(sessionID, level));
+				levelState = await Api.StartLevelSession(sessionID, level);
+			}
+			if(levelState != null)
+			{
+				return JSON.Serialize(levelState);
+			} else
+			{
+				return BadRequest();
 			}
 		}
 		[HttpPost("pauseLevel")]
