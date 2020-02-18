@@ -1,7 +1,5 @@
-﻿using BackEnd.Exceptions;
+﻿using System;
 using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
 
 namespace BackEnd
 {
@@ -13,11 +11,6 @@ namespace BackEnd
         public bool Finished => Character.Position == Finish;
         public int LevelNumber { get; private set; }
 
-        public Puzzle(string info)
-        {
-            // {"LevelNumber":1,"GridSize":[3,3],"Par":8,"Walls":[[1,0],[1,2]],"Begin":[2,1],"End":[0,1],"Buttons":[[1,2,0]],"Doors":[[1,1,1]],"Boxes":[[2,2]]}
-            ConstructPuzzle(JsonConvert.DeserializeObject<Level>(info));
-        }
         public Puzzle(Level level)
         {
             ConstructPuzzle(level);

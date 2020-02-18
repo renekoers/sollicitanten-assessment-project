@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
-import "../../css/HR.css";
 import { Jumbotron, Container } from "reactstrap";
 import { Statistics } from "./Statistics";
 import { StatisticsButtons } from "./StatisticsButtons";
+import "../../css/HR.css";
 
 export function Results(props) {
 	const [name, setName] = useState(null);

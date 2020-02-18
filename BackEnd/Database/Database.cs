@@ -1,12 +1,9 @@
 using System;
-using System.Collections.Generic;
-using System.Collections;
 using System.Linq;
-using Newtonsoft.Json.Linq;
+using System.Collections.Generic;
 using System.Threading.Tasks;
-using MongoDB.Driver;
 using MongoDB.Entities;
-using MongoDB.Bson;
+using MongoDB.Driver;
 using MongoDB.Driver.Linq;
 
 namespace BackEnd
@@ -19,18 +16,6 @@ namespace BackEnd
 		"mongodb+srv://sylveon-client:development@sylveon-xf66r.azure.mongodb.net/test?retryWrites=true&w=majority"),
 		"sylveon");
 		}
-		// private static IMongoCollection<BsonDocument> getCandidateCollection()
-		// {
-		// 	return Database.GetDatabase().GetCollection<BsonDocument>("candidates");
-		// }
-		// private static IMongoCollection<BsonDocument> getLevelsCollection()
-		// {
-		// 	return Database.GetDatabase().GetCollection<BsonDocument>("levels");
-		// }
-		// private static IMongoCollection<BsonDocument> getHrUsersCollection()
-		// {
-		// 	return Database.GetDatabase().GetCollection<BsonDocument>("hr-users");
-		// }
 
 		async internal static Task<string> AddNewCandidate(string name)
 		{

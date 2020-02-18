@@ -8,8 +8,8 @@ import {
 	Label,
 	Input
 } from "reactstrap";
-import "../css/StartingPage.css";
 import { Redirect } from "react-router-dom";
+import "../css/StartingPage.css";
 
 export const StartingPage = () => {
 	const [isTutorialSessionStarted, setTutorialSessionStatus] = useState(
@@ -23,7 +23,6 @@ export const StartingPage = () => {
 			fetch("api/session/candidate/getUnstartedCandidates")
 				.then(response => response.json())
 				.then(data => {
-					console.log(data);
 					setAvailableCandidates(data);
 					let candidateOptions = data.map((candidate, index) => {
 						return (

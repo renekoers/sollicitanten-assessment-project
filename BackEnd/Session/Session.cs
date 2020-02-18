@@ -1,5 +1,4 @@
-﻿using MongoDB.Entities.Core;
-
+﻿
 namespace BackEnd
 {
 	public abstract class Session

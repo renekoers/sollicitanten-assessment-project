@@ -1,7 +1,7 @@
 ﻿
 namespace BackEnd
 {
-    class FinishTile : Tile
+    public abstract class Movable
     {
     }
 }
