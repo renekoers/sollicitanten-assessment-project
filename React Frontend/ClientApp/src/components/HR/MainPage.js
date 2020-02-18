@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
+import { Redirect, Link } from "react-router-dom";
 import { AddCandidate } from "./AddCandidate";
 import { Results } from "./Results";
-import { Redirect, Link } from "react-router-dom";
 import "../../css/HR.css";
 
 export function MainPage() {

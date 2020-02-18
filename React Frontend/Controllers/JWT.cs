@@ -1,11 +1,10 @@
 using System;
-using BackEnd;
 using System.Text;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
+using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
-using System.Collections.Generic;
+using Microsoft.IdentityModel.Tokens;
+using BackEnd;
 
 namespace JSonWebToken
 {

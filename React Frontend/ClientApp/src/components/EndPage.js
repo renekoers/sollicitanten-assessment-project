@@ -2,21 +2,6 @@
 import { Jumbotron, Container } from "reactstrap";
 
 export const EndPage = props => {
-	// const [sessionID, setSessionID] = useState(-1);
-
-	// useEffect(() => {
-	// 	const ID = localStorage.getItem("sessionID");
-	// 	if (!ID === null) {
-	// 		console.log(ID);
-	// 		setSessionID(ID);
-	// 	} else {
-	// 		return (
-	// 			<div>
-	// 				<p>Invalid session ID</p>
-	// 			</div>
-	// 		);
-	// 	}
-	// }, []);
 
 	return (
 		<div>

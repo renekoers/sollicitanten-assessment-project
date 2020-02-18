@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using System.Collections;
-using System.Linq;
-using Newtonsoft.Json.Linq;
 
 namespace BackEnd
 {
@@ -164,7 +161,7 @@ namespace BackEnd
 		/// <returns>List of IDs</returns>
 		async public static Task<List<string>> GetFinishedIDsAfterTime(DateTime time)
 		{
-			return await Database.GetFinishedIDsAfterTime(time);
+			return await Statistics.GetFinishedIDsAfterTime(time);
 		}
 		/// <summary>
 		/// This method finds the first ID of the CandidateEntity that ended the session after the given ID.
@@ -172,7 +169,7 @@ namespace BackEnd
 		/// <returns>ID if there exists one</returns>
 		async public static Task<string> GetNextFinishedID(string ID)
 		{
-			return await Database.GetNextFinishedID(ID);
+			return await Statistics.GetNextFinishedID(ID);
 		}
 		/// <summary>
 		/// This method finds the last ID of the CandidateEntity that ended the session before the given ID.
@@ -180,11 +177,11 @@ namespace BackEnd
 		/// <returns>ID if there exists one</returns>
 		async public static Task<string> GetPreviousFinishedID(string ID)
 		{
-			return await Database.GetPreviousFinishedID(ID);
+			return await Statistics.GetPreviousFinishedID(ID);
 		}
 		async public static Task<string> GetLastFinishedID()
 		{
-			return await Database.GetLastFinishedID();
+			return await Statistics.GetLastFinishedID();
 		}
 		public static int GetTotalLevelAmount()
 		{
@@ -223,32 +220,6 @@ namespace BackEnd
 		public static long GetEpochTime()
 		{
 			return DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
-		}
-
-		/// <summary>
-		/// Converts a string into an array of commands.
-		/// </summary>
-		/// <param name="input">String of commands seperated by ';'.</param>
-		/// <returns>Array of commands.</returns>
-		/// <exception cref="ArgumentException">Throws exception if the string is not a command.</exception>
-		private static SingleCommand[] ConvertStringToSingleCommands(string[] input)
-		{
-			SingleCommand[] commands = new SingleCommand[input.Length];
-			for (int index = 0; index < input.Length; index++)
-			{
-				commands[index] = new SingleCommand((Command)Enum.Parse(typeof(Command), input[index].Trim()));
-			}
-			return commands;
-		}
-
-		private static int CalculateScore(Statement[] input)
-		{
-			int lines = 0;
-			foreach (Statement statement in input)
-			{
-				lines += statement.GetLines();
-			}
-			return lines;
 		}
 
 		/// <summary>
