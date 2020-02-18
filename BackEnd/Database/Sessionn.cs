@@ -14,7 +14,7 @@ namespace BackEnd
 		{
 			DateTime defaultTime = new DateTime();
 			// Returns true if session is started && session not finished && the duration of the session is smaller or equal than 20 minutes.
-			return candidate.started > defaultTime && candidate.finished == defaultTime && (candidate.finished-candidate.started) <= new TimeSpan(0,20,0);
+			return candidate.started > defaultTime && candidate.finished == defaultTime && (DateTime.UtcNow-candidate.started) <= new TimeSpan(0,20,0);
 		}
 		async private static Task<bool> StopSessionIfNotInProgress(CandidateEntity candidate)
 		{
