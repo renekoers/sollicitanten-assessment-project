@@ -10,7 +10,7 @@ namespace BackEnd
 {
 	public class Database
 	{
-		private static DB GetDatabase()
+		private protected static DB GetDatabase()
 		{
 			return new DB(MongoClientSettings.FromConnectionString(
 		"mongodb+srv://sylveon-client:development@sylveon-xf66r.azure.mongodb.net/test?retryWrites=true&w=majority"),
@@ -29,17 +29,44 @@ namespace BackEnd
 				.Match(candidate => candidate.started == new DateTime())
 				.Limit(1)
 				.ExecuteAsync();
-			return unstartedCandidates.Count!=0 ? unstartedCandidates.First() : null;
+			return unstartedCandidates.Count != 0 ? unstartedCandidates.First() : null;
 		}
 
 		async internal static Task<CandidateEntity> GetCandidate(string ID)
 		{
-			return await DB.Find<CandidateEntity>().OneAsync(ID);
+			CandidateEntity candidate = await DB.Find<CandidateEntity>().OneAsync(ID);
+			return candidate;
 		}
-		async internal static Task<List<CandidateEntity>> GetAllUnstartedCandidate()
+		async internal static Task<IEnumerable<CandidateEntity>> GetAllUnstartedCandidate()
 		{
 			return (await GetDatabase().Find<CandidateEntity>()
 			.ManyAsync(a => a.started == new DateTime())).ToList();
+		}
+
+		async internal static Task<bool> HasCandidateNotYetStarted(string ID)
+		{
+			CandidateEntity candidate = await GetDatabase().Find<CandidateEntity>().OneAsync(ID);
+			if (candidate != null && candidate.started == new DateTime() && candidate.finished == new DateTime())
+			{
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
+
+		async internal static Task<bool> IsCandidateStillActive(string ID)
+		{
+			CandidateEntity candidate = await GetDatabase().Find<CandidateEntity>().OneAsync(ID);
+			if (candidate != null && candidate.started == new DateTime() && candidate.finished != new DateTime())
+			{
+				return true;
+			}
+			else
+			{
+				return false;
+			}
 		}
 		async internal static Task<bool> IsUnstarted(string ID)
 		{
@@ -52,9 +79,8 @@ namespace BackEnd
 			await DB.Update<CandidateEntity>()
 				.Match(candidate => candidate.ID == ID && candidate.started == defaultTime)
 				.Modify(candidate => candidate.started, DateTime.UtcNow)
-				.Modify(candidate => candidate.GameResults, new GameSession())
 				.ExecuteAsync();
-			CandidateEntity foundCandidate = await GetCandidate(ID);
+			CandidateEntity foundCandidate = await DB.Find<CandidateEntity>().OneAsync(ID);
 			return foundCandidate != null && foundCandidate.started > defaultTime;
 		}
 		async internal static Task<bool> EndSession(string ID)
@@ -64,51 +90,8 @@ namespace BackEnd
 				.Match(candidate => candidate.ID == ID && candidate.started > defaultTime && candidate.finished == defaultTime)
 				.Modify(candidate => candidate.finished, DateTime.UtcNow)
 				.ExecuteAsync();
-			CandidateEntity foundCandidate = await GetCandidate(ID);
+			CandidateEntity foundCandidate = await DB.Find<CandidateEntity>().OneAsync(ID);
 			return foundCandidate != null && foundCandidate.finished > defaultTime;
-		}
-
-		// The following methods are used by HR to receive IDs of candidates.
-		async internal static Task<List<string>> GetFinishedIDsAfterTime(DateTime time)
-		{
-			IEnumerable<CandidateEntity> newFinishedCandidates = await DB.Find<CandidateEntity>()
-                    .Match(candidate => (candidate.finished > time))
-                    .Sort(candidate => candidate.finished, Order.Ascending)
-                    .ExecuteAsync();
-			return newFinishedCandidates.Select(candidate => candidate.ID).ToList();
-		}
-		async internal static Task<string> GetPreviousFinishedID(string ID)
-		{
-			CandidateEntity currentCandidate = await GetCandidate(ID);
-			if(currentCandidate.finished == new DateTime())
-			{
-				return null;
-			}
-			IEnumerable<CandidateEntity> previousFinishedCandidates = await DB.Find<CandidateEntity>()
-                    .Match(candidate => (candidate.finished < currentCandidate.finished))
-                    .Sort(candidate => candidate.finished, Order.Descending)
-                    .ExecuteAsync();
-			return previousFinishedCandidates.Count()>0 ? previousFinishedCandidates.First().ID : null;
-		}
-		async internal static Task<string> GetNextFinishedID(string ID)
-		{
-			CandidateEntity currentCandidate = await GetCandidate(ID);
-			if(currentCandidate.finished == new DateTime())
-			{
-				return null;
-			}
-			IEnumerable<CandidateEntity> nextFinishedCandidates = await DB.Find<CandidateEntity>()
-                    .Match(candidate => (candidate.finished > currentCandidate.finished))
-                    .Sort(candidate => candidate.finished, Order.Ascending)
-                    .ExecuteAsync();
-			return nextFinishedCandidates.Count()>0 ? nextFinishedCandidates.First().ID : null;
-		}
-		async internal static Task<string> GetLastFinishedID()
-		{
-			IEnumerable<CandidateEntity> finishedCandidates = await DB.Find<CandidateEntity>()
-                    .Sort(candidate => candidate.finished, Order.Descending)
-                    .ExecuteAsync();
-			return finishedCandidates.Count()>0 ? finishedCandidates.First().ID : null;
 		}
 	}
 }

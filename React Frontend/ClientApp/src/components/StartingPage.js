@@ -6,7 +6,8 @@ import {
 	Form,
 	FormGroup,
 	Label,
-	Input
+	Input,
+	Spinner
 } from "reactstrap";
 import { Redirect } from "react-router-dom";
 import "../css/StartingPage.css";
@@ -17,26 +18,58 @@ export const StartingPage = () => {
 	);
 	const [sessionStarted, setSessionStatus] = useState(false);
 	const [name, setName] = useState(null);
+	const [
+		isEligibleCandidateAvailable,
+		setIsEligibleCandidateAvailable
+	] = useState(false);
+	const [isNoCandidateChosen, setIsNoCandidateChosen] = useState(false);
+	const [dropdownValue, setDropdownValue] = useState("kieskandidaat");
+	const [availableCandidateOptions, setAvailableCandidateOptions] = useState(
+		null
+	);
+	const [availableCandidates, setAvailableCandidates] = useState(null);
 
 	useEffect(() => {
-		if (localStorage.getItem("sessionID") === null) {
-			fetch("api/session/candidate/getUnstartedCandidates")
-				.then(response => response.json())
-				.then(data => {
-					setAvailableCandidates(data);
-					let candidateOptions = data.map((candidate, index) => {
-						return (
-							<option value={candidate.id} key={index}>
-								{candidate.name}
-							</option>
-						);
-					});
-					setAvailableCandidateOptions(candidateOptions);
-				});
+		if (IsSessionIdAvailable()) {
+			checkSessionIDForEligibleCandidate();
+			// Check if SessionID is still available after checking its candidate.
+			if (IsSessionIdAvailable()) {
+				renderCandidateWelcomePage();
+			} else {
+				renderChooseCandidatePage();
+			}
 		} else {
-			getCandidate();
+			getAllUnstartedCandidates();
+			renderChooseCandidatePage();
 		}
 	}, []);
+
+	const renderCandidateWelcomePage = () => {
+		setIsEligibleCandidateAvailable(true);
+		setIsNoCandidateChosen(false);
+	};
+
+	const renderChooseCandidatePage = () => {
+		setIsNoCandidateChosen(true);
+		setIsEligibleCandidateAvailable(false);
+	};
+
+	const getAllUnstartedCandidates = () => {
+		fetch("api/session/candidate/getUnstartedCandidates")
+			.then(response => response.json())
+			.then(data => {
+				console.log(data);
+				setAvailableCandidates(data);
+				let candidateOptions = data.map((candidate, index) => {
+					return (
+						<option value={candidate.id} key={index}>
+							{candidate.name}
+						</option>
+					);
+				});
+				setAvailableCandidateOptions(candidateOptions);
+			});
+	};
 
 	const startTutorialSession = async () => {
 		await fetch("api/session/startTutorialSession")
@@ -52,42 +85,37 @@ export const StartingPage = () => {
 			});
 	};
 
-	const getCandidate = async () => {
-		if (IsSessionIdAvailable()) {
-			if (await isAlreadyStarted()) {
-				getCandidateName();
-				setSessionStatus(true);
-			} else if (await isSessionIDValid()) {
-				getCandidateName();
-			} else {
-				getNewCandidate();
-			}
+	const checkSessionIDForEligibleCandidate = async () => {
+		const sessionID = localStorage.getItem("sessionID");
+		if (await hasCandidateNotYetStarted(sessionID)) {
+			setName(await getCandidateName(sessionID));
+		} else if (await isCandidateStillActive(sessionID)) {
+			setSessionStatus(true);
 		} else {
-			getNewCandidate();
+			localStorage.removeItem("sessionID");
 		}
 	};
 
-	const getNewCandidate = async () => {
-		await fetch("api/session/candidate")
-			.then(checkStatus)
-			.then(data => {
-				console.log(data);
-				setName(data.name);
-				localStorage.setItem("sessionID", data.id);
-			});
-	};
+	// const getNewCandidate = async () => {
+	// 	await fetch("api/session/candidate")
+	// 		.then(checkStatus)
+	// 		.then(data => {
+	// 			console.log(data);
+	// 			setName(data.name);
+	// 			localStorage.setItem("sessionID", data.id);
+	// 		});
+	// };
 
 	const getCandidateName = async () => {
-		if (name !== null) {
-			return;
-		}
+		let candidateName;
 		await fetch(
 			"api/session/candidate/" + localStorage.getItem("sessionID")
 		)
 			.then(checkStatus)
 			.then(data => {
-				setName(data.name);
+				candidateName = data.name;
 			});
+		return candidateName;
 	};
 
 	const IsSessionIdAvailable = () => {
@@ -103,7 +131,7 @@ export const StartingPage = () => {
 
 	const isSessionIDValid = async () => {
 		let sessionExists;
-		await fetch("api/session/sessionIDValidation", {
+		await fetch("api/session/sessionIDEligibleation", {
 			method: "GET",
 			headers: {
 				"Content-Type": "application/json",
@@ -116,9 +144,10 @@ export const StartingPage = () => {
 			});
 		return sessionExists;
 	};
-	const isAlreadyStarted = async () => {
-		let isStarted;
-		await fetch("api/session/isStarted", {
+
+	const hasCandidateNotYetStarted = async () => {
+		let hasNotYetStarted;
+		await fetch("api/session/hasNotYetStarted", {
 			method: "GET",
 			headers: {
 				"Content-Type": "application/json",
@@ -127,9 +156,25 @@ export const StartingPage = () => {
 		})
 			.then(response => response.json())
 			.then(data => {
-				isStarted = data;
+				hasNotYetStarted = data;
 			});
-		return isStarted;
+		return hasNotYetStarted;
+	};
+
+	const isCandidateStillActive = async () => {
+		let isStillActive;
+		await fetch("api/session/isActive", {
+			method: "GET",
+			headers: {
+				"Content-Type": "application/json",
+				Authorization: localStorage.getItem("sessionID")
+			}
+		})
+			.then(response => response.json())
+			.then(data => {
+				isStillActive = data;
+			});
+		return isStillActive;
 	};
 
 	const gameSessionRedirect = () => {
@@ -148,30 +193,21 @@ export const StartingPage = () => {
 		});
 	};
 
-	// Select a candidate page
-	const [dropdownValue, setDropdownValue] = useState();
-	const [availableCandidateOptions, setAvailableCandidateOptions] = useState(
-		null
-	);
-	const [availableCandidates, setAvailableCandidates] = useState(null);
-
-	// useEffect(() => {}, []);
-
-	// const toggleCandidateDropdown = () => {
-	// 	setCandidateDropdownOpen(!candidateDropdownOpen);
-	// };
-
 	const handleCandidateSelection = () => {
 		localStorage.setItem("sessionID", dropdownValue);
 		const selectedCandidateName = availableCandidates.map(candidate => {
+			console.log("Dropdown:" + dropdownValue);
+			console.log("Candidate:" + candidate);
 			if (candidate.id === dropdownValue) {
+				console.log("Got value:" + dropdownValue);
 				return candidate.name;
 			}
 		});
 		setName(selectedCandidateName);
+		setIsEligibleCandidateAvailable(true);
 	};
 
-	if (name) {
+	if (isEligibleCandidateAvailable && name !== null) {
 		return (
 			<div>
 				{tutorialSessionRedirect()}
@@ -197,7 +233,7 @@ export const StartingPage = () => {
 				</Button>
 			</div>
 		);
-	} else {
+	} else if (isNoCandidateChosen) {
 		return (
 			<div>
 				<Jumbotron fluid>
@@ -212,11 +248,15 @@ export const StartingPage = () => {
 									type="select"
 									name="select"
 									id="candidateSelect"
-									onChange={e =>
-										setDropdownValue(e.target.value)
-									}
+									onChange={e => {
+										console.log(e.target.value);
+										setDropdownValue(e.target.value);
+									}}
 									value={dropdownValue}
 								>
+									<option disabled value="kieskandidaat">
+										Kies kandidaat
+									</option>
 									{availableCandidateOptions}
 								</Input>
 							</FormGroup>
@@ -230,6 +270,20 @@ export const StartingPage = () => {
 						</Button>
 					</Container>
 				</Jumbotron>
+			</div>
+		);
+	} else {
+		return (
+			<div>
+				Loading...
+				<Spinner
+					style={{
+						width: "3rem",
+						height: "3rem"
+					}}
+					type="grow"
+					color="success"
+				/>
 			</div>
 		);
 	}

@@ -64,6 +64,24 @@ namespace BackEnd
 			return gameSession.InProgress;
 		}
 		///<summary>
+		/// Returns true if candidate has yet to start a session.
+		///</summary>
+		///<param name="ID"></param>
+		///<returns>Bool</returns>
+		async public static Task<bool> HasCandidateNotYetStarted(string ID)
+		{
+			return await Database.HasCandidateNotYetStarted(ID);
+		}
+		///<summary>
+		/// Returns true if candidate still has an active session available.
+		///</summary>
+		///<param name="ID"></param>
+		///<returns>Bool</returns>
+		async public static Task<bool> IsCandidateStillActive(string ID)
+		{
+			return await Database.IsCandidateStillActive(ID);
+		}
+		///<summary>
 		/// Makes a tutorial session.
 		/// </summary>
 		public static void StartTutorialSession()
@@ -129,13 +147,15 @@ namespace BackEnd
 
 		async public static Task<bool> EndSession(string ID)
 		{
-			if(await Database.EndSession(ID))
+			if (await Database.EndSession(ID))
 			{
 				GameSession gameSession = GetSession(ID);
 				gameSession.End();
 				Repository.UpdateSession(ID, gameSession);
 				return true;
-			} else {
+			}
+			else
+			{
 				return false;
 			}
 		}
@@ -161,7 +181,7 @@ namespace BackEnd
 		/// <returns>List of IDs</returns>
 		async public static Task<List<string>> GetFinishedIDsAfterTime(DateTime time)
 		{
-			return await Database.GetFinishedIDsAfterTime(time);
+			return await Statistics.GetFinishedIDsAfterTime(time);
 		}
 		/// <summary>
 		/// This method finds the first ID of the CandidateEntity that ended the session after the given ID.
@@ -169,7 +189,7 @@ namespace BackEnd
 		/// <returns>ID if there exists one</returns>
 		async public static Task<string> GetNextFinishedID(string ID)
 		{
-			return await Database.GetNextFinishedID(ID);
+			return await Statistics.GetNextFinishedID(ID);
 		}
 		/// <summary>
 		/// This method finds the last ID of the CandidateEntity that ended the session before the given ID.
@@ -177,11 +197,11 @@ namespace BackEnd
 		/// <returns>ID if there exists one</returns>
 		async public static Task<string> GetPreviousFinishedID(string ID)
 		{
-			return await Database.GetPreviousFinishedID(ID);
+			return await Statistics.GetPreviousFinishedID(ID);
 		}
 		async public static Task<string> GetLastFinishedID()
 		{
-			return await Database.GetLastFinishedID();
+			return await Statistics.GetLastFinishedID();
 		}
 		public static int GetTotalLevelAmount()
 		{
