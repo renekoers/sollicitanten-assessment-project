@@ -92,13 +92,14 @@ namespace BackEnd
 		}
 		async internal static Task<string> GetPreviousFinishedID(string ID)
 		{
+			DateTime defaultTime = new DateTime();
 			CandidateEntity currentCandidate = await DB.Find<CandidateEntity>().OneAsync(ID);
-			if(currentCandidate.finished == new DateTime())
+			if(currentCandidate.finished == defaultTime)
 			{
 				return null;
 			}
 			IEnumerable<CandidateEntity> previousFinishedCandidates = await DB.Find<CandidateEntity>()
-                    .Match(candidate => (candidate.finished < currentCandidate.finished))
+                    .Match(candidate => (candidate.finished < currentCandidate.finished) && (candidate.finished > defaultTime))
                     .Sort(candidate => candidate.finished, Order.Descending)
                     .ExecuteAsync();
 			return previousFinishedCandidates.Count()>0 ? previousFinishedCandidates.First().ID : null;
