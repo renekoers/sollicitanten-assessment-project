@@ -46,19 +46,21 @@ export function MainPage() {
     useEffect(() => {
         document.querySelector("#loginerror").innerHTML = " ";
 		document.querySelector(".popupButton").style["display"] = "none";
-		getLastID();
 	},[token])
 	
 	async function getLastID(){
-		fetch("api/statistics/lastFinished", {
+		await fetch("api/statistics/lastFinished", {
 			method: "GET",
 			headers: {
 				"Content-Type": "application/json",
 				Authorization: token
 			}
 		})
-		.then(status)
-		.then(setLastID)
+		.then(async response => {
+			if(response.status===200){
+				setLastID(await response.text())
+			}
+		})
 	}
 	
 	useEffect(() => {
@@ -81,9 +83,9 @@ export function MainPage() {
 		})
 		.then(status)
 		.then(data => {
-			if(data.IDs.length>0){
+			if(data.iDs.length>0){
 				var arrayID = newFinishedIDs;
-				data.IDs.forEach(id => {
+				data.iDs.forEach(id => {
 					arrayID.push(id);
 				});
 				setNewFinishedIds(arrayID);
@@ -117,7 +119,7 @@ export function MainPage() {
 	
 	function toLogin(error){
 		document.querySelector("#loginerror").innerHTML = "Oeps! " + error;
-		document.querySelector(".popupButton").style.removeProperty("display");
+		document.querySelector(".popupButton").style["display"] = "unset";
 	}
 	function changePage(){
 		document.querySelector("#loginerror").innerHTML = " ";
