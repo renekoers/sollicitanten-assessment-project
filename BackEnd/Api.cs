@@ -29,7 +29,7 @@ namespace BackEnd
 		{
 			return await Database.IsUnstarted(ID);
 		}
-		async public static Task<List<CandidateEntity>> GetAllUnstartedCandidate()
+		async public static Task<IEnumerable<CandidateEntity>> GetAllUnstartedCandidate()
 		{
 			return await Database.GetAllUnstartedCandidate();
 		}
@@ -90,21 +90,21 @@ namespace BackEnd
 			return new State(new Puzzle(Level.Get(levelNumber)));
 		}
 
-        /// <summary>
-        /// Submit a new solution attempt
-        /// </summary>
-        /// <param name="ID"></param>
-        /// <param name="levelNumber"></param>
-        /// <param name="statements"></param>
-        /// <returns>A LevelSolution object which contains amongst other things a list of IState objects and whether the level was solved or not</returns>
+		/// <summary>
+		/// Submit a new solution attempt
+		/// </summary>
+		/// <param name="ID"></param>
+		/// <param name="levelNumber"></param>
+		/// <param name="statements"></param>
+		/// <returns>A LevelSolution object which contains amongst other things a list of IState objects and whether the level was solved or not</returns>
 		public static LevelSolution SubmitSolution(string ID, int levelNumber, Statement[] statements)
-        {
-            GameSession gameSession = GetSession(ID);
-            LevelSession levelSession = gameSession.GetSession(levelNumber);
-            LevelSolution solution = levelSession.Attempt(statements);
-            Repository.UpdateSession(ID, gameSession);
-            return solution;
-        }
+		{
+			GameSession gameSession = GetSession(ID);
+			LevelSession levelSession = gameSession.GetSession(levelNumber);
+			LevelSolution solution = levelSession.Attempt(statements);
+			Repository.UpdateSession(ID, gameSession);
+			return solution;
+		}
 
 		public static void PauseLevelSession(string ID, int levelNumber)
 		{
@@ -195,27 +195,27 @@ namespace BackEnd
 		{
 			return new Overview(GetSession(ID));
 		}
-        /// <summary>
-        /// Creates a dictionary consisting of all statistics of a candidate.
-        /// </summary>
-        /// <returns>Dictionary with for every level has a dictionary of name of the statistic and the data.</returns>
-        public static Dictionary<int,Dictionary<string,int>> StatisticsCandidate(string ID)
-        {
-            return Analysis.MakeStatisticsCandidate(ID);
-        }
-        /// <summary>
-        /// Creates a dictionary consisting of all statistics of all candidates.
-        /// </summary>
-        /// <returns>Dictionary with for every level has a dictionary of name of the statistic and the combination of data and number of candidates.</returns>
-        public static Dictionary<int,Dictionary<string, Dictionary<int, int>>> StatisticsEveryone()
-        {
-            return Analysis.MakeStatisticsEveryone();
-        }
-        /// <summary>
-        /// This method creates a dictionary consisting of the number of candidates that did not solve a certain level.
-        /// </summary>
-        /// <returns></returns>
-        public static Dictionary<int,int> NumberOfCandidatesNotSolvedPerLevel()
+		/// <summary>
+		/// Creates a dictionary consisting of all statistics of a candidate.
+		/// </summary>
+		/// <returns>Dictionary with for every level has a dictionary of name of the statistic and the data.</returns>
+		public static Dictionary<int, Dictionary<string, int>> StatisticsCandidate(string ID)
+		{
+			return Analysis.MakeStatisticsCandidate(ID);
+		}
+		/// <summary>
+		/// Creates a dictionary consisting of all statistics of all candidates.
+		/// </summary>
+		/// <returns>Dictionary with for every level has a dictionary of name of the statistic and the combination of data and number of candidates.</returns>
+		public static Dictionary<int, Dictionary<string, Dictionary<int, int>>> StatisticsEveryone()
+		{
+			return Analysis.MakeStatisticsEveryone();
+		}
+		/// <summary>
+		/// This method creates a dictionary consisting of the number of candidates that did not solve a certain level.
+		/// </summary>
+		/// <returns></returns>
+		public static Dictionary<int, int> NumberOfCandidatesNotSolvedPerLevel()
 		{
 			return Repository.NumberOfCandidatesNotSolvedPerLevel();
 		}

@@ -103,7 +103,6 @@ namespace BackEnd
             }
             return amountUnsolved;
         }
-
 		public static void CreateTutorialSession()
 		{
 			if (!GameSessions.ContainsKey("0"))

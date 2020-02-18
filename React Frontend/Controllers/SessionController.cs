@@ -39,7 +39,7 @@ namespace React_Frontend.Controllers
 
 		}
 		[HttpGet("candidate/getUnstartedCandidates")]
-		async public Task<List<CandidateEntity>> GetAllUnstartedCandidates()
+		async public Task<IEnumerable<CandidateEntity>> GetAllUnstartedCandidates()
 		{
 			return await Api.GetAllUnstartedCandidate();
 		}

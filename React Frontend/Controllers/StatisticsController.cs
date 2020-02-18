@@ -70,20 +70,20 @@ namespace React_Frontend.Controllers
 		[HttpGet("candidate")]
 		public string GetDataCandidate(string ID)
 		{
-			Dictionary<int,Dictionary<string,int>> data = Api.StatisticsCandidate(ID);
+			Dictionary<int, Dictionary<string, int>> data = Api.StatisticsCandidate(ID);
 			return JSON.Serialize(data);
 		}
 		[HttpGet("tally")]
 		public string GetDataTally()
 		{
-			Dictionary<int,Dictionary<string, Dictionary<int, int>>> data = Api.StatisticsEveryone();
+			Dictionary<int, Dictionary<string, Dictionary<int, int>>> data = Api.StatisticsEveryone();
 			return JSON.Serialize(data);
 		}
-        [HttpGet("unsolved")]
-        public string GetDataUnsolved()
-        {
-            Dictionary<int,int> amountUnsolvedPerLevel = Api.NumberOfCandidatesNotSolvedPerLevel();
-            return JSON.Serialize(amountUnsolvedPerLevel);
-        }
+		[HttpGet("unsolved")]
+		public string GetDataUnsolved()
+		{
+			Dictionary<int, int> amountUnsolvedPerLevel = Api.NumberOfCandidatesNotSolvedPerLevel();
+			return JSON.Serialize(amountUnsolvedPerLevel);
+		}
 	}
 }
