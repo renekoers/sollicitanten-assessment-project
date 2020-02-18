@@ -49,8 +49,7 @@ namespace BackEnd
 
 		async internal static Task<CandidateEntity> GetCandidate(string ID)
 		{
-			CandidateEntity candidate = await DB.Find<CandidateEntity>().OneAsync(ID);
-			return candidate;
+			return await DB.Find<CandidateEntity>().OneAsync(ID);
 		}
 		async internal static Task<List<CandidateEntity>> GetAllUnstartedCandidate()
 		{
@@ -68,8 +67,9 @@ namespace BackEnd
 			await DB.Update<CandidateEntity>()
 				.Match(candidate => candidate.ID == ID && candidate.started == defaultTime)
 				.Modify(candidate => candidate.started, DateTime.UtcNow)
+				.Modify(candidate => candidate.GameResults, new GameSession())
 				.ExecuteAsync();
-			CandidateEntity foundCandidate = await DB.Find<CandidateEntity>().OneAsync(ID);
+			CandidateEntity foundCandidate = await GetCandidate(ID);
 			return foundCandidate != null && foundCandidate.started > defaultTime;
 		}
 		async internal static Task<bool> EndSession(string ID)
@@ -79,9 +79,11 @@ namespace BackEnd
 				.Match(candidate => candidate.ID == ID && candidate.started > defaultTime && candidate.finished == defaultTime)
 				.Modify(candidate => candidate.finished, DateTime.UtcNow)
 				.ExecuteAsync();
-			CandidateEntity foundCandidate = await DB.Find<CandidateEntity>().OneAsync(ID);
+			CandidateEntity foundCandidate = await GetCandidate(ID);
 			return foundCandidate != null && foundCandidate.finished > defaultTime;
 		}
+
+		// The following methods are used by HR to receive IDs of candidates.
 		async internal static Task<List<string>> GetFinishedIDsAfterTime(DateTime time)
 		{
 			IEnumerable<CandidateEntity> newFinishedCandidates = await DB.Find<CandidateEntity>()
@@ -92,7 +94,7 @@ namespace BackEnd
 		}
 		async internal static Task<string> GetPreviousFinishedID(string ID)
 		{
-			CandidateEntity currentCandidate = await DB.Find<CandidateEntity>().OneAsync(ID);
+			CandidateEntity currentCandidate = await GetCandidate(ID);
 			if(currentCandidate.finished == new DateTime())
 			{
 				return null;
@@ -105,7 +107,7 @@ namespace BackEnd
 		}
 		async internal static Task<string> GetNextFinishedID(string ID)
 		{
-			CandidateEntity currentCandidate = await DB.Find<CandidateEntity>().OneAsync(ID);
+			CandidateEntity currentCandidate = await GetCandidate(ID);
 			if(currentCandidate.finished == new DateTime())
 			{
 				return null;
