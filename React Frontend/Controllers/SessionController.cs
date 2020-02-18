@@ -76,6 +76,18 @@ namespace React_Frontend.Controllers
 			string sessionID = Request.Headers["Authorization"];
 			return Api.IsStarted(sessionID);
 		}
+		[HttpGet("hasNotYetStarted")]
+		async public Task<bool> IsEligible()
+		{
+			string sessionID = Request.Headers["Authorization"];
+			return await Api.hasCandidateNotYetStarted(sessionID);
+		}
+		[HttpGet("isActive")]
+		async public Task<bool> IsActive()
+		{
+			string sessionID = Request.Headers["Authorization"];
+			return await Api.IsCandidateStillActive(sessionID);
+		}
 		[HttpGet("levelIsSolved/{levelNumber}")]
 		public bool IsSolved(string levelNumber)
 		{
