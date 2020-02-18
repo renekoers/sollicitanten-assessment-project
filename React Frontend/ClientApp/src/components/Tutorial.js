@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
+import { Button, ButtonToolbar, ButtonGroup } from "reactstrap";
+import { Redirect } from "react-router-dom";
 import { Header } from "./Header";
 import { LevelGrid } from "./game-grid/LevelGrid";
 import { Statement } from "./Statement";
-import { Button, ButtonToolbar, ButtonGroup } from "reactstrap";
-import { Redirect } from "react-router-dom";
 import { HelpPopUp } from "./HelpPopUp";
 
 export const Tutorial = () => {
