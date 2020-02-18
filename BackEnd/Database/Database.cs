@@ -29,7 +29,7 @@ namespace BackEnd
 				.Match(candidate => candidate.started == new DateTime())
 				.Limit(1)
 				.ExecuteAsync();
-			return unstartedCandidates.Count!=0 ? unstartedCandidates.First() : null;
+			return unstartedCandidates.Count != 0 ? unstartedCandidates.First() : null;
 		}
 
 		async internal static Task<CandidateEntity> GetCandidate(string ID)
@@ -37,10 +37,36 @@ namespace BackEnd
 			CandidateEntity candidate = await DB.Find<CandidateEntity>().OneAsync(ID);
 			return candidate;
 		}
-		async internal static Task<List<CandidateEntity>> GetAllUnstartedCandidate()
+		async internal static Task<IEnumerable<CandidateEntity>> GetAllUnstartedCandidate()
 		{
 			return (await GetDatabase().Find<CandidateEntity>()
 			.ManyAsync(a => a.started == new DateTime())).ToList();
+		}
+
+		async internal static Task<bool> hasCandidateNotYetStarted(string ID)
+		{
+			CandidateEntity candidate = await GetDatabase().Find<CandidateEntity>().OneAsync(ID);
+			if (candidate != null && candidate.started == new DateTime() && candidate.finished == new DateTime())
+			{
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
+
+		async internal static Task<bool> IsCandidateStillActive(string ID)
+		{
+			CandidateEntity candidate = await GetDatabase().Find<CandidateEntity>().OneAsync(ID);
+			if (candidate != null && candidate.started == new DateTime() && candidate.finished != new DateTime())
+			{
+				return true;
+			}
+			else
+			{
+				return false;
+			}
 		}
 		async internal static Task<bool> IsUnstarted(string ID)
 		{

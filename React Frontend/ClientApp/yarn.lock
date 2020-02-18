@@ -1185,7 +1185,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/runtime@npm:7.8.4, @babel/runtime@npm:^7.0.0, @babel/runtime@npm:^7.1.2, @babel/runtime@npm:^7.3.4, @babel/runtime@npm:^7.4.0, @babel/runtime@npm:^7.4.2, @babel/runtime@npm:^7.4.5, @babel/runtime@npm:^7.5.5, @babel/runtime@npm:^7.6.3, @babel/runtime@npm:^7.7.2, @babel/runtime@npm:^7.7.4":
+"@babel/runtime@npm:7.8.4, @babel/runtime@npm:^7.0.0, @babel/runtime@npm:^7.1.2, @babel/runtime@npm:^7.2.0, @babel/runtime@npm:^7.3.4, @babel/runtime@npm:^7.4.0, @babel/runtime@npm:^7.4.2, @babel/runtime@npm:^7.4.5, @babel/runtime@npm:^7.5.5, @babel/runtime@npm:^7.6.3, @babel/runtime@npm:^7.7.2, @babel/runtime@npm:^7.7.4":
   version: 7.8.4
   resolution: "@babel/runtime@npm:7.8.4"
   dependencies:
@@ -3948,6 +3948,19 @@ __metadata:
   languageName: node
   linkType: hard
 
+"create-react-context@npm:^0.3.0":
+  version: 0.3.0
+  resolution: "create-react-context@npm:0.3.0"
+  dependencies:
+    gud: ^1.0.0
+    warning: ^4.0.3
+  peerDependencies:
+    prop-types: ^15.0.0
+    react: ^0.14.0 || ^15.0.0 || ^16.0.0
+  checksum: f60f9d5025a043f9acfb9d43e14f876ff0ca430a4a7ddaa126bcf3897a770613d92298cfa88d36005e1b364eb70ea5d0e403084f55924775900173709a7f6206
+  languageName: node
+  linkType: hard
+
 "cross-env@npm:^5.2.1":
   version: 5.2.1
   resolution: "cross-env@npm:5.2.1"
@@ -4477,7 +4490,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"deep-equal@npm:^1.0.1":
+"deep-equal@npm:^1.0.1, deep-equal@npm:^1.1.1":
   version: 1.1.1
   resolution: "deep-equal@npm:1.1.1"
   dependencies:
@@ -8419,20 +8432,6 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"lodash.isfunction@npm:^3.0.9":
-  version: 3.0.9
-  resolution: "lodash.isfunction@npm:3.0.9"
-  checksum: 6df69c5ea54fcead50444821fe7415fb16840db2059ab186aa7aae97ed2046ea30d3253c1ca8b026ca8878daebd845a70d6a3e1816f31084c7b8ec214c92f5b3
-  languageName: node
-  linkType: hard
-
-"lodash.isobject@npm:^3.0.2":
-  version: 3.0.2
-  resolution: "lodash.isobject@npm:3.0.2"
-  checksum: 934343fe0065c8990518f7e38b103f36b04ce45d88b887e9b76a66b9045a362a394a638f1230d607fffc2e70c34a1ee6c8f3ee93b2965cca8b76b9c8f02a459b
-  languageName: node
-  linkType: hard
-
 "lodash.memoize@npm:^4.1.2":
   version: 4.1.2
   resolution: "lodash.memoize@npm:4.1.2"
@@ -8463,13 +8462,6 @@ fsevents@^1.2.7:
   dependencies:
     lodash._reinterpolate: ^3.0.0
   checksum: 41e4244fe816fa34d7b82e51b9417ab6074275348a358359c2dad5315a002dd8d56a30913a3f4ba24165e0c1ace1310f8fdb0ef8bedca893abb4e5846b9afa40
-  languageName: node
-  linkType: hard
-
-"lodash.tonumber@npm:^4.0.3":
-  version: 4.0.3
-  resolution: "lodash.tonumber@npm:4.0.3"
-  checksum: 85ca3670ce3b30958bd1547aacaf7396cd341e3d7d2f0fdae3f224eb8b1f04086e4f6ab50c698e4a2f550c0dbac91a91f4be4b8ae82a5e848f61da8d3d4c86ce
   languageName: node
   linkType: hard
 
@@ -10106,7 +10098,7 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"popper.js@npm:^1.14.1, popper.js@npm:^1.15.0, popper.js@npm:^1.16.0":
+"popper.js@npm:^1.14.4, popper.js@npm:^1.15.0, popper.js@npm:^1.16.0":
   version: 1.16.1
   resolution: "popper.js@npm:1.16.1"
   checksum: 2bee5c5dd2db53b27b540093b292745880b31453d91722e216814f1aa42bb07ec83ae2d0a0b43521b8f47be46a41499b79e6685bdeee43327d445c92b03892ae
@@ -11423,16 +11415,20 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"react-popper@npm:^0.10.4":
-  version: 0.10.4
-  resolution: "react-popper@npm:0.10.4"
+"react-popper@npm:^1.3.6":
+  version: 1.3.7
+  resolution: "react-popper@npm:1.3.7"
   dependencies:
-    popper.js: ^1.14.1
+    "@babel/runtime": ^7.1.2
+    create-react-context: ^0.3.0
+    deep-equal: ^1.1.1
+    popper.js: ^1.14.4
     prop-types: ^15.6.1
+    typed-styles: ^0.0.7
+    warning: ^4.0.2
   peerDependencies:
     react: 0.14.x || ^15.0.0 || ^16.0.0
-    react-dom: 0.14.x || ^15.0.0 || ^16.0.0
-  checksum: 5ed03d881b51e87293d98277856212d514e37b72a0369e74b284d1565909db374998f4ea089368ee88ff0bfba70dd9df285325bd0fd4202fd5e9c0bbb15be3df
+  checksum: 1e8022d76cef0d9375dd737516dafa96911f1dabc5b2a8276cbc83399541b3bc9823c126540c29c7066a603d086f1975f5d7517bfb25dea00953520eb71610e8
   languageName: node
   linkType: hard
 
@@ -11650,29 +11646,27 @@ fsevents@^1.2.7:
     react-router-bootstrap: ^0.24.4
     react-router-dom: ^5.1.2
     react-scripts: ^3.3.1
-    reactstrap: ^6.3.0
+    reactstrap: ^8.4.1
     recharts: ^2.0.0-beta.1
     rimraf: ^2.7.1
     typescript: ^3.7.5
   languageName: unknown
   linkType: soft
 
-"reactstrap@npm:^6.3.0":
-  version: 6.5.0
-  resolution: "reactstrap@npm:6.5.0"
+"reactstrap@npm:^8.4.1":
+  version: 8.4.1
+  resolution: "reactstrap@npm:8.4.1"
   dependencies:
+    "@babel/runtime": ^7.2.0
     classnames: ^2.2.3
-    lodash.isfunction: ^3.0.9
-    lodash.isobject: ^3.0.2
-    lodash.tonumber: ^4.0.3
     prop-types: ^15.5.8
     react-lifecycles-compat: ^3.0.4
-    react-popper: ^0.10.4
+    react-popper: ^1.3.6
     react-transition-group: ^2.3.1
   peerDependencies:
-    react: ^16.0.0
-    react-dom: ^16.0.0
-  checksum: da59a696c402aba9f5319e6c435201d1f3c0725ae7c476aaf5bf694b735c7e0c87d6558d67d60ca48a943acd616c43abc0ff9da1fb884030c6bc45de4d527bd2
+    react: ^16.3.0
+    react-dom: ^16.3.0
+  checksum: dab96f5e6a6564bee1ee705e7233d16d567f16797c88bf2c085bb6289b31e2d28d3c2859ce7d0da391d2bf19778504d610d223db59ef25d4b0bc5df82a8c8503
   languageName: node
   linkType: hard
 
@@ -13658,6 +13652,13 @@ resolve@1.1.7:
   languageName: node
   linkType: hard
 
+"typed-styles@npm:^0.0.7":
+  version: 0.0.7
+  resolution: "typed-styles@npm:0.0.7"
+  checksum: fad3dbd44d893e5934a20a017b23f91ca93cef2e6668e30176cf889b7aaeed6fea9b3a519ba490f68639fbbe7b824db57c025a0da9eb78e3317c8e8c8d9602ff
+  languageName: node
+  linkType: hard
+
 "typedarray@npm:^0.0.6":
   version: 0.0.6
   resolution: "typedarray@npm:0.0.6"
@@ -14022,7 +14023,7 @@ typescript@^3.7.5:
   languageName: node
   linkType: hard
 
-"warning@npm:^4.0.0, warning@npm:^4.0.3":
+"warning@npm:^4.0.0, warning@npm:^4.0.2, warning@npm:^4.0.3":
   version: 4.0.3
   resolution: "warning@npm:4.0.3"
   dependencies:

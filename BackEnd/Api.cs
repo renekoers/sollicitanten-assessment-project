@@ -64,6 +64,24 @@ namespace BackEnd
 			return gameSession.InProgress;
 		}
 		///<summary>
+		/// Returns true if candidate has yet to start a session.
+		///</summary>
+		///<param name="ID"></param>
+		///<returns>Bool</returns>
+		async public static Task<bool> hasCandidateNotYetStarted(string ID)
+		{
+			return await Database.hasCandidateNotYetStarted(ID);
+		}
+		///<summary>
+		/// Returns true if candidate still has an active session available.
+		///</summary>
+		///<param name="ID"></param>
+		///<returns>Bool</returns>
+		async public static Task<bool> IsCandidateStillActive(string ID)
+		{
+			return await Database.IsCandidateStillActive(ID);
+		}
+		///<summary>
 		/// Makes a tutorial session.
 		/// </summary>
 		public static void StartTutorialSession()
@@ -129,13 +147,15 @@ namespace BackEnd
 
 		async public static Task<bool> EndSession(string ID)
 		{
-			if(await Database.EndSession(ID))
+			if (await Database.EndSession(ID))
 			{
 				GameSession gameSession = GetSession(ID);
 				gameSession.End();
 				Repository.UpdateSession(ID, gameSession);
 				return true;
-			} else {
+			}
+			else
+			{
 				return false;
 			}
 		}
