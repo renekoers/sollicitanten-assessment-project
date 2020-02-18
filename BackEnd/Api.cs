@@ -68,9 +68,9 @@ namespace BackEnd
 		///</summary>
 		///<param name="ID"></param>
 		///<returns>Bool</returns>
-		async public static Task<bool> hasCandidateNotYetStarted(string ID)
+		async public static Task<bool> HasCandidateNotYetStarted(string ID)
 		{
-			return await Database.hasCandidateNotYetStarted(ID);
+			return await Database.HasCandidateNotYetStarted(ID);
 		}
 		///<summary>
 		/// Returns true if candidate still has an active session available.

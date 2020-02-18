@@ -43,7 +43,7 @@ namespace BackEnd
 			.ManyAsync(a => a.started == new DateTime())).ToList();
 		}
 
-		async internal static Task<bool> hasCandidateNotYetStarted(string ID)
+		async internal static Task<bool> HasCandidateNotYetStarted(string ID)
 		{
 			CandidateEntity candidate = await GetDatabase().Find<CandidateEntity>().OneAsync(ID);
 			if (candidate != null && candidate.started == new DateTime() && candidate.finished == new DateTime())

@@ -80,7 +80,7 @@ namespace React_Frontend.Controllers
 		async public Task<bool> IsEligible()
 		{
 			string sessionID = Request.Headers["Authorization"];
-			return await Api.hasCandidateNotYetStarted(sessionID);
+			return await Api.HasCandidateNotYetStarted(sessionID);
 		}
 		[HttpGet("isActive")]
 		async public Task<bool> IsActive()
@@ -126,7 +126,7 @@ namespace React_Frontend.Controllers
 		async public Task<StatusCodeResult> EndSession()
 		{
 			string sessionID = Request.Headers["Authorization"];
-			if(await Api.EndSession(sessionID))
+			if (await Api.EndSession(sessionID))
 			{
 				return Ok();
 			}
