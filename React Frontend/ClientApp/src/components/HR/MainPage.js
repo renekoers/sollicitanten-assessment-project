@@ -19,7 +19,7 @@ export function MainPage() {
 
 	useEffect(() => {
 		async function validate(){
-			fetch("api/HR/validate", {
+			await fetch("api/HR/validate", {
 				method: "GET",
 				headers: {
 					"Content-Type": "application/json",
@@ -46,19 +46,21 @@ export function MainPage() {
     useEffect(() => {
         document.querySelector("#loginerror").innerHTML = " ";
 		document.querySelector(".popupButton").style["display"] = "none";
-		getLastID();
 	},[token])
 	
 	async function getLastID(){
-		fetch("api/statistics/lastFinished", {
+		await fetch("api/statistics/lastFinished", {
 			method: "GET",
 			headers: {
 				"Content-Type": "application/json",
 				Authorization: token
 			}
 		})
-		.then(status)
-		.then(setLastID)
+		.then(async response => {
+			if(response.status===200){
+				setLastID(await response.text())
+			}
+		})
 	}
 	
 	useEffect(() => {
@@ -81,29 +83,28 @@ export function MainPage() {
 		})
 		.then(status)
 		.then(data => {
-			let maxID = lastID;
-			if(data.length>0){
+			if(data.iDs.length>0){
 				var arrayID = newFinishedIDs;
-				data.forEach(id => {
+				data.iDs.forEach(id => {
 					arrayID.push(id);
-					if(id>maxID){
-						maxID=id;
-					}
 				});
 				setNewFinishedIds(arrayID);
 			}
-			if(maxID>lastID){
-				setLastID(maxID)
-			}
-			setLastCheck(Date.now())
+			setLastCheck(data.time)
 		})
+		.catch(async(error) => {
+			if(error.status === 404){
+				setLastCheck(await error.text())
+			}
+		})
+		await getLastID();
 	}	
     function status(response){
         return new Promise(function(resolve, reject){
             if(response.status === 200){
                 resolve(response.json())
             } else {
-                reject(response.status)
+                reject(response)
             }
         })
 	}
@@ -118,7 +119,7 @@ export function MainPage() {
 	
 	function toLogin(error){
 		document.querySelector("#loginerror").innerHTML = "Oeps! " + error;
-		document.querySelector(".popupButton").style.removeProperty("display");
+		document.querySelector(".popupButton").style["display"] = "unset";
 	}
 	function changePage(){
 		document.querySelector("#loginerror").innerHTML = " ";

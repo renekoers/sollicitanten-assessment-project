@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using BackEnd;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace React_Frontend.Controllers
 {
@@ -11,48 +13,58 @@ namespace React_Frontend.Controllers
 	public class StatisticsController : Controller
 	{
 		[HttpGet("newFinished")]
-		public ActionResult<List<string>> GetNewFinished(long time)
+		async public Task<ActionResult<string>> GetNewFinished(string time)
 		{
-			List<string> newFinishedIDs = Api.GetFinishedIDsAfterEpochTime(time);
-			return newFinishedIDs;
+			string timeReceivedRequest = DateTime.UtcNow.ToString();
+			if(time==null){
+				ClaimsIdentity identity = (ClaimsIdentity)User.Identity;
+				time = identity.FindFirst("Time").Value;
+			}
+			DateTime givenTime = DateTime.Parse(time);
+			List<string> newFinishedIDs = await Api.GetFinishedIDsAfterTime(givenTime);
+			if(newFinishedIDs.Count > 0){
+				return JSON.Serialize(new {IDs = newFinishedIDs , time = timeReceivedRequest});
+			} else {
+				return NotFound(timeReceivedRequest);
+			}
 		}
 		[HttpGet("nextFinished")]
-		public ActionResult<int> GetNextFinished(int ID)
+		async public Task<ActionResult<string>> GetNextFinished(string ID)
 		{
-			int? nextID = Api.GetNextIDWhichIsFinished(ID);
+			string nextID = await Api.GetNextFinishedID(ID);
 			if (nextID == null)
 			{
 				return NotFound();
 			}
 			else
 			{
-				return nextID.Value;
+				return nextID;
 			}
 		}
 		[HttpGet("previousFinished")]
-		public ActionResult<int> GetPreviousFinished(int ID)
+		async public Task<ActionResult<string>> GetPreviousFinished(string ID)
 		{
-			int? previousID = Api.GetPreviousIDWhichIsFinished(ID);
+			string previousID = await Api.GetPreviousFinishedID(ID);
 			if (previousID == null)
 			{
 				return NotFound();
 			}
 			else
 			{
-				return previousID.Value;
+				return previousID;
 			}
 		}
 		[HttpGet("lastFinished")]
-		public ActionResult<int> GetLastFinished()
+		async public Task<ActionResult<string>> GetLastFinished()
 		{
-			int? lastID = Api.GetLastIDWhichIsFinished();
+			string lastID = await Api.GetLastFinishedID();
 			if (lastID == null)
 			{
 				return NotFound();
 			}
 			else
 			{
-				return lastID.Value;
+				return lastID;
 			}
 		}
 		[HttpGet("candidate")]

@@ -12,15 +12,16 @@ export function Results(props) {
 	useEffect(() => {
 		if(id===0){
 			getLastID();
+			setID(lastID)
 		}
 		props.onSeen(id)
 		fetch("api/session/candidate/"+id)
-		.then(status)
+		.then(statusToJSON)
 		.then(data => {setName(data.name)})
 	},[id])
 	
 	async function getLastID(){
-		fetch("api/statistics/lastFinished", {
+		await fetch("api/statistics/lastFinished", {
 			method: "GET",
 			headers: {
 				"Content-Type": "application/json",
@@ -74,7 +75,16 @@ export function Results(props) {
             }
         })
 	}
-    function status(response){
+    async function status(response){
+        return await new Promise(async function(resolve, reject){
+            if(response.status === 200){
+                resolve(await response.text())
+            } else {
+                reject(response.status);
+            }
+        })
+	}
+    function statusToJSON(response){
         return new Promise(function(resolve, reject){
             if(response.status === 200){
                 resolve(response.json())

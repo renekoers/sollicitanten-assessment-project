@@ -15,19 +15,19 @@ namespace BackEnd
 		}
 		async public static Task<bool> AddCandidate(string name)
 		{
-			return await Repository.AddCandidate(name);
+			return await Database.AddNewCandidate(name) != null;
 		}
 		async public static Task<CandidateEntity> GetCandidate()
 		{
-			return await Repository.GetCandidate();
+			return await Database.GetCandidate();
 		}
 		async public static Task<CandidateEntity> GetCandidate(string ID)
 		{
-			return await Repository.GetCandidate(ID);
+			return await Database.GetCandidate(ID);
 		}
 		async public static Task<bool> IsUnstarted(string ID)
 		{
-			return await Repository.IsUnstarted(ID);
+			return await Database.IsUnstarted(ID);
 		}
 		async public static Task<IEnumerable<CandidateEntity>> GetAllUnstartedCandidate()
 		{
@@ -43,9 +43,9 @@ namespace BackEnd
 		{
 			return Repository.CreateSession();
 		}
-		public static bool StartSession(string ID)
+		async public static Task<bool> StartSession(string ID)
 		{
-			return Repository.StartSession(ID);
+			return await Repository.StartSession(ID);
 		}
 
 		/// <summary>
@@ -130,11 +130,17 @@ namespace BackEnd
 			Repository.UpdateSession(ID, gameSession);
 		}
 
-		public static void EndSession(string ID)
+		async public static Task<bool> EndSession(string ID)
 		{
-			GameSession gameSession = GetSession(ID);
-			gameSession.End();
-			Repository.UpdateSession(ID, gameSession);
+			if(await Database.EndSession(ID))
+			{
+				GameSession gameSession = GetSession(ID);
+				gameSession.End();
+				Repository.UpdateSession(ID, gameSession);
+				return true;
+			} else {
+				return false;
+			}
 		}
 		public static bool LevelHasBeenStarted(string ID, int levelNumber)
 		{
@@ -156,29 +162,29 @@ namespace BackEnd
 		/// This method creates a list of all IDs of candidates that finished a session after a given time
 		/// </summary>
 		/// <returns>List of IDs</returns>
-		public static List<string> GetFinishedIDsAfterEpochTime(long epochTime)
+		async public static Task<List<string>> GetFinishedIDsAfterTime(DateTime time)
 		{
-			return Repository.GetFinishedIDsAfterEpochTime(epochTime);
+			return await Database.GetFinishedIDsAfterTime(time);
 		}
 		/// <summary>
 		/// This method finds the first ID of the CandidateEntity that ended the session after the given ID.
 		/// </summary>
 		/// <returns>ID if there exists one</returns>
-		public static int? GetNextIDWhichIsFinished(int ID)
+		async public static Task<string> GetNextFinishedID(string ID)
 		{
-			return Repository.GetNextIDWhichIsFinished(ID);
+			return await Database.GetNextFinishedID(ID);
 		}
 		/// <summary>
 		/// This method finds the last ID of the CandidateEntity that ended the session before the given ID.
 		/// </summary>
 		/// <returns>ID if there exists one</returns>
-		public static int? GetPreviousIDWhichIsFinished(int ID)
+		async public static Task<string> GetPreviousFinishedID(string ID)
 		{
-			return Repository.GetPreviousIDWhichIsFinished(ID);
+			return await Database.GetPreviousFinishedID(ID);
 		}
-		public static int? GetLastIDWhichIsFinished()
+		async public static Task<string> GetLastFinishedID()
 		{
-			return Repository.GetLastIDWhichIsFinished();
+			return await Database.GetLastFinishedID();
 		}
 		public static int GetTotalLevelAmount()
 		{
