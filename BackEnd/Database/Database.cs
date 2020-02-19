@@ -39,8 +39,7 @@ namespace BackEnd
 
 		async internal static Task<CandidateEntity> GetCandidate(string ID)
 		{
-			CandidateEntity candidate = await MongoDB.Find<CandidateEntity>().OneAsync(ID);
-			return candidate;
+			return await MongoDB.Find<CandidateEntity>().OneAsync(ID);
 		}
 		async internal static Task<IEnumerable<CandidateEntity>> GetAllUnstartedCandidate()
 		{
@@ -50,33 +49,24 @@ namespace BackEnd
 
 		async internal static Task<bool> HasCandidateNotYetStarted(string ID)
 		{
-			CandidateEntity candidate = await MongoDB.Find<CandidateEntity>().OneAsync(ID);
-			if (candidate != null && candidate.started == new DateTime() && candidate.finished == new DateTime())
-			{
-				return true;
-			}
-			else
-			{
-				return false;
-			}
+			CandidateEntity candidate = await GetCandidate(ID);
+			// Checks if candidate exists && candidate is not started && candidate is not finished.
+			return candidate != null && candidate.started == new DateTime() && candidate.finished == new DateTime();
 		}
 
 		async internal static Task<bool> IsCandidateStillActive(string ID)
 		{
-			CandidateEntity candidate = await MongoDB.Find<CandidateEntity>().OneAsync(ID);
-			if (candidate != null && candidate.started != new DateTime() && candidate.finished == new DateTime())
-			{
-				return true;
-			}
-			else
-			{
-				return false;
-			}
+			CandidateEntity candidate = await GetCandidate(ID);
+			// Checks if candidate exists && candidate is started && candidate is not finished.
+			return candidate != null && candidate.started != new DateTime() && candidate.finished == new DateTime();
 		}
+		[Obsolete]
+		/// This function checks if a candidate is started instead of unstarted. This method is the same as HasCandidateNotYetStarted
 		async internal static Task<bool> IsUnstarted(string ID)
 		{
 			CandidateEntity candidate = await GetCandidate(ID);
-			return candidate != null ? candidate.started > new DateTime() : false;
+			// Checks if candidate exists && candidate is started
+			return candidate != null && candidate.started > new DateTime();
 		}
 		async internal static Task<bool> StartSession(string ID)
 		{
@@ -84,8 +74,10 @@ namespace BackEnd
 			await MongoDB.Update<CandidateEntity>()
 				.Match(candidate => candidate.ID == ID && candidate.started == defaultTime)
 				.Modify(candidate => candidate.started, DateTime.UtcNow)
+				.Modify(candidate => candidate.GameResults, CandidateEntity.newGameResults())
 				.ExecuteAsync();
-			CandidateEntity foundCandidate = await MongoDB.Find<CandidateEntity>().OneAsync(ID);
+			// Checks if the candidate with the given ID exists and is started.
+			CandidateEntity foundCandidate = await GetCandidate(ID);
 			return foundCandidate != null && foundCandidate.started > defaultTime;
 		}
 		async internal static Task<bool> EndSession(string ID)
@@ -95,7 +87,8 @@ namespace BackEnd
 				.Match(candidate => candidate.ID == ID && candidate.started > defaultTime && candidate.finished == defaultTime)
 				.Modify(candidate => candidate.finished, DateTime.UtcNow)
 				.ExecuteAsync();
-			CandidateEntity foundCandidate = await MongoDB.Find<CandidateEntity>().OneAsync(ID);
+			// Checks if the candidate with the given ID exists and is finished.
+			CandidateEntity foundCandidate = await GetCandidate(ID);
 			return foundCandidate != null && foundCandidate.finished > defaultTime;
 		}
 	}
