@@ -53,7 +53,7 @@ export const StartingPage = () => {
 	};
 
 	const getAllUnstartedCandidates = () => {
-		fetch("api/session/candidate/getUnstartedCandidates")
+		fetch("api/candidate/getUnstartedCandidates")
 			.then(response => response.json())
 			.then(data => {
 				console.log(data);
@@ -69,18 +69,8 @@ export const StartingPage = () => {
 			});
 	};
 
-	const startTutorialSession = async () => {
-		await fetch("api/session/startTutorialSession")
-			.then(response => {
-				if (response.ok) {
-					setTutorialSessionStatus(true);
-				} else {
-					throw Error("Error whilst fetching session, no OK");
-				}
-			})
-			.catch(error => {
-				console.log(error);
-			});
+	const startTutorialSession = () => {
+		setTutorialSessionStatus(true);
 	};
 
 	const isExistingSessionIDEligible = async () => {
@@ -99,7 +89,7 @@ export const StartingPage = () => {
 	const getCandidateName = async () => {
 		let candidateName;
 		await fetch(
-			"api/session/candidate/" + localStorage.getItem("sessionID")
+			"api/candidate/" + localStorage.getItem("sessionID")
 		)
 			.then(checkStatus)
 			.then(data => {
@@ -137,7 +127,7 @@ export const StartingPage = () => {
 
 	const hasCandidateNotYetStarted = async () => {
 		let hasNotYetStarted;
-		await fetch("api/session/hasNotYetStarted", {
+		await fetch("api/candidate/hasNotYetStarted", {
 			method: "GET",
 			headers: {
 				"Content-Type": "application/json",
@@ -153,7 +143,7 @@ export const StartingPage = () => {
 
 	const isCandidateStillActive = async () => {
 		let isStillActive;
-		await fetch("api/session/isActive", {
+		await fetch("api/candidate/isActive", {
 			method: "GET",
 			headers: {
 				"Content-Type": "application/json",

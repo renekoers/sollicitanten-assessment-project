@@ -14,6 +14,7 @@ export const Game = props => {
 	const [solved, setSolved] = useState(false);
 	const [levelNumber, setLevelNumber] = useState(1);
 	const [totalLevels, setTotalLevels] = useState(0);
+	const [areStatementsRunning, setAreStatementsRunning] = useState(false);
 
 	useEffect(() => {
 		getTotalLevelAmount();
@@ -91,6 +92,7 @@ export const Game = props => {
 	};
 
 	const onReceiveStatementTree = async statementTree => {
+		setAreStatementsRunning(true);
 		const sessionId = localStorage.getItem("sessionID");
 		const levelSolutionResponse = await fetch(
 			"api/statement/" + levelNumber,
@@ -138,7 +140,10 @@ export const Game = props => {
 				STATE_CHANGE_ANIMATION_INTERVAL_TIME
 			);
 		} // Set to null to indicate the sequence has been completed (and avoid potential conflicts with other timeouts).
-		else _currentStateTimeoutID = null;
+		else {
+			_currentStateTimeoutID = null;
+			setAreStatementsRunning(false);
+		}
 	};
 
 	/**
@@ -169,6 +174,7 @@ export const Game = props => {
 						onClickNext={nextLevel.bind(this)}
 						disabledPrevious={levelNumber === 1}
 						lastLevel={levelNumber === totalLevels}
+						running={areStatementsRunning}
 					/>
 				</div>
 			</div>
