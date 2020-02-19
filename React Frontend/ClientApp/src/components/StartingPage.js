@@ -16,7 +16,7 @@ export const StartingPage = () => {
 	const [isTutorialSessionStarted, setTutorialSessionStatus] = useState(
 		false
 	);
-	const [sessionStarted, setSessionStatus] = useState(false);
+	const [isSessionStarted, setSessionStatus] = useState(false);
 	const [name, setName] = useState(null);
 	const [
 		isEligibleCandidateAvailable,
@@ -31,15 +31,12 @@ export const StartingPage = () => {
 
 	useEffect(() => {
 		if (IsSessionIdAvailable()) {
-			checkSessionIDForEligibleCandidate();
-			// Check if SessionID is still available after checking its candidate.
-			if (IsSessionIdAvailable()) {
+			if (isExistingSessionIDEligible()) {
 				renderCandidateWelcomePage();
 			} else {
 				renderChooseCandidatePage();
 			}
 		} else {
-			getAllUnstartedCandidates();
 			renderChooseCandidatePage();
 		}
 	}, []);
@@ -50,6 +47,7 @@ export const StartingPage = () => {
 	};
 
 	const renderChooseCandidatePage = () => {
+		getAllUnstartedCandidates();
 		setIsNoCandidateChosen(true);
 		setIsEligibleCandidateAvailable(false);
 	};
@@ -85,26 +83,18 @@ export const StartingPage = () => {
 			});
 	};
 
-	const checkSessionIDForEligibleCandidate = async () => {
+	const isExistingSessionIDEligible = async () => {
 		const sessionID = localStorage.getItem("sessionID");
 		if (await hasCandidateNotYetStarted(sessionID)) {
 			setName(await getCandidateName(sessionID));
+			return true;
 		} else if (await isCandidateStillActive(sessionID)) {
 			setSessionStatus(true);
 		} else {
 			localStorage.removeItem("sessionID");
+			return false;
 		}
 	};
-
-	// const getNewCandidate = async () => {
-	// 	await fetch("api/session/candidate")
-	// 		.then(checkStatus)
-	// 		.then(data => {
-	// 			console.log(data);
-	// 			setName(data.name);
-	// 			localStorage.setItem("sessionID", data.id);
-	// 		});
-	// };
 
 	const getCandidateName = async () => {
 		let candidateName;
@@ -178,7 +168,7 @@ export const StartingPage = () => {
 	};
 
 	const gameSessionRedirect = () => {
-		if (sessionStarted) {
+		if (isSessionStarted) {
 			return <Redirect to="/gamesession" />;
 		}
 	};
@@ -211,7 +201,6 @@ export const StartingPage = () => {
 		return (
 			<div>
 				{tutorialSessionRedirect()}
-				{gameSessionRedirect()}
 				<Jumbotron fluid>
 					<Container fluid>
 						<h1 className="display-4">Welkom, {name}!</h1>
@@ -272,16 +261,18 @@ export const StartingPage = () => {
 				</Jumbotron>
 			</div>
 		);
+	} else if (isSessionStarted || isTutorialSessionStarted) {
+		return <div>{gameSessionRedirect()}</div>;
 	} else {
 		return (
 			<div>
-				Loading...
+				{"Loading...    "}
 				<Spinner
 					style={{
-						width: "3rem",
-						height: "3rem"
+						width: "1rem",
+						height: "1rem"
 					}}
-					type="grow"
+					// type="grow"
 					color="success"
 				/>
 			</div>
