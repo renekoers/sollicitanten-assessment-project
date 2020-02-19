@@ -10,7 +10,7 @@ namespace BackEnd
 	public partial class Database
 	{
 
-		private protected static DB MongoDB = new DB(MongoClientSettings.FromConnectionString(
+		private static DB MongoDB = new DB(MongoClientSettings.FromConnectionString(
 		"mongodb+srv://sylveon-client:development@sylveon-xf66r.azure.mongodb.net/test?retryWrites=true&w=majority"),
 		"sylveon");
 

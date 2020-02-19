@@ -14,6 +14,11 @@ namespace BackEnd
 		/// The duration of the session once it has been stopped or paused
 		/// </summary>
 		public long TotalDuration { get; protected set; }
+        private long CurrentDuration {get
+            {
+                return InProgress ? TotalDuration + (long) Math.Ceiling((DateTime.UtcNow - StartTime).TotalSeconds) : TotalDuration;
+            }
+        }
 		public bool InProgress { get; private set; }
         public List<LevelSolution> Solutions = new List<LevelSolution>();
         [Ignore]
@@ -40,27 +45,11 @@ namespace BackEnd
 				TotalDuration += (long) Math.Ceiling((DateTime.UtcNow - StartTime).TotalSeconds);
 			}
         }
-
-
-
-        /// Old stuff, needs to check what is needed!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        private long CurrentDuration()
-        {
-				if (InProgress)
-				{
-					return TotalDuration + (long) Math.Ceiling((DateTime.UtcNow - StartTime).TotalSeconds);
-				}
-				else
-				{
-					return TotalDuration;
-				}
-        }
-
         public LevelSolution Attempt(Statement[] statements)
         {
             if (InProgress)
             {
-                LevelSolution solution = new LevelSolution(LevelNumber, new StatementBlock(statements), CurrentDuration());
+                LevelSolution solution = new LevelSolution(LevelNumber, new StatementBlock(statements), CurrentDuration);
                 Solutions.Add(solution);
                 Solved = Solved || solution.Solved;
                 return solution;
@@ -69,13 +58,20 @@ namespace BackEnd
             {
                 throw new InvalidOperationException("Level session has already ended.");
             }
-
         }
-		public void Pause()
-		{
-			End();
-		}
 
+
+        public LevelSolution GetLeastLinesOfCodeSolution()
+        {
+            return Util.Min(Solutions.FindAll(s => s.Solved), s => s.Lines);
+        }
+        public static int GetLines(LevelSession session) => session.GetLeastLinesOfCodeSolution().Lines;
+        public static Func<LevelSession,int> GetDurationPerPeriod(int period) => (session => GetDuration(session)/period*period);
+        public static int GetDuration(LevelSession session) => (int)session.GetLeastLinesOfCodeSolution().Duration/1000;
+
+        /// Old stuff, needs to check what is needed!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+        [Obsolete("Use Stop() instead after fixing mock data!!!!")]
 		virtual public void End()
 		{
 			if (InProgress)
@@ -88,16 +84,9 @@ namespace BackEnd
         {
             return Solutions.Find(s => s.Solved);
         }
-        public LevelSolution GetLeastLinesOfCodeSolution()
-        {
-            return Util.Min(Solutions.FindAll(s => s.Solved), s => s.Lines);
-        }
         public LevelSolution GetLeastNumberOfStatesSolution()
         {
             return Util.Min(Solutions.FindAll(s => s.Solved), s => s.NumberOfStates);
         }
-        public static int GetLines(LevelSession session) => session.GetLeastLinesOfCodeSolution().Lines;
-        public static Func<LevelSession,int> GetDurationPerPeriod(int period) => (session => GetDuration(session)/period*period);
-        public static int GetDuration(LevelSession session) => (int)session.GetLeastLinesOfCodeSolution().Duration/1000;
     }
 }

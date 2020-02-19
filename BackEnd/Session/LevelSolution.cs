@@ -1,17 +1,21 @@
 ﻿using System.Collections.Generic;
+using MongoDB.Entities;
+using MongoDB.Entities.Core;
 
 namespace BackEnd
 {
     /// <summary>
     /// Represents an attempt at solving a level
     /// </summary>
-    public class LevelSolution
+    public class LevelSolution : Entity
     {
+        [Ignore]
         public int LevelNumber { get; private set; }
-        private readonly StatementBlock Code;
+        public StatementBlock Code;
         public long Duration {get; private set;}
         public bool Solved { get; private set; }
         public int Lines => Code.GetLines();
+        [Ignore]
         public List<IState> States { get; private set; }
         public int NumberOfStates => States.Count;
 

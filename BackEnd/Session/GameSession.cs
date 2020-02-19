@@ -11,7 +11,6 @@ namespace BackEnd
 		/// Times are in milliseconds Epoch
 		/// </summary>
 		public long StartTime { get; protected set; }
-		public long EndTime { get; protected set; }
 		/// <summary>
 		/// The duration of the session once it has been stopped or paused
 		/// </summary>

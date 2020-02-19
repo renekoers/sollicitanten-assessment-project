@@ -1,6 +1,7 @@
 ﻿using System.Text.Json;
 using System.Linq;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using BackEnd;
 
@@ -11,11 +12,18 @@ namespace React_Frontend.Controllers
 	public class StatementController : Controller
 	{
 		[HttpPost("{levelId}")]
-		public string PostStatements(int levelId, [FromBody] JsonElement statementTreeJson)
+		async public Task<ActionResult<string>> PostStatements(int levelId, [FromBody] JsonElement statementTreeJson)
 		{
 			string sessionID = Request.Headers["Authorization"];
 			IEnumerable<Statement> statements = Api.ParseStatementTreeJson(statementTreeJson);
-			return JSON.Serialize(Api.SubmitSolution(sessionID, levelId, statements.ToArray()));
+			LevelSolution solution = await Api.SubmitSolution(sessionID, levelId, statements.ToArray());
+			if(solution != null)
+			{
+				return JSON.Serialize(solution);
+			} else
+			{
+				return BadRequest();
+			}
 		}
 	}
 }

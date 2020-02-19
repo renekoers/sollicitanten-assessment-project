@@ -25,11 +25,11 @@ namespace React_Frontend.Controllers
 		}
 
 		[HttpGet("levelIsSolved/{levelNumber}")]
-		public bool IsSolved(string levelNumber)
+		async public Task<bool> IsSolved(string levelNumber)
 		{
 			int level = int.Parse(levelNumber);
 			string sessionID = Request.Headers["Authorization"];
-			return Api.LevelIsSolved(sessionID, level);
+			return await Api.LevelIsSolved(sessionID, level);
 		}
 		[HttpGet("retrieveLevel/{levelNumber}")]
 		async public Task<ActionResult<string>> GetLevel(string levelNumber)
