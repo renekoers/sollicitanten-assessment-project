@@ -30,6 +30,14 @@ namespace BackEnd
 		{
 			return await Database.GetAllUnstartedCandidate();
 		}
+		public static IState GetTutorialLevel()
+		{
+			return new State(new Puzzle(Level.Get(0)));
+		}
+		public static LevelSolution SubmitSolutionTutorial(Statement[] statements)
+		{
+			return new LevelSolution(0, new StatementBlock(statements), 0);
+		}
 
 		/// <summary>
 		/// Start a new session for a new CandidateEntity.!-- This method is used in mockdata and tests!!!!
