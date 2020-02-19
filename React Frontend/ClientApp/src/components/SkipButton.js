@@ -16,20 +16,21 @@ export class SkipButton extends Component {
     }
     render() {
         let classNames;
-        if(this.props.disabledPrevious){
+        let running = this.props.running;
+        if(this.props.disabledPrevious || running){
             classNames=["skipButton", "disabled"].join(' ');
         } else {
             classNames="skipButton";
         }
         let nextButton;
         if(this.props.lastLevel){
-            nextButton = <Link to={'/overview'}> <button className="skipButton" onClick={ this.nextButtonClicked }> Overview</button></Link>;
+            nextButton = <Link to={'/overview'}> <button className={"skipButton"} onClick={ this.nextButtonClicked }> Overview</button></Link>;
         } else {
-            nextButton = <button className="skipButton" onClick={ this.nextButtonClicked }> Next level</button>;
+            nextButton = <button disabled={running} className={(this.props.lastLevel||running)?classNames:"skipButton"} onClick={ this.nextButtonClicked }> Next level</button>;
         }
         return (
             <div>
-                <button disabled={this.props.disabledPrevious} className={classNames} onClick={ this.previousButtonClicked }> Previous level</button>
+                <button disabled={this.props.disabledPrevious || running} className={classNames} onClick={ this.previousButtonClicked }> Previous level</button>
                 {nextButton}
             </div>
         );
