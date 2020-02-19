@@ -37,7 +37,7 @@ export function AddCandidate(props) {
         })
     }
     function translateErrorStatusCodeToString(statusCode){
-        if(statusCode===400){
+        if(statusCode===422){
             return "Vul eerst een naam in."
         } else if(statusCode===401){
             return "De sessie is verlopen. Log opnieuw in."
