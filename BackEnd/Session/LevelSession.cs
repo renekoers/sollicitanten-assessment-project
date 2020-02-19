@@ -1,16 +1,78 @@
 ﻿using System;
 using System.Linq;
 using System.Collections.Generic;
+using MongoDB.Entities;
+using MongoDB.Entities.Core;
 
 namespace BackEnd
 {
-    public class LevelSession : Session
+    public class LevelSession : Entity
     {
-        protected List<LevelSolution> Solutions = new List<LevelSolution>();
-        public int NumberOfAttempts => Solutions.Count;
-        public int NumberOfAttemptsForFirstSolved => Solutions.FindIndex(s => s.Solved) + 1;
         public int LevelNumber { get; protected set; }
-        public bool Solved => Solutions.Any(s => s.Solved);
+		public DateTime StartTime { get; protected set; }
+		/// <summary>
+		/// The duration of the session once it has been stopped or paused
+		/// </summary>
+		public long TotalDuration { get; protected set; }
+		public bool InProgress { get; private set; }
+        public List<LevelSolution> Solutions = new List<LevelSolution>();
+        [Ignore]
+        public int NumberOfAttemptsForFirstSolved => Solutions.FindIndex(s => s.Solved) + 1;
+        public bool Solved;
+
+        public LevelSession(int levelNumber)
+        {
+            LevelNumber = levelNumber;
+        }
+        private long CurrentDuration()
+        {
+				if (InProgress)
+				{
+					return TotalDuration + (long) Math.Ceiling((DateTime.UtcNow - StartTime).TotalSeconds);
+				}
+				else
+				{
+					return TotalDuration;
+				}
+        }
+
+        public LevelSolution Attempt(Statement[] statements)
+        {
+            if (InProgress)
+            {
+                LevelSolution solution = new LevelSolution(LevelNumber, new StatementBlock(statements), CurrentDuration());
+                Solutions.Add(solution);
+                Solved = Solved || solution.Solved;
+                return solution;
+            }
+            else
+            {
+                throw new InvalidOperationException("Level session has already ended.");
+            }
+
+        }
+		public void Pause()
+		{
+			End();
+		}
+
+		public void Restart()
+		{
+			if (!InProgress)
+			{
+				StartTime = DateTime.UtcNow;
+				InProgress = true;
+			}
+		}
+
+		virtual public void End()
+		{
+			if (InProgress)
+			{
+				InProgress = false;
+				TotalDuration += (long) Math.Ceiling((DateTime.UtcNow - StartTime).TotalSeconds);
+			}
+		}
         public LevelSolution FindFirstSolution()
         {
             return Solutions.Find(s => s.Solved);
@@ -22,26 +84,6 @@ namespace BackEnd
         public LevelSolution GetLeastNumberOfStatesSolution()
         {
             return Util.Min(Solutions.FindAll(s => s.Solved), s => s.NumberOfStates);
-        }
-
-        public LevelSession(int levelNumber) : base()
-        {
-            LevelNumber = levelNumber;
-        }
-
-        public LevelSolution Attempt(Statement[] statements)
-        {
-            if (InProgress)
-            {
-                LevelSolution solution = new LevelSolution(LevelNumber, new StatementBlock(statements), CurrentDuration);
-                Solutions.Add(solution);
-                return solution;
-            }
-            else
-            {
-                throw new InvalidOperationException("Level session has already ended.");
-            }
-
         }
         public static int GetLines(LevelSession session) => session.GetLeastLinesOfCodeSolution().Lines;
         public static Func<LevelSession,int> GetDurationPerPeriod(int period) => (session => GetDuration(session)/period*period);
