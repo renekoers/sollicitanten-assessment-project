@@ -15,7 +15,7 @@ export function Results(props) {
 			setID(lastID)
 		}
 		props.onSeen(id)
-		fetch("api/session/candidate/"+id)
+		fetch("api/candidate/"+id)
 		.then(statusToJSON)
 		.then(data => {setName(data.name)})
 	},[id])
