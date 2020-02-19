@@ -10,39 +10,6 @@ namespace React_Frontend.Controllers
 	[Route("api/session")]
 	public class SessionController : Controller
 	{
-		[HttpGet("candidate")]
-		async public Task<ActionResult<string>> getCandidate()
-		{
-			CandidateEntity candidate = await Api.GetCandidate();
-			if (candidate == null)
-			{
-				return NotFound();
-			}
-			else
-			{
-				return JSON.Serialize(candidate);
-			}
-
-		}
-		[HttpGet("candidate/{id}")]
-		async public Task<ActionResult<string>> getCandidateName(string id)
-		{
-			CandidateEntity candidate = await Api.GetCandidate(id);
-			if (candidate == null)
-			{
-				return NotFound();
-			}
-			else
-			{
-				return JSON.Serialize(candidate);
-			}
-
-		}
-		[HttpGet("candidate/getUnstartedCandidates")]
-		async public Task<IEnumerable<CandidateEntity>> GetAllUnstartedCandidates()
-		{
-			return await Api.GetAllUnstartedCandidate();
-		}
 		[HttpGet("startsession")]
 		async public Task<ActionResult> StartSession()
 		{
@@ -57,37 +24,6 @@ namespace React_Frontend.Controllers
 			}
 		}
 
-		[HttpGet("startTutorialSession")]
-		public StatusCodeResult StartTutorialSession()
-		{
-			Api.StartTutorialSession();
-			return Ok();
-		}
-
-		[HttpGet("sessionIDValidation")]
-		async public Task<bool> IsSessionValid()
-		{
-			string sessionID = Request.Headers["Authorization"];
-			return await Api.IsUnstarted(sessionID);
-		}
-		[HttpGet("isStarted")]
-		public bool isStarted()
-		{
-			string sessionID = Request.Headers["Authorization"];
-			return Api.IsStarted(sessionID);
-		}
-		[HttpGet("hasNotYetStarted")]
-		async public Task<bool> IsEligible()
-		{
-			string sessionID = Request.Headers["Authorization"];
-			return await Api.HasCandidateNotYetStarted(sessionID);
-		}
-		[HttpGet("isActive")]
-		async public Task<bool> IsActive()
-		{
-			string sessionID = Request.Headers["Authorization"];
-			return await Api.IsCandidateStillActive(sessionID);
-		}
 		[HttpGet("levelIsSolved/{levelNumber}")]
 		public bool IsSolved(string levelNumber)
 		{

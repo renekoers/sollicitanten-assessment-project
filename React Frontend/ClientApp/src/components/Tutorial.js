@@ -11,7 +11,7 @@ export const Tutorial = () => {
 
 	const STATE_CHANGE_ANIMATION_INTERVAL_TIME = 1000;
 
-	const tutorialSessionID = 0;
+	const tutorialSessionID = "tutorialSylveon";
 	const [level, setLevel] = useState(null);
 	const [isSolved, setSolved] = useState(false);
 	const [isLiveSessionStarted, setLiveSessionStarted] = useState(false);
@@ -20,43 +20,40 @@ export const Tutorial = () => {
 		getTutorialLevel();
 	}, []);
 
+    function status(response){
+        return new Promise(function(resolve, reject){
+            if(response.status === 200){
+                resolve(response.json())
+            } else {
+                reject(response)
+            }
+        })
+	}
 	const getTutorialLevel = async () => {
-		await fetch("api/session/retrieveLevel/0", {
+		await fetch("api/tutorial/retrieveLevel", {
 			method: "GET",
 			headers: {
 				"Content-Type": "application/json",
 				Authorization: tutorialSessionID
 			}
 		})
-			.then(response => response.json())
+			.then(status)
 			.then(data => {
 				setLevel(data);
-			});
-
-		await fetch("api/session/levelIsSolved/0", {
-			method: "GET",
-			headers: {
-				"Content-Type": "application/json",
-				Authorization: tutorialSessionID
-			}
-		})
-			.then(response => response.json())
-			.then(data => {
-				setSolved(data);
 			});
 	};
 
 	const onReceiveTutorialStatementTree = async statementTree => {
-		const levelSolutionResponse = await fetch("api/statement/0", {
+		await fetch("api/tutorial/submitSolution", {
 			method: "POST",
 			headers: {
 				"content-type": "application/json",
 				Authorization: tutorialSessionID
 			},
 			body: JSON.stringify(statementTree)
-		});
-		const levelSolution = await levelSolutionResponse.json();
-		updateGridFromLevelSolution(levelSolution);
+		})
+		.then(status)
+		.then(updateGridFromLevelSolution)
 	};
 
 	/**
@@ -115,7 +112,7 @@ export const Tutorial = () => {
 
 	const isSessionIDValid = async () => {
 		let sessionExists;
-		await fetch("api/session/sessionIDValidation", {
+		await fetch("api/candidate/sessionIDValidation", {
 			method: "GET",
 			headers: {
 				"Content-Type": "application/json",
@@ -143,7 +140,7 @@ export const Tutorial = () => {
 	};
 
 	const getNewCandidate = async () => {
-		await fetch("api/session/candidate")
+		await fetch("api/candidate/get")
 			.then(checkStatus)
 			.then(data => {
 				localStorage.setItem("sessionID", data.id);
