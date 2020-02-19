@@ -14,12 +14,6 @@ namespace BackEnd
 		"mongodb+srv://sylveon-client:development@sylveon-xf66r.azure.mongodb.net/test?retryWrites=true&w=majority"),
 		"sylveon");
 
-		// private protected static DB GetDatabase()
-		// {
-		// 	return new DB(MongoClientSettings.FromConnectionString(
-		// "mongodb+srv://sylveon-client:development@sylveon-xf66r.azure.mongodb.net/test?retryWrites=true&w=majority"),
-		// "sylveon");
-		// }
 
 		async internal static Task<string> AddNewCandidate(string name)
 		{

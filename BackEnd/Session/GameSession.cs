@@ -49,14 +49,5 @@ namespace BackEnd
 			return LevelSessions.TryGetValue(levelNumber, out LevelSession session) ? session : null;
 		}
 
-		virtual public void End()
-		{
-			if (InProgress)
-			{
-				InProgress = false;
-				EndTime = Api.GetEpochTime();
-				TotalDuration += EndTime - StartTime;
-			}
-		}
 	}
 }

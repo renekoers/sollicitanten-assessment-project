@@ -50,7 +50,7 @@ namespace BackEnd
 		}
 		async public static Task<bool> StartSession(string ID)
 		{
-			return await Repository.StartSession(ID);
+			return await Database.StartSession(ID);
 		}
 
 		/// <summary>
@@ -91,7 +91,7 @@ namespace BackEnd
 		}
 
 		/// <summary>
-		/// Begin a new level session.
+		/// Starts a level session.
 		/// </summary>
 		/// <param name="ID"></param>
 		/// <param name="levelNumber"></param>
@@ -99,6 +99,16 @@ namespace BackEnd
 		async public static Task<IState> StartLevelSession(string ID, int levelNumber)
 		{
 			return (await Session.StartLevel(ID, levelNumber)) ? new State(new Puzzle(Level.Get(levelNumber))) : null;
+		}
+		/// <summary>
+		/// Stops a level session.
+		/// </summary>
+		/// <param name="ID"></param>
+		/// <param name="levelNumber"></param>
+		/// <returns></returns>
+		async public static Task<bool> StopLevelSession(string ID, int levelNumber)
+		{
+			return await Session.StopLevel(ID, levelNumber);
 		}
 
 		/// <summary>
@@ -116,15 +126,7 @@ namespace BackEnd
 			Repository.UpdateSession(ID, gameSession);
 			return solution;
 		}
-
-		public static void PauseLevelSession(string ID, int levelNumber)
-		{
-			GameSession gameSession = GetSession(ID);
-			LevelSession levelSession = gameSession.GetSession(levelNumber);
-			levelSession.Pause();
-			Repository.UpdateSession(ID, gameSession);
-		}
-
+		[Obsolete("Remove function after mock data is fixed!!")]
 		public static void EndLevelSession(string ID, int levelNumber)
 		{
 			GameSession gameSession = GetSession(ID);
@@ -135,17 +137,7 @@ namespace BackEnd
 
 		async public static Task<bool> EndSession(string ID)
 		{
-			if (await Database.EndSession(ID))
-			{
-				GameSession gameSession = GetSession(ID);
-				gameSession.End();
-				Repository.UpdateSession(ID, gameSession);
-				return true;
-			}
-			else
-			{
-				return false;
-			}
+			return await Database.EndSession(ID);
 		}
 		public static bool LevelIsSolved(string ID, int levelNumber)
 		{

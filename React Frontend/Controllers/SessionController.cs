@@ -46,12 +46,16 @@ namespace React_Frontend.Controllers
 			}
 		}
 		[HttpPost("pauseLevel")]
-		public StatusCodeResult PauseLevel([FromBody]object levelNumber)
+		async public Task<ActionResult> PauseLevel([FromBody]object levelNumber)
 		{
 			int level = int.Parse(levelNumber.ToString());
 			string sessionID = Request.Headers["Authorization"];
-			Api.PauseLevelSession(sessionID, level);
-			return Ok();
+			if(await Api.StopLevelSession(sessionID,level))
+			{
+				return Ok();
+			} else {
+				return BadRequest();
+			}
 		}
 		[HttpGet("totalAmountLevels")]
 		public int GetTotalAmountLevels()

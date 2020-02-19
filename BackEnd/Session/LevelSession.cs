@@ -32,6 +32,14 @@ namespace BackEnd
 				InProgress = true;
 			}
         }
+        public void Stop()
+        {
+			if (InProgress)
+			{
+				InProgress = false;
+				TotalDuration += (long) Math.Ceiling((DateTime.UtcNow - StartTime).TotalSeconds);
+			}
+        }
 
 
 
@@ -66,15 +74,6 @@ namespace BackEnd
 		public void Pause()
 		{
 			End();
-		}
-
-		public void Restart()
-		{
-			if (!InProgress)
-			{
-				StartTime = DateTime.UtcNow;
-				InProgress = true;
-			}
 		}
 
 		virtual public void End()
