@@ -8,7 +8,7 @@ using MongoDB.Driver.Linq;
 
 namespace BackEnd
 {
-	public class Statistics : Database
+	public partial class Database
 	{
 		async internal static Task<List<string>> GetFinishedIDsAfterTime(DateTime time)
 		{

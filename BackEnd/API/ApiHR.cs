@@ -16,7 +16,7 @@ namespace BackEnd
 		/// <returns>List of IDs</returns>
 		async public static Task<List<string>> GetFinishedIDsAfterTime(DateTime time)
 		{
-			return await Statistics.GetFinishedIDsAfterTime(time);
+			return await Database.GetFinishedIDsAfterTime(time);
 		}
 		/// <summary>
 		/// This method finds the last ID of the CandidateEntity that ended the session before the given ID.
@@ -24,7 +24,7 @@ namespace BackEnd
 		/// <returns>ID if there exists one</returns>
 		async public static Task<string> GetPreviousFinishedID(string ID)
 		{
-			return await Statistics.GetPreviousFinishedID(ID);
+			return await Database.GetPreviousFinishedID(ID);
 		}
 		/// <summary>
 		/// This method finds the first ID of the CandidateEntity that ended the session after the given ID.
@@ -32,11 +32,11 @@ namespace BackEnd
 		/// <returns>ID if there exists one</returns>
 		async public static Task<string> GetNextFinishedID(string ID)
 		{
-			return await Statistics.GetNextFinishedID(ID);
+			return await Database.GetNextFinishedID(ID);
 		}
 		async public static Task<string> GetLastFinishedID()
 		{
-			return await Statistics.GetLastFinishedID();
+			return await Database.GetLastFinishedID();
 		}
 		/// <summary>
 		/// Creates a dictionary consisting of all statistics of a candidate.
