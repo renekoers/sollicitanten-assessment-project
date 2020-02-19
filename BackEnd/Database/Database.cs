@@ -7,7 +7,7 @@ using MongoDB.Driver;
 
 namespace BackEnd
 {
-	public class Database
+	public partial class Database
 	{
 
 		private protected static DB MongoDB = new DB(MongoClientSettings.FromConnectionString(
