@@ -89,13 +89,6 @@ namespace BackEnd
 		{
 			return await Database.IsCandidateStillActive(ID);
 		}
-		///<summary>
-		/// Makes a tutorial session.
-		/// </summary>
-		public static void StartTutorialSession()
-		{
-			Repository.CreateTutorialSession();
-		}
 
 		/// <summary>
 		/// Begin a new level session.
@@ -105,11 +98,6 @@ namespace BackEnd
 		/// <returns></returns>
 		async public static Task<IState> StartLevelSession(string ID, int levelNumber)
 		{
-			GameSession gameSession = GetSession(ID);
-			LevelSession levelSession = new LevelSession(levelNumber);
-			gameSession.AddLevel(levelSession);
-			Repository.UpdateSession(ID, gameSession);
-
 			return (await Session.StartLevel(ID, levelNumber)) ? new State(new Puzzle(Level.Get(levelNumber))) : null;
 		}
 
@@ -136,14 +124,6 @@ namespace BackEnd
 			levelSession.Pause();
 			Repository.UpdateSession(ID, gameSession);
 		}
-		public static IState ContinueLevelSession(string ID, int levelNumber)
-		{
-			GameSession gameSession = GetSession(ID);
-			LevelSession levelSession = gameSession.GetSession(levelNumber);
-			levelSession.Restart();
-			Repository.UpdateSession(ID, gameSession);
-			return new State(new Puzzle(Level.Get(levelNumber)));
-		}
 
 		public static void EndLevelSession(string ID, int levelNumber)
 		{
@@ -166,11 +146,6 @@ namespace BackEnd
 			{
 				return false;
 			}
-		}
-		public static bool LevelHasBeenStarted(string ID, int levelNumber)
-		{
-			GameSession gameSession = GetSession(ID);
-			return gameSession.GetSession(levelNumber) != null;
 		}
 		public static bool LevelIsSolved(string ID, int levelNumber)
 		{

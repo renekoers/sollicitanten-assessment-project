@@ -44,19 +44,6 @@ namespace BackEnd
 			InProgress = true;
 			TotalDuration = 0;
 		}
-
-		public void AddLevel(LevelSession levelSession)
-		{
-			if (InProgress)
-			{
-				LevelSessions.Add(levelSession.LevelNumber, levelSession);
-			}
-			else
-			{
-				throw new InvalidOperationException("Game session has already ended.");
-			}
-		}
-
 		public LevelSession GetSession(int levelNumber)
 		{
 			return LevelSessions.TryGetValue(levelNumber, out LevelSession session) ? session : null;
