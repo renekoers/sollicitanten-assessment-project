@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace BackEnd
 {
@@ -20,8 +21,25 @@ namespace BackEnd
 			this._statements = statements;
 			this._tempStatements = new List<Statement>();
 		}
+        // public void Test(){
+		// 	if(_isTrue){
+		// 		return;
+		// 	}
+        //     Object[] input = new Object[]{_parameter,_value,false, _statements};
+        //     Type type = this.GetType();
+        //     String typeAsString = type.ToString();
+        //     Type type1 = Type.GetType(typeAsString);
+        //     While S = (While) Activator.CreateInstance(type1,input);
+		// 	System.Console.WriteLine("NEEEEEEEWWWW.......... ");
+		// 	System.Console.WriteLine("Type: " + S.GetType().ToString());
+		// 	System.Console.WriteLine("Parameter: " + S._parameter.ToString());
+		// 	System.Console.WriteLine("Value: " + S._value.ToString());
+		// 	System.Console.WriteLine("IsTrue: " + S._isTrue.ToString());
+		// 	System.Console.WriteLine("Number of lines: " + S._statements.GetLines());
+        // }
 		internal override List<State> ExecuteCommand(Puzzle puzzle)
 		{
+			Test();
 			List<State> states = new List<State>();
 			List<State> oldStates = new List<State>();
 			State newState = null;
