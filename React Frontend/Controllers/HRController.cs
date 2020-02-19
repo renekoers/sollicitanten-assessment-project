@@ -46,6 +46,9 @@ namespace React_Frontend.Controllers
 		[HttpPost("candidate")]
 		async public Task<StatusCodeResult> AddCandidate([FromBody] string name)
 		{
+			if(name == "" || name == null){
+				return UnprocessableEntity();
+			}
 			if (await Api.AddCandidate(name))
 			{
 				return Ok();
