@@ -26,49 +26,23 @@ namespace BackEnd
 		}
 		async public static Task<bool> StartSession(string ID)
 		{
-			return await Repository.StartSession(ID);
+			return await Database.StartSession(ID);
 		}
 		async public static Task<bool> EndSession(string ID)
 		{
-			if (await Database.EndSession(ID))
-			{
-				GameSession gameSession = GetSession(ID);
-				gameSession.End();
-				Repository.UpdateSession(ID, gameSession);
-				return true;
-			}
-			else
-			{
-				return false;
-			}
+			return await Database.EndSession(ID);
 		}
         /// Level session methods.
-		public static IState StartLevelSession(string ID, int levelNumber)
+		async public static Task<IState> StartLevelSession(string ID, int levelNumber)
 		{
-			GameSession gameSession = GetSession(ID);
-			LevelSession levelSession = new LevelSession(levelNumber);
-			gameSession.AddLevel(levelSession);
-			Repository.UpdateSession(ID, gameSession);
-
-			return new State(new Puzzle(Level.Get(levelNumber)));
+			return (await Session.StartLevel(ID, levelNumber)) ? new State(new Puzzle(Level.Get(levelNumber))) : null;
 		}
-        
-		public static void PauseLevelSession(string ID, int levelNumber)
+		async public static Task<bool> StopLevelSession(string ID, int levelNumber)
 		{
-			GameSession gameSession = GetSession(ID);
-			LevelSession levelSession = gameSession.GetSession(levelNumber);
-			levelSession.Pause();
-			Repository.UpdateSession(ID, gameSession);
-		}
-		public static IState ContinueLevelSession(string ID, int levelNumber)
-		{
-			GameSession gameSession = GetSession(ID);
-			LevelSession levelSession = gameSession.GetSession(levelNumber);
-			levelSession.Restart();
-			Repository.UpdateSession(ID, gameSession);
-			return new State(new Puzzle(Level.Get(levelNumber)));
+			return await Session.StopLevel(ID, levelNumber);
 		}
 
+		[Obsolete("Remove function after mock data is fixed!!")]
 		public static void EndLevelSession(string ID, int levelNumber)
 		{
 			GameSession gameSession = GetSession(ID);
@@ -77,11 +51,6 @@ namespace BackEnd
 			Repository.UpdateSession(ID, gameSession);
 		}
         /// Check property of session methods.
-		public static bool LevelHasBeenStarted(string ID, int levelNumber)
-		{
-			GameSession gameSession = GetSession(ID);
-			return gameSession.GetSession(levelNumber) != null;
-		}
 		public static bool LevelIsSolved(string ID, int levelNumber)
 		{
 			GameSession gameSession = GetSession(ID);
@@ -95,6 +64,7 @@ namespace BackEnd
         /// Submit a solution methods.
 		public static IEnumerable<Statement> ParseStatementTreeJson(System.Text.Json.JsonElement statementTreeJson)
 	   => StatementParser.ParseStatementTreeJson(statementTreeJson);
+	   
 		/// <summary>
 		/// Submit a new solution attempt
 		/// </summary>
