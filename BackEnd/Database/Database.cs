@@ -10,22 +10,27 @@ namespace BackEnd
 {
 	public class Database
 	{
-		private protected static DB GetDatabase()
-		{
-			return new DB(MongoClientSettings.FromConnectionString(
+
+		private protected static DB MongoDB = new DB(MongoClientSettings.FromConnectionString(
 		"mongodb+srv://sylveon-client:development@sylveon-xf66r.azure.mongodb.net/test?retryWrites=true&w=majority"),
 		"sylveon");
-		}
+
+		// private protected static DB GetDatabase()
+		// {
+		// 	return new DB(MongoClientSettings.FromConnectionString(
+		// "mongodb+srv://sylveon-client:development@sylveon-xf66r.azure.mongodb.net/test?retryWrites=true&w=majority"),
+		// "sylveon");
+		// }
 
 		async internal static Task<string> AddNewCandidate(string name)
 		{
 			CandidateEntity candidate = new CandidateEntity(name);
-			await GetDatabase().SaveAsync(candidate);
+			await MongoDB.SaveAsync(candidate);
 			return candidate.ID;
 		}
 		async internal static Task<CandidateEntity> GetCandidate()
 		{
-			List<CandidateEntity> unstartedCandidates = await DB.Find<CandidateEntity>()
+			List<CandidateEntity> unstartedCandidates = await MongoDB.Find<CandidateEntity>()
 				.Match(candidate => candidate.started == new DateTime())
 				.Limit(1)
 				.ExecuteAsync();
@@ -34,18 +39,18 @@ namespace BackEnd
 
 		async internal static Task<CandidateEntity> GetCandidate(string ID)
 		{
-			CandidateEntity candidate = await DB.Find<CandidateEntity>().OneAsync(ID);
+			CandidateEntity candidate = await MongoDB.Find<CandidateEntity>().OneAsync(ID);
 			return candidate;
 		}
 		async internal static Task<IEnumerable<CandidateEntity>> GetAllUnstartedCandidate()
 		{
-			return (await GetDatabase().Find<CandidateEntity>()
+			return (await MongoDB.Find<CandidateEntity>()
 			.ManyAsync(a => a.started == new DateTime())).ToList();
 		}
 
 		async internal static Task<bool> HasCandidateNotYetStarted(string ID)
 		{
-			CandidateEntity candidate = await GetDatabase().Find<CandidateEntity>().OneAsync(ID);
+			CandidateEntity candidate = await MongoDB.Find<CandidateEntity>().OneAsync(ID);
 			if (candidate != null && candidate.started == new DateTime() && candidate.finished == new DateTime())
 			{
 				return true;
@@ -58,8 +63,8 @@ namespace BackEnd
 
 		async internal static Task<bool> IsCandidateStillActive(string ID)
 		{
-			CandidateEntity candidate = await GetDatabase().Find<CandidateEntity>().OneAsync(ID);
-			if (candidate != null && candidate.started == new DateTime() && candidate.finished != new DateTime())
+			CandidateEntity candidate = await MongoDB.Find<CandidateEntity>().OneAsync(ID);
+			if (candidate != null && candidate.started != new DateTime() && candidate.finished == new DateTime())
 			{
 				return true;
 			}
@@ -76,21 +81,21 @@ namespace BackEnd
 		async internal static Task<bool> StartSession(string ID)
 		{
 			DateTime defaultTime = new DateTime();
-			await DB.Update<CandidateEntity>()
+			await MongoDB.Update<CandidateEntity>()
 				.Match(candidate => candidate.ID == ID && candidate.started == defaultTime)
 				.Modify(candidate => candidate.started, DateTime.UtcNow)
 				.ExecuteAsync();
-			CandidateEntity foundCandidate = await DB.Find<CandidateEntity>().OneAsync(ID);
+			CandidateEntity foundCandidate = await MongoDB.Find<CandidateEntity>().OneAsync(ID);
 			return foundCandidate != null && foundCandidate.started > defaultTime;
 		}
 		async internal static Task<bool> EndSession(string ID)
 		{
 			DateTime defaultTime = new DateTime();
-			await DB.Update<CandidateEntity>()
+			await MongoDB.Update<CandidateEntity>()
 				.Match(candidate => candidate.ID == ID && candidate.started > defaultTime && candidate.finished == defaultTime)
 				.Modify(candidate => candidate.finished, DateTime.UtcNow)
 				.ExecuteAsync();
-			CandidateEntity foundCandidate = await DB.Find<CandidateEntity>().OneAsync(ID);
+			CandidateEntity foundCandidate = await MongoDB.Find<CandidateEntity>().OneAsync(ID);
 			return foundCandidate != null && foundCandidate.finished > defaultTime;
 		}
 	}

@@ -33,8 +33,10 @@ export const Overview = () => {
 				"Content-Type": "application/json",
 				Authorization: localStorage.getItem("sessionID")
 			}
-		})
-			.then(response => setFinished(response.status === 200));
+		}).then(response => {
+			setFinished(response.status === 200);
+			if (response.status === 200) localStorage.removeItem("sessionID");
+		});
 	};
 
 	const redirectToAnalysationPage = () => {
