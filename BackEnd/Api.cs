@@ -95,14 +95,14 @@ namespace BackEnd
 		/// <param name="ID"></param>
 		/// <param name="levelNumber"></param>
 		/// <returns></returns>
-		public static IState StartLevelSession(string ID, int levelNumber)
+		async public static Task<IState> StartLevelSession(string ID, int levelNumber)
 		{
 			GameSession gameSession = GetSession(ID);
 			LevelSession levelSession = new LevelSession(levelNumber);
 			gameSession.AddLevel(levelSession);
 			Repository.UpdateSession(ID, gameSession);
 
-			return new State(new Puzzle(Level.Get(levelNumber)));
+			return (await Session.StartLevel(ID, levelNumber)) ? new State(new Puzzle(Level.Get(levelNumber))) : null;
 		}
 
 		/// <summary>

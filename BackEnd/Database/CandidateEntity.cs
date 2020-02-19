@@ -24,5 +24,9 @@ namespace BackEnd
 			}
 			return GameResults;
 		}
+		internal LevelSession GetLevelSession(int levelNumber)
+		{
+			return (levelNumber>0 && levelNumber-1 <= GameResults.Length) ? GameResults[levelNumber-1] : null;
+		}
 	}
 }

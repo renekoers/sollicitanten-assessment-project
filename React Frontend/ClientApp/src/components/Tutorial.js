@@ -32,18 +32,6 @@ export const Tutorial = () => {
 			.then(data => {
 				setLevel(data);
 			});
-
-		await fetch("api/session/levelIsSolved/0", {
-			method: "GET",
-			headers: {
-				"Content-Type": "application/json",
-				Authorization: tutorialSessionID
-			}
-		})
-			.then(response => response.json())
-			.then(data => {
-				setSolved(data);
-			});
 	};
 
 	const onReceiveTutorialStatementTree = async statementTree => {

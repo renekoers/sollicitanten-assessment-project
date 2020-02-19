@@ -24,6 +24,18 @@ namespace BackEnd
         {
             LevelNumber = levelNumber;
         }
+        public void Start()
+        {
+			if (!InProgress)
+			{
+				StartTime = DateTime.UtcNow;
+				InProgress = true;
+			}
+        }
+
+
+
+        /// Old stuff, needs to check what is needed!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         private long CurrentDuration()
         {
 				if (InProgress)

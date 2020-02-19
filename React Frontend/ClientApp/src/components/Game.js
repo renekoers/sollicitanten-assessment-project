@@ -23,7 +23,15 @@ export const Game = props => {
 			getLevel(1);
 		}
 	}, []);
-
+    function status(response){
+        return new Promise(function(resolve, reject){
+            if(response.status === 200){
+                resolve(response.json())
+            } else {
+                reject(response)
+            }
+        })
+	}
 	const getTotalLevelAmount = async () => {
 		await fetch("api/session/totalAmountLevels")
 			.then(response => response.json())
@@ -40,7 +48,7 @@ export const Game = props => {
 				Authorization: localStorage.getItem("sessionID")
 			}
 		})
-			.then(response => response.json())
+			.then(status)
 			.then(data => {
 				setLevel(data);
 				setLevelNumber(data.puzzleLevel);
