@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import LevelGrid from "./game-grid/LevelGrid";
 import { SkipButton } from "./SkipButton";
 import SylveonBlocks from "../blockly/SylveonBlocks";
+import { Redirect } from "react-router-dom";
 
 export const Game = props => {
 	let _currentStateTimeoutID = null;
@@ -15,6 +16,7 @@ export const Game = props => {
 	const [levelNumber, setLevelNumber] = useState(1);
 	const [totalLevels, setTotalLevels] = useState(0);
 	const [areStatementsRunning, setAreStatementsRunning] = useState(false);
+	const [isGamesessionFinished, setIsGamesessionFinished] = useState(false);
 
 	useEffect(() => {
 		getTotalLevelAmount();
@@ -149,9 +151,24 @@ export const Game = props => {
 		return levelGrid;
 	};
 
+	const redirectToEndPage = () => {
+		if (isGamesessionFinished) {
+			localStorage.removeItem("sessionID");
+			return <Redirect to="/results" />;
+		}
+	};
+
+	const sessionIsOverCallback = isSessionOver => {
+		setIsGamesessionFinished(isSessionOver);
+	};
+
 	return (
 		<div>
-			<Header hasTimer={true} />
+			{redirectToEndPage()}
+			<Header
+				hasTimer={true}
+				sessionIsOverCallback={sessionIsOverCallback.bind(this)}
+			/>
 			<div>
 				<div style={{ width: "50%", float: "left" }}>
 					<Statement
