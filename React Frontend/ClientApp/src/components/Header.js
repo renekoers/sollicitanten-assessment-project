@@ -10,18 +10,24 @@ export const Header = props => {
 	const timerTickDelay = 1000;
 	const timerBackendSyncDelay = 10000;
 
-	const sessionIsOver = props.sessionIsOverCallback;
+	const sessionIsOver = (input) => {if(props.hasTimer){props.sessionIsOverCallback(input)}};
 
 	useInterval(() => {
-		tickTimer();
+		if(props.hasTimer){
+			tickTimer();
+		}
 	}, timerTickDelay);
 
 	useInterval(() => {
-		getRemainingTime();
+		if(props.hasTimer){
+			getRemainingTime();
+		}
 	}, timerBackendSyncDelay);
 
 	useEffect(() => {
-		getRemainingTime();
+		if(props.hasTimer){
+			getRemainingTime();
+		}
 	}, []);
 
 	const timer = () => {
