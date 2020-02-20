@@ -86,6 +86,10 @@ namespace BackEnd
 					return ParseIfElseStatementJson(statementElement);
 				case "while":
 					return ParseWhileStatementJson(statementElement);
+				case "equals":
+					return null;
+				case "not_equals":
+					return null;
 				default:
 					throw new JsonException($"Invalid flow action \"{statementAction}\".");
 			}

@@ -95,7 +95,16 @@ namespace React_Frontend.Controllers
 			{
 				return BadRequest();
 			}
-			return Math.Max(0, 1200000L - session.CurrentDuration); //20 minutes in milliseconds
+			long remainingTime = Math.Max(0, 1200000L - session.CurrentDuration);
+			if (remainingTime > 0)
+			{
+				return remainingTime;
+			}
+			else
+			{
+				return new StatusCodeResult(410);
+			}
+
 		}
 	}
 }
