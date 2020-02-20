@@ -20,17 +20,12 @@ namespace BackEnd
             {
                 states.AddRange(_statements.ExecuteCommand(puzzle));
 				newState = states.Count>0 ? states[states.Count - 1] : null;
-				if (oldStates.Contains(newState) || newState==null)
+				if (newState == null || oldStates.Contains(newState) || _statements.IsInfiniteLoop)
                 {
                     this.IsInfiniteLoop = true;
                     return states;
                 }
                 oldStates.Add(newState);
-                if(_statements.IsInfiniteLoop)
-                {
-                    this.IsInfiniteLoop = true;
-                    return states;
-                }
             } while (puzzle.Character.CheckCondition(_parameter, _value) == _isTrue);
             return states;
         }

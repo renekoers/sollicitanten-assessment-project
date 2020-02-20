@@ -5,13 +5,11 @@ namespace BackEnd
 {
 	public class While : ConditionalStatement
 	{
-		private List<Statement> _tempStatements;
 		public While(ConditionParameter parameter, ConditionValue value, bool isTrue, Statement[] statements)
 			: this(parameter, value, isTrue, new StatementBlock(statements)) { }
 		public While(ConditionParameter parameter, ConditionValue value, bool isTrue, StatementBlock statements) : base(parameter, value, isTrue)
 		{
 			this._statements = statements;
-			this._tempStatements = new List<Statement>();
             this.Code = statements._statements;
 		}
         // public void Test(){
@@ -39,17 +37,12 @@ namespace BackEnd
 			{
 				states.AddRange(_statements.ExecuteCommand(puzzle));
 				newState = states.Count>0 ? states[states.Count - 1] : null;
-				if (oldStates.Contains(newState) || newState==null)
+				if (newState == null || oldStates.Contains(newState) || _statements.IsInfiniteLoop)
 				{
 					this.IsInfiniteLoop = true;
 					return states;
 				}
 				oldStates.Add(newState);
-				if (_statements.IsInfiniteLoop)
-				{
-					this.IsInfiniteLoop = true;
-					return states;
-				}
 				if (states.Count >= MaxStates)
 				{
 					return states;
@@ -61,11 +54,6 @@ namespace BackEnd
 		internal override int GetLines()
 		{
 			return 1 + _statements.GetLines();
-		}
-
-		private void ConvertStatements()
-		{
-			this._statements = new StatementBlock(this._tempStatements.ToArray());
 		}
 	}
 }

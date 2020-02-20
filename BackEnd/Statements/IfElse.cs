@@ -4,10 +4,6 @@ namespace BackEnd
 {
     public class IfElse : ConditionalStatement
     {
-
-        private List<Statement> _tempTrue;
-
-        private List<Statement> _tempFalse;
         private  StatementBlock _statementsTrue;
         private  StatementBlock _statementsFalse;
         public IfElse(ConditionParameter parameter, ConditionValue value, bool isTrue, Statement[] statementsTrue)
@@ -19,8 +15,6 @@ namespace BackEnd
         {
             this._statementsTrue = statementsTrue;
             this._statementsFalse = statementsFalse;
-            this._tempFalse = new List<Statement>();
-            this._tempTrue = new List<Statement>();
             List<Statement> totalStatements = new List<Statement>(statementsTrue._statements);
             totalStatements.Add(new Else(statementsFalse));
             this.Code = totalStatements.ToArray();
@@ -52,10 +46,6 @@ namespace BackEnd
             return 1 + _statementsTrue.GetLines() + _statementsFalse.GetLines();
         }
 
-        public void ConvertStatementBlock(){
-            this._statementsFalse = new StatementBlock(this._tempFalse.ToArray());
-            this._statementsTrue = new StatementBlock(this._tempTrue.ToArray());
-        }
         internal class Else : Statement
         {
             private StatementBlock _statementsFalse;
