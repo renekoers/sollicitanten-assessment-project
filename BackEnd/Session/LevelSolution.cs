@@ -11,19 +11,18 @@ namespace BackEnd
     {
         [Ignore]
         public int LevelNumber { get; private set; }
-        public StatementBlock Code;
+        public Statement[] Code;
         public long Duration {get; private set;}
         public bool Solved { get; private set; }
-        public int Lines => Code.GetLines();
+        public int Lines => new StatementBlock(Code).GetLines();
+        public bool IsInfiteLoop;
         [Ignore]
         public List<IState> States { get; private set; }
         public int NumberOfStates => States.Count;
 
         public LevelSolution(int number, Statement[] statements)
-            : this(number, new StatementBlock(statements)) { }
-        public LevelSolution(int number, StatementBlock statements)
             : this(number, statements, 0){}
-        public LevelSolution(int number, StatementBlock statements, long duration)
+        public LevelSolution(int number, Statement[] statements, long duration)
         {
             LevelNumber = number;
             Code = statements;
@@ -31,8 +30,10 @@ namespace BackEnd
             Puzzle puzzle = new Puzzle(Level.Get(number));
             States = new List<IState>();
             States.Add(new State(puzzle));
-            States.AddRange(Code.ExecuteCommand(puzzle));
+            StatementBlock blockCode = new StatementBlock(statements);
+            States.AddRange(blockCode.ExecuteCommand(puzzle));
             Solved = puzzle.Finished;
+            IsInfiteLoop = blockCode.IsInfiniteLoop;
         }
     }
 }

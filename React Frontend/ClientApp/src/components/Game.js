@@ -79,8 +79,10 @@ export const Game = props => {
 		});
 	};
 	const nextLevel = async () => {
-		if (levelNumber !== totalLevels) {
+		if (levelNumber <= totalLevels) {
 			await pauseLevel();
+		}
+		if(levelNumber !== totalLevels){
 			getLevel(level.puzzleLevel + 1);
 		}
 	};

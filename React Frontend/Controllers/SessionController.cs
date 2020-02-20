@@ -74,10 +74,11 @@ namespace React_Frontend.Controllers
 
 		}
 		[HttpGet("getOverview")]
-		public string GetOverview()
+		async public Task<string> GetOverview()
 		{
 			string sessionID = Request.Headers["Authorization"];
-			return JSON.Serialize(Api.GetOverview(sessionID));
+			Overview overview = await Api.GetOverview(sessionID);
+			return JSON.Serialize(overview);
 		}
 
 		/// <summary>

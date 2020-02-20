@@ -71,7 +71,7 @@ namespace BackEnd
 				.ExecuteAsync();
 			// Checks if the candidate with the given ID exists and is started.
 			CandidateEntity foundCandidate = await GetCandidate(ID);
-			return foundCandidate != null && foundCandidate.started > defaultTime;
+			return foundCandidate != null && foundCandidate.started > defaultTime && foundCandidate.GameResults != null;
 		}
 		async internal static Task<bool> EndSession(string ID)
 		{

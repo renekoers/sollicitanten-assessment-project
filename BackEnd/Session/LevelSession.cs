@@ -49,7 +49,7 @@ namespace BackEnd
         {
             if (InProgress)
             {
-                LevelSolution solution = new LevelSolution(LevelNumber, new StatementBlock(statements), CurrentDuration);
+                LevelSolution solution = new LevelSolution(LevelNumber, statements, CurrentDuration);
                 Solutions.Add(solution);
                 Solved = Solved || solution.Solved;
                 return solution;

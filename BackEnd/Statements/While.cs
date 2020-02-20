@@ -5,21 +5,14 @@ namespace BackEnd
 {
 	public class While : ConditionalStatement
 	{
-		private readonly ConditionParameter _parameter;
-		private readonly ConditionValue _value;
-		private readonly bool _isTrue;
-		private StatementBlock _statements;
-
 		private List<Statement> _tempStatements;
 		public While(ConditionParameter parameter, ConditionValue value, bool isTrue, Statement[] statements)
 			: this(parameter, value, isTrue, new StatementBlock(statements)) { }
-		public While(ConditionParameter parameter, ConditionValue value, bool isTrue, StatementBlock statements)
+		public While(ConditionParameter parameter, ConditionValue value, bool isTrue, StatementBlock statements) : base(parameter, value, isTrue)
 		{
-			this._parameter = parameter;
-			this._value = value;
-			this._isTrue = isTrue;
 			this._statements = statements;
 			this._tempStatements = new List<Statement>();
+            this.Code = statements._statements;
 		}
         // public void Test(){
 		// 	if(_isTrue){
@@ -39,7 +32,6 @@ namespace BackEnd
         // }
 		internal override List<State> ExecuteCommand(Puzzle puzzle)
 		{
-			Test();
 			List<State> states = new List<State>();
 			List<State> oldStates = new List<State>();
 			State newState = null;

@@ -4,18 +4,12 @@ namespace BackEnd
 {
     public class DoWhile : ConditionalStatement
     {
-        private readonly ConditionParameter _parameter;
-        private readonly ConditionValue _value;
-        private readonly bool _isTrue;
-        private readonly StatementBlock _statements;
         public DoWhile(ConditionParameter parameter, ConditionValue value, bool isTrue, Statement[] statements)
             : this(parameter, value, isTrue, new StatementBlock(statements)) { }
-        public DoWhile(ConditionParameter parameter, ConditionValue value, bool isTrue, StatementBlock statements)
+        public DoWhile(ConditionParameter parameter, ConditionValue value, bool isTrue, StatementBlock statements) : base(parameter, value, isTrue)
         {
-            this._parameter = parameter;
-            this._value = value;
-            this._isTrue = isTrue;
             this._statements = statements;
+            this.Code = statements._statements;
         }
         internal override List<State> ExecuteCommand(Puzzle puzzle)
         {
