@@ -16,6 +16,7 @@ namespace BackEnd
             List<State> states = new List<State>();
             foreach (Statement statement in _statements)
             {
+                if (statement == null) continue;
                 states.AddRange(statement.ExecuteCommand(puzzle));
                 if(statement.IsInfiniteLoop)
                 {
@@ -31,6 +32,7 @@ namespace BackEnd
             int lines = 0;
             foreach (Statement statement in _statements)
             {
+                if (statement == null) continue;
                 lines += statement.GetLines();
             }
             return lines;
