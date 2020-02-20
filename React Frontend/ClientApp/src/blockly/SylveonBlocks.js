@@ -42,7 +42,7 @@ class SylveonBlocks
             const object = block.getFieldValue("flow_statement_object");
             const objectState = block.getFieldValue("flow_statement_object_state");
 
-            return "{\"inverse\":false,\"targetObject\":\""
+            return "{\"type\":\"flow\",\"action\":\"equals\",\"inverse\":false,\"targetObject\":\""
                 + object
                 + "\",\"targetState\":\""
                 + objectState
@@ -52,7 +52,7 @@ class SylveonBlocks
             const object = block.getFieldValue("flow_statement_object");
             const objectState = block.getFieldValue("flow_statement_object_state");
 
-            return "{\"inverse\":true,\"targetObject\":\""
+            return "{\"type\":\"flow\",\"action\":\"not_equals\",\"inverse\":true,\"targetObject\":\""
                 + object
                 + "\",\"targetState\":\""
                 + objectState
@@ -80,7 +80,7 @@ class SylveonBlocks
     static workspaceToJson(workspace)
     {
         if(workspace.getTopBlocks().length === 1)
-            return "[" + Blockly.JavaScript.workspaceToCode(workspace) + "]";
+            return "[" + (Blockly.JavaScript.workspaceToCode(workspace).replace(";","").replace("\n","")) + "]";
         else
             return "null";
     }
