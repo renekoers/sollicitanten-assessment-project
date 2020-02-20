@@ -24,7 +24,7 @@ export class SkipButton extends Component {
         }
         let nextButton;
         if(this.props.lastLevel){
-            nextButton = <Link to={'/overview'}> <button className={"skipButton"} onClick={ this.nextButtonClicked }> Overview</button></Link>;
+            nextButton = <Link to={'/overview'}> <button disabled={running} className={running?classNames:"skipButton"} onClick={ this.nextButtonClicked }> Overview</button></Link>;
         } else {
             nextButton = <button disabled={running} className={(this.props.lastLevel||running)?classNames:"skipButton"} onClick={ this.nextButtonClicked }> Next level</button>;
         }
