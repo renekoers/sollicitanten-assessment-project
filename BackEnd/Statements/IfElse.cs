@@ -48,10 +48,9 @@ namespace BackEnd
 
         internal class Else : Statement
         {
-            private StatementBlock _statementsFalse;
             internal Else(StatementBlock statementsFalse)
             {
-                this._statementsFalse = statementsFalse;
+                this.Code = statementsFalse._statements;
             }
             internal override List<State> ExecuteCommand(Puzzle puzzle)
             {

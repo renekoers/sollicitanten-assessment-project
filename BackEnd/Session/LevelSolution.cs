@@ -14,7 +14,7 @@ namespace BackEnd
         public Statement[] Code;
         public long Duration {get; private set;}
         public bool Solved { get; private set; }
-        public int Lines => new StatementBlock(Code).GetLines();
+        public int Lines;
         public bool IsInfiteLoop;
         [Ignore]
         public List<IState> States { get; private set; }
@@ -33,6 +33,7 @@ namespace BackEnd
             StatementBlock blockCode = new StatementBlock(statements);
             States.AddRange(blockCode.ExecuteCommand(puzzle));
             Solved = puzzle.Finished;
+            Lines = blockCode.GetLines();
             IsInfiteLoop = blockCode.IsInfiniteLoop;
         }
     }
