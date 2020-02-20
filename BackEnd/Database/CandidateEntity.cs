@@ -10,7 +10,7 @@ namespace BackEnd
 		public string Name { get; protected set; }
 		public DateTime started { get; protected set; }
 		public DateTime finished { get; protected set; }
-		public GameSession GameResults { get; set; }
+		public Object GameResults { get; set; }
 
 		public CandidateEntity(string name)
 		{

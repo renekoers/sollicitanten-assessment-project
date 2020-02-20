@@ -6,11 +6,11 @@ import {
 	Form,
 	FormGroup,
 	Label,
-	Input,
-	Spinner
+	Input
 } from "reactstrap";
 import { Redirect } from "react-router-dom";
 import "../css/StartingPage.css";
+import { Loadingscreen } from "./Loadingscreen";
 
 export const StartingPage = () => {
 	const [isTutorialSessionStarted, setTutorialSessionStatus] = useState(
@@ -88,9 +88,7 @@ export const StartingPage = () => {
 
 	const getCandidateName = async () => {
 		let candidateName;
-		await fetch(
-			"api/candidate/" + localStorage.getItem("sessionID")
-		)
+		await fetch("api/candidate/" + localStorage.getItem("sessionID"))
 			.then(checkStatus)
 			.then(data => {
 				candidateName = data.name;
@@ -111,7 +109,7 @@ export const StartingPage = () => {
 
 	const isSessionIDValid = async () => {
 		let sessionExists;
-		await fetch("api/session/sessionIDEligibleation", {
+		await fetch("api/session/sessionIDValidation", {
 			method: "GET",
 			headers: {
 				"Content-Type": "application/json",
@@ -256,15 +254,7 @@ export const StartingPage = () => {
 	} else {
 		return (
 			<div>
-				{"Loading...    "}
-				<Spinner
-					style={{
-						width: "1rem",
-						height: "1rem"
-					}}
-					// type="grow"
-					color="success"
-				/>
+				<Loadingscreen />
 			</div>
 		);
 	}
