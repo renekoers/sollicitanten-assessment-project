@@ -33,14 +33,10 @@ namespace BackEnd
 		{
 			return await Database.HasCandidateNotYetStarted(ID);
 		}
-		public static bool IsStarted(string ID)
+		async public static Task<bool> IsStarted(string ID)
 		{
-			GameSession gameSession = Api.GetSession(ID);
-			if (gameSession == null)
-			{
-				return false;
-			}
-			return gameSession.InProgress;
+			CandidateEntity candidate = await Database.GetCandidate(ID);
+			return candidate != null && candidate.started > new DateTime();
 		}
 		///<summary>
 		/// Returns true if candidate still has an active session available.
