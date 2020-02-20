@@ -78,5 +78,17 @@ namespace BackEnd
 			LevelSession[] levelSessions = await Database.GetAllLevelSessions(ID);
 			return new Overview(levelSessions);
 		}
+		async public static Task<TimeSpan> GetRemainingTime(string ID)
+		{
+			CandidateEntity candidate = await Database.GetCandidate(ID);
+			if(candidate == null || candidate.started == new DateTime() || candidate.finished != new DateTime())
+			{
+				return TimeSpan.Zero;
+			}
+			TimeSpan duration = DateTime.UtcNow - candidate.started;
+			TimeSpan maxTime = new TimeSpan(0,20,0);
+			return duration < maxTime ? maxTime-duration : TimeSpan.Zero; 
+
+		}
     }
 }

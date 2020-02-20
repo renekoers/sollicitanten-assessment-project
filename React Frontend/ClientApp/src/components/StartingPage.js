@@ -56,7 +56,6 @@ export const StartingPage = () => {
 		fetch("api/candidate/getUnstartedCandidates")
 			.then(response => response.json())
 			.then(data => {
-				console.log(data);
 				setAvailableCandidates(data);
 				let candidateOptions = data.map((candidate, index) => {
 					return (
@@ -174,10 +173,7 @@ export const StartingPage = () => {
 	const handleCandidateSelection = () => {
 		localStorage.setItem("sessionID", dropdownValue);
 		const selectedCandidateName = availableCandidates.map(candidate => {
-			console.log("Dropdown:" + dropdownValue);
-			console.log("Candidate:" + candidate);
 			if (candidate.id === dropdownValue) {
-				console.log("Got value:" + dropdownValue);
 				return candidate.name;
 			}
 		});
@@ -226,7 +222,6 @@ export const StartingPage = () => {
 									name="select"
 									id="candidateSelect"
 									onChange={e => {
-										console.log(e.target.value);
 										setDropdownValue(e.target.value);
 									}}
 									value={dropdownValue}

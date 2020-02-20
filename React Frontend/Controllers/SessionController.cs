@@ -87,18 +87,13 @@ namespace React_Frontend.Controllers
 		/// <param name="ID"> Session ID</param>
 		/// <returns> Remaining time in milliseconds</returns>
 		[HttpGet("remainingTime")]
-		public ActionResult<long> GetRemainingTime()
+		async public Task<ActionResult<long>> GetRemainingTime()
 		{
 			string sessionID = Request.Headers["Authorization"];
-			GameSession session = Api.GetSession(sessionID);
-			if (session == null)
+			TimeSpan remainingTime = await Api.GetRemainingTime(sessionID);
+			if(remainingTime != TimeSpan.Zero)
 			{
-				return BadRequest();
-			}
-			long remainingTime = Math.Max(0, 1200000L - session.CurrentDuration);
-			if (remainingTime > 0)
-			{
-				return remainingTime;
+				return (long) Math.Floor(remainingTime.TotalMilliseconds);
 			}
 			else
 			{
