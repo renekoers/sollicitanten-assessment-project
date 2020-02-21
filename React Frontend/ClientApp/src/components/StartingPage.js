@@ -30,6 +30,40 @@ export const StartingPage = () => {
 	const [availableCandidates, setAvailableCandidates] = useState(null);
 
 	useEffect(() => {
+		const renderCandidateWelcomePage = () => {
+			setIsEligibleCandidateAvailable(true);
+			setIsNoCandidateChosen(false);
+		};
+
+		const renderChooseCandidatePage = () => {
+			getAllUnstartedCandidates();
+			setIsNoCandidateChosen(true);
+			setIsEligibleCandidateAvailable(false);
+		};
+
+		const isExistingSessionIDEligible = async () => {
+			const sessionID = localStorage.getItem("sessionID");
+			if (await hasCandidateNotYetStarted(sessionID)) {
+				setName(await getCandidateName(sessionID));
+				return true;
+			} else if (await isCandidateStillActive(sessionID)) {
+				setSessionStatus(true);
+			} else {
+				localStorage.removeItem("sessionID");
+				return false;
+			}
+		};
+
+		const getCandidateName = async () => {
+			let candidateName;
+			await fetch("api/candidate/" + localStorage.getItem("sessionID"))
+				.then(checkStatus)
+				.then(data => {
+					candidateName = data.name;
+				});
+			return candidateName;
+		};
+
 		if (IsSessionIdAvailable()) {
 			if (isExistingSessionIDEligible()) {
 				renderCandidateWelcomePage();
@@ -40,17 +74,6 @@ export const StartingPage = () => {
 			renderChooseCandidatePage();
 		}
 	}, []);
-
-	const renderCandidateWelcomePage = () => {
-		setIsEligibleCandidateAvailable(true);
-		setIsNoCandidateChosen(false);
-	};
-
-	const renderChooseCandidatePage = () => {
-		getAllUnstartedCandidates();
-		setIsNoCandidateChosen(true);
-		setIsEligibleCandidateAvailable(false);
-	};
 
 	const getAllUnstartedCandidates = () => {
 		fetch("api/candidate/getUnstartedCandidates")
@@ -72,29 +95,6 @@ export const StartingPage = () => {
 		setTutorialSessionStatus(true);
 	};
 
-	const isExistingSessionIDEligible = async () => {
-		const sessionID = localStorage.getItem("sessionID");
-		if (await hasCandidateNotYetStarted(sessionID)) {
-			setName(await getCandidateName(sessionID));
-			return true;
-		} else if (await isCandidateStillActive(sessionID)) {
-			setSessionStatus(true);
-		} else {
-			localStorage.removeItem("sessionID");
-			return false;
-		}
-	};
-
-	const getCandidateName = async () => {
-		let candidateName;
-		await fetch("api/candidate/" + localStorage.getItem("sessionID"))
-			.then(checkStatus)
-			.then(data => {
-				candidateName = data.name;
-			});
-		return candidateName;
-	};
-
 	const IsSessionIdAvailable = () => {
 		const id = localStorage.getItem("sessionID");
 		return id !== null;
@@ -106,21 +106,21 @@ export const StartingPage = () => {
 		}
 	};
 
-	const isSessionIDValid = async () => {
-		let sessionExists;
-		await fetch("api/session/sessionIDValidation", {
-			method: "GET",
-			headers: {
-				"Content-Type": "application/json",
-				Authorization: localStorage.getItem("sessionID")
-			}
-		})
-			.then(response => response.json())
-			.then(data => {
-				sessionExists = data;
-			});
-		return sessionExists;
-	};
+	// const isSessionIDValid = async () => {
+	// 	let sessionExists;
+	// 	await fetch("api/session/sessionIDValidation", {
+	// 		method: "GET",
+	// 		headers: {
+	// 			"Content-Type": "application/json",
+	// 			Authorization: localStorage.getItem("sessionID")
+	// 		}
+	// 	})
+	// 		.then(response => response.json())
+	// 		.then(data => {
+	// 			sessionExists = data;
+	// 		});
+	// 	return sessionExists;
+	// };
 
 	const hasCandidateNotYetStarted = async () => {
 		let hasNotYetStarted;
@@ -173,9 +173,11 @@ export const StartingPage = () => {
 	const handleCandidateSelection = () => {
 		localStorage.setItem("sessionID", dropdownValue);
 		const selectedCandidateName = availableCandidates.map(candidate => {
+			let name = "";
 			if (candidate.id === dropdownValue) {
-				return candidate.name;
+				name = candidate.name;
 			}
+			return name;
 		});
 		setName(selectedCandidateName);
 		setIsEligibleCandidateAvailable(true);

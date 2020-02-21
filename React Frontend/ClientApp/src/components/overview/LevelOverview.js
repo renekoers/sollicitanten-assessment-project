@@ -16,7 +16,12 @@ export function LevelOverview(props) {
 			setNumberOfLines(props.info.lines);
 			setPar(props.info.par);
 		}
-	}, []);
+	}, [
+		props.info.levelNumber,
+		props.info.lines,
+		props.info.solved,
+		props.info.par
+	]);
 	let levelIcon;
 	if (solved) {
 		levelIcon = solvedIcon;
@@ -30,9 +35,13 @@ export function LevelOverview(props) {
 				className="textLevelOverview"
 			>
 				{levelNumber}:
-				{solved ? "Solved in " + numberOfLines + " lines. Par is " + par + "."
-				: "Not solved"
-				}
+				{solved
+					? "Solved in " +
+					  numberOfLines +
+					  " lines. Par is " +
+					  par +
+					  "."
+					: "Not solved"}
 				<img
 					className="levelIcon"
 					src={levelIcon}

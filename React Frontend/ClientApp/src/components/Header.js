@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect, useRef } from "react";
+﻿import React, { useState, useEffect, useCallback } from "react";
 import { Timer } from "./Timer";
 import "../css/Header.css";
 import { useInterval } from "../hooks/useInterval";
@@ -10,55 +10,16 @@ export const Header = props => {
 	const timerTickDelay = 1000;
 	const timerBackendSyncDelay = 10000;
 
-	const sessionIsOver = (input) => {if(props.hasTimer){props.sessionIsOverCallback(input)}};
+	const sessionIsOver = useCallback(
+		input => {
+			if (props.hasTimer) {
+				props.sessionIsOverCallback(input);
+			}
+		},
+		[props]
+	);
 
-	useInterval(() => {
-		if(props.hasTimer){
-			tickTimer();
-		}
-	}, timerTickDelay);
-
-	useInterval(() => {
-		if(props.hasTimer){
-			getRemainingTime();
-		}
-	}, timerBackendSyncDelay);
-
-	useEffect(() => {
-		if(props.hasTimer){
-			getRemainingTime();
-		}
-	}, []);
-
-	const timer = () => {
-		if (props.hasTimer && millisecondsRemaining !== NaN) {
-			return <Timer minutes={minutes} seconds={seconds} key="timer" />;
-		}
-		return;
-	};
-
-	const tickTimer = async () => {
-		if (millisecondsRemaining <= 0) {
-			setTime("00", "00", 0);
-			return;
-		}
-
-		let minutes = Math.floor(millisecondsRemaining / 60000);
-		let seconds = Math.floor(millisecondsRemaining / 1000) % 60;
-
-		if (minutes < 10) minutes = "0" + minutes;
-		if (seconds < 10) seconds = "0" + seconds;
-
-		setTime(minutes, seconds, millisecondsRemaining);
-	};
-
-	const setTime = (minutes, seconds, millisecondsRemaining) => {
-		setMinutes(minutes);
-		setSeconds(seconds);
-		setMillisecondsRemaining(millisecondsRemaining - 1000);
-	};
-
-	const getRemainingTime = async () => {
+	const getRemainingTime = useCallback(async () => {
 		const id = localStorage.getItem("sessionID");
 		await fetch("api/session/remainingTime", {
 			method: "GET",
@@ -85,6 +46,52 @@ export const Header = props => {
 					});
 				}
 			});
+	}, [setMillisecondsRemaining, sessionIsOver]);
+
+	useInterval(() => {
+		if (props.hasTimer) {
+			tickTimer();
+		}
+	}, timerTickDelay);
+
+	useInterval(() => {
+		if (props.hasTimer) {
+			getRemainingTime();
+		}
+	}, timerBackendSyncDelay);
+
+	useEffect(() => {
+		if (props.hasTimer) {
+			getRemainingTime();
+		}
+	}, [getRemainingTime, props.hasTimer]);
+
+	const timer = () => {
+		if (props.hasTimer && !isNaN(millisecondsRemaining)) {
+			return <Timer minutes={minutes} seconds={seconds} key="timer" />;
+		}
+		return;
+	};
+
+	const tickTimer = async () => {
+		if (millisecondsRemaining <= 0) {
+			setTime("00", "00", 0);
+			return;
+		}
+
+		let minutes = Math.floor(millisecondsRemaining / 60000);
+		let seconds = Math.floor(millisecondsRemaining / 1000) % 60;
+
+		if (minutes < 10) minutes = "0" + minutes;
+		if (seconds < 10) seconds = "0" + seconds;
+
+		setTime(minutes, seconds, millisecondsRemaining);
+	};
+
+	const setTime = (minutes, seconds, millisecondsRemaining) => {
+		setMinutes(minutes);
+		setSeconds(seconds);
+		setMillisecondsRemaining(millisecondsRemaining - 1000);
 	};
 
 	const status = response => {

@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { Redirect, Link } from "react-router-dom";
 import { AddCandidate } from "./AddCandidate";
 import { Results } from "./Results";
+import { useInterval } from "../../hooks/useInterval";
 import "../../css/HR.css";
 
 export function MainPage() {
@@ -11,68 +12,26 @@ export function MainPage() {
 	const [newFinishedIDs, setNewFinishedIds] = useState([]);
 	const [atResults, setAtResults] = useState(false);
 	const [lastID, setLastID] = useState(0);
-	useEffect(() => {
-		if(localStorage.getItem("token") !== token){
-			setToken(localStorage.getItem("token"));
-		}
-	},[localStorage.getItem("token")])
+	const NewIDCheckFrequency = 20000;
 
-	useEffect(() => {
-		async function validate(){
-			await fetch("api/HR/validate", {
-				method: "GET",
-				headers: {
-					"Content-Type": "application/json",
-					Authorization: token
-				}
-			})
-			.then(response => {
-				if(response.status===200){
-					setIsValid(true)
-				} else {
-					setIsValid(false)
-					setToken(null)
-				}
-			})
-		}
-		if(token !== null){
-			validate();
-		} else {
-			setIsValid(false)
-		}
-	},[token]);
-	useEffect(() => getNewFinished(),[])
-
-    useEffect(() => {
-        document.querySelector("#loginerror").innerHTML = " ";
-		document.querySelector(".popupButton").style["display"] = "none";
-	},[token])
-	
-	async function getLastID(){
+	const getLastID = useCallback(async () => {
 		await fetch("api/statistics/lastFinished", {
 			method: "GET",
 			headers: {
 				"Content-Type": "application/json",
 				Authorization: token
 			}
-		})
-		.then(async response => {
-			if(response.status===200){
-				setLastID(await response.text())
+		}).then(async response => {
+			if (response.status === 200) {
+				setLastID(await response.text());
 			}
-		})
-	}
-	
-	useEffect(() => {
-		const id = setInterval(() => getNewFinished(), 20000);
-		return () => clearInterval(id);
-	},[lastCheck])
+		});
+	}, [setLastID, token]);
 
-	
-	async function getNewFinished(){
+	const getNewFinished = useCallback(async () => {
 		let time = "";
-		if(lastCheck!==null){
-			time = "?time=" + lastCheck
+		if (lastCheck !== null) {
+			time = "?time=" + lastCheck;
 		}
 		await fetch("api/statistics/newFinished" + time, {
 			method: "GET",
@@ -81,89 +40,148 @@ export function MainPage() {
 				Authorization: localStorage.getItem("token")
 			}
 		})
-		.then(status)
-		.then(data => {
-			if(data.iDs.length>0){
-				var arrayID = newFinishedIDs;
-				data.iDs.forEach(id => {
-					arrayID.push(id);
-				});
-				setNewFinishedIds(arrayID);
-			}
-			setLastCheck(data.time)
-		})
-		.catch(async(error) => {
-			if(error.status === 404){
-				setLastCheck(await error.text())
-			}
-		})
+			.then(status)
+			.then(data => {
+				if (data.iDs.length > 0) {
+					var arrayID = newFinishedIDs;
+					data.iDs.forEach(id => {
+						arrayID.push(id);
+					});
+					setNewFinishedIds(arrayID);
+				}
+				setLastCheck(data.time);
+			})
+			.catch(async error => {
+				if (error.status === 404) {
+					setLastCheck(await error.text());
+				}
+			});
 		await getLastID();
-	}	
-    function status(response){
-        return new Promise(function(resolve, reject){
-            if(response.status === 200){
-                resolve(response.json())
-            } else {
-                reject(response)
-            }
-        })
-	}
-	function removeIDFromNewFinishedIDs(id){
+	}, [setNewFinishedIds, setLastCheck, getLastID, lastCheck, newFinishedIDs]);
+
+	useEffect(() => {
+		getNewFinished();
+	}, [getNewFinished]);
+
+	useEffect(() => {
+		const storedToken = localStorage.getItem("token");
+		if (storedToken !== token) {
+			setToken(storedToken);
+		}
+	}, [token]);
+
+	useEffect(() => {
+		const validate = async () => {
+			await fetch("api/HR/validate", {
+				method: "GET",
+				headers: {
+					"Content-Type": "application/json",
+					Authorization: token
+				}
+			}).then(response => {
+				if (response.status === 200) {
+					setIsValid(true);
+				} else {
+					setIsValid(false);
+					setToken(null);
+				}
+			});
+		};
+		token !== null ? validate() : setIsValid(false);
+	}, [token, setIsValid]);
+
+	useEffect(() => {
+		document.querySelector("#loginerror").innerHTML = " ";
+		document.querySelector(".popupButton").style["display"] = "none";
+	}, [token]);
+
+	useInterval(async () => {
+		await getNewFinished();
+	}, NewIDCheckFrequency);
+
+	const status = response => {
+		return new Promise(function(resolve, reject) {
+			if (response.status === 200) {
+				resolve(response.json());
+			} else {
+				reject(response);
+			}
+		});
+	};
+
+	const removeIDFromNewFinishedIDs = id => {
 		let arrayIDs = newFinishedIDs;
 		const index = arrayIDs.indexOf(id);
 		if (index > -1) {
 			arrayIDs.splice(index, 1);
 		}
-		setNewFinishedIds(arrayIDs)
-	}
-	
-	function toLogin(error){
+		setNewFinishedIds(arrayIDs);
+	};
+
+	const toLogin = error => {
 		document.querySelector("#loginerror").innerHTML = "Oeps! " + error;
 		document.querySelector(".popupButton").style["display"] = "unset";
-	}
-	function changePage(){
+	};
+	const changePage = () => {
 		document.querySelector("#loginerror").innerHTML = " ";
 		document.querySelector(".popupButton").style["display"] = "none";
 		setAtResults(!atResults);
-	}
-	function getPage(){
-		if(isValid){
-			if(atResults){
-				let id=lastID;
-				if(newFinishedIDs.length>0){
-					id=newFinishedIDs[0];
+	};
+	const getPage = () => {
+		if (isValid) {
+			if (atResults) {
+				let id = lastID;
+				if (newFinishedIDs.length > 0) {
+					id = newFinishedIDs[0];
 				}
 				return (
 					<div>
-						<button className="upperButton" onClick={changePage}>Voeg kandidaat toe</button>
-						<Results onInvalidSession={toLogin} id={id} lastID={lastID} onSeen={removeIDFromNewFinishedIDs}/>
+						<button className="upperButton" onClick={changePage}>
+							Voeg kandidaat toe
+						</button>
+						<Results
+							onInvalidSession={toLogin}
+							id={id}
+							lastID={lastID}
+							onSeen={removeIDFromNewFinishedIDs}
+						/>
 					</div>
 				);
 			} else {
 				return (
 					<div>
-						{newResults()}<button className="upperButton" onClick={changePage}>Naar resultaten </button>
-						<AddCandidate onInvalidSession={toLogin}/>
+						{newResults()}
+						<button className="upperButton" onClick={changePage}>
+							Naar resultaten{" "}
+						</button>
+						<AddCandidate onInvalidSession={toLogin} />
 					</div>
 				);
 			}
 		}
-	}
-	function newResults(){
-		if(isValid){
-			if(newFinishedIDs.length>0){
-				return <div className="badge">{newFinishedIDs.length}</div>
+	};
+
+	const newResults = () => {
+		if (isValid) {
+			if (newFinishedIDs.length > 0) {
+				return <div className="badge">{newFinishedIDs.length}</div>;
 			} else {
-				return <div/>
+				return <div />;
 			}
 		}
-	}
+	};
 	return (
 		<div>
-			{ getPage()}
-			<div className="error" id="loginerror"> </div>
-			<Link to="HR/login" className="popupButton"><button id="loginbutton">Naar login</button></Link>
-			{!isValid && isValid!==null && token===null &&<Redirect to="/HR/login"/>}
+			{getPage()}
+			<div className="error" id="loginerror">
+				{" "}
+			</div>
+			<Link to="HR/login" className="popupButton">
+				<button id="loginbutton">Naar login</button>
+			</Link>
+			{!isValid && isValid !== null && token === null && (
+				<Redirect to="/HR/login" />
+			)}
 		</div>
 	);
-};
+}
