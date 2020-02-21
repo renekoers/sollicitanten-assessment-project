@@ -5,6 +5,7 @@ import LevelGrid from "./game-grid/LevelGrid";
 import { SkipButton } from "./SkipButton";
 import SylveonBlocks from "../blockly/SylveonBlocks";
 import { Redirect } from "react-router-dom";
+import { StopRunningStatementsButton } from "./StopRunningStatementsButton";
 
 export const Game = props => {
 	let _currentStateTimeoutID = null;
@@ -98,6 +99,10 @@ export const Game = props => {
 			getLevel(level.puzzleLevel - 1);
 		}
 	};
+
+	const stopRunningStatements = async () => {
+
+	}
 
 	const onReceiveStatementTree = async statementTree => {
 		setAreStatementsRunning(true);
@@ -198,6 +203,13 @@ export const Game = props => {
 						disabledPrevious={levelNumber === 1}
 						lastLevel={levelNumber === totalLevels}
 						running={areStatementsRunning}
+					/>
+				</div>
+				<div style={{ width: "50%", float: "right" }}>
+
+					<StopRunningStatementsButton
+						running={areStatementsRunning}
+						stopRunningStatements={stopRunningStatements.bind(this)}
 					/>
 				</div>
 			</div>
