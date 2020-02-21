@@ -9,16 +9,6 @@ namespace BackEnd
 {
 	public partial class Database
 	{
-		/// <summary>
-		/// Checks if a session is valid.
-		/// </summary>
-		/// <param name="candidate"></param>
-		/// <returns>Returns true if the candidate is not null, candidate is started but not finished.!-- MUST INSERT CHECK TIME LATER!!!!!!!!</returns>
-		private static bool SessionIsValid(CandidateEntity candidate)
-		{
-			DateTime defaultTime = new DateTime();
-			return candidate != null && candidate.started > defaultTime && candidate.finished == defaultTime;
-		}
 		/// Get properties of a certain session
 		async internal static Task<LevelSession> GetLevelSession(string ID, int levelNumber)
 		{
@@ -41,7 +31,7 @@ namespace BackEnd
 		async internal static Task<bool> StartLevel(string ID, int levelNumber)
 		{
 			CandidateEntity candidate = await GetCandidate(ID);
-			if(!SessionIsValid(candidate) || candidate.GameResults == null){
+			if(candidate != null && candidate.HasTimeLeft() || candidate.GameResults == null){
 				return false;
 			}
 			LevelSession levelSession = candidate.GetLevelSession(levelNumber);
@@ -57,7 +47,7 @@ namespace BackEnd
 		async internal static Task<bool> StopLevel(string ID, int levelNumber)
 		{
 			CandidateEntity candidate = await GetCandidate(ID);
-			if(!SessionIsValid(candidate) || candidate.GameResults == null){
+			if(candidate != null && candidate.GameResults == null){
 				return false;
 			}
 			LevelSession levelSession = candidate.GetLevelSession(levelNumber);
@@ -74,7 +64,7 @@ namespace BackEnd
 		async internal static Task<LevelSolution> SubmitSolution(string ID, int levelNumber, Statement[] statements)
 		{
 			CandidateEntity candidate = await GetCandidate(ID);
-			if(!SessionIsValid(candidate) || candidate.GameResults == null){
+			if(candidate != null && candidate.HasTimeLeft() || candidate.GameResults == null){
 				return null;
 			}
 			LevelSession levelSession = candidate.GetLevelSession(levelNumber);

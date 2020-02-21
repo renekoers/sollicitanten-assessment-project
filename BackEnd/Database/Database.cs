@@ -48,14 +48,14 @@ namespace BackEnd
 		{
 			CandidateEntity candidate = await GetCandidate(ID);
 			// Checks if candidate exists && candidate is not started && candidate is not finished.
-			return candidate != null && candidate.started == new DateTime() && candidate.finished == new DateTime();
+			return candidate != null && !candidate.IsStarted() && !candidate.IsFinished();
 		}
 
 		async internal static Task<bool> IsCandidateStillActive(string ID)
 		{
 			CandidateEntity candidate = await GetCandidate(ID);
 			// Checks if candidate exists && candidate is started && candidate is not finished.
-			return candidate != null && candidate.started != new DateTime() && candidate.finished == new DateTime();
+			return candidate != null && candidate.IsStarted() && !candidate.IsFinished();
 		}
 		[Obsolete]
 		/// This function checks if a candidate is started instead of unstarted. This method is the same as HasCandidateNotYetStarted
@@ -63,30 +63,28 @@ namespace BackEnd
 		{
 			CandidateEntity candidate = await GetCandidate(ID);
 			// Checks if candidate exists && candidate is started
-			return candidate != null && candidate.started > new DateTime();
+			return candidate != null && !candidate.IsStarted();
 		}
 		async internal static Task<bool> StartSession(string ID)
 		{
-			DateTime defaultTime = new DateTime();
 			await MongoDB.Update<CandidateEntity>()
-				.Match(candidate => candidate.ID == ID && candidate.started == defaultTime)
+				.Match(candidate => candidate.ID == ID && !candidate.IsStarted())
 				.Modify(candidate => candidate.started, DateTime.UtcNow)
 				.Modify(candidate => candidate.GameResults, CandidateEntity.newGameResults())
 				.ExecuteAsync();
 			// Checks if the candidate with the given ID exists and is started.
 			CandidateEntity foundCandidate = await GetCandidate(ID);
-			return foundCandidate != null && foundCandidate.started > defaultTime && foundCandidate.GameResults != null;
+			return foundCandidate != null && foundCandidate.IsStarted() && foundCandidate.GameResults != null;
 		}
 		async internal static Task<bool> EndSession(string ID)
 		{
-			DateTime defaultTime = new DateTime();
 			await MongoDB.Update<CandidateEntity>()
-				.Match(candidate => candidate.ID == ID && candidate.started > defaultTime && candidate.finished == defaultTime)
+				.Match(candidate => candidate.ID == ID && candidate.IsStarted() && !candidate.IsFinished())
 				.Modify(candidate => candidate.finished, DateTime.UtcNow)
 				.ExecuteAsync();
 			// Checks if the candidate with the given ID exists and is finished.
 			CandidateEntity foundCandidate = await GetCandidate(ID);
-			return foundCandidate != null && foundCandidate.finished > defaultTime;
+			return foundCandidate != null && foundCandidate.IsFinished();
 		}
 	}
 }
