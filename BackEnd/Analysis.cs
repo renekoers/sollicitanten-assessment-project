@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 namespace BackEnd
 {
+    [Obsolete]
 	public class Analysis
 	{
 		public int LinesOfCode
