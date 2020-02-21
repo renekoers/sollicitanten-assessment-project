@@ -11,7 +11,8 @@ namespace BackEnd
 		{
 			this._statements = statements;
             this.Code = statements._statements;
-		}		internal override List<State> ExecuteCommand(Puzzle puzzle)
+		}
+		internal override List<State> ExecuteCommand(Puzzle puzzle)
 		{
 			List<State> states = new List<State>();
 			List<State> oldStates = new List<State>();
