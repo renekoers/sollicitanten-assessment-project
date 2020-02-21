@@ -12,6 +12,8 @@ namespace BackEnd
         [Ignore]
         public int LevelNumber { get; private set; }
         public Statement[] Code;
+        [Ignore]
+        public StatementBlock CodeBlock;
         public long Duration {get; private set;}
         public bool Solved { get; private set; }
         public int Lines;
@@ -25,16 +27,28 @@ namespace BackEnd
         public LevelSolution(int number, Statement[] statements, long duration)
         {
             LevelNumber = number;
+            CodeBlock = new StatementBlock(statements);
             Code = statements;
             Duration = duration;
             Puzzle puzzle = new Puzzle(Level.Get(number));
             States = new List<IState>();
             States.Add(new State(puzzle));
-            StatementBlock blockCode = new StatementBlock(statements);
-            States.AddRange(blockCode.ExecuteCommand(puzzle));
+            States.AddRange(CodeBlock.ExecuteCommand(puzzle));
             Solved = puzzle.Finished;
-            Lines = blockCode.GetLines();
-            IsInfiteLoop = blockCode.IsInfiniteLoop;
+            Lines = CodeBlock.GetLines();
+            IsInfiteLoop = CodeBlock.IsInfiniteLoop;
+        }
+        public void ConvertCodeToOriginalTypes()
+        {
+            if(CodeBlock==null)
+            {
+                List<Statement> codeAsList = new List<Statement>();
+                foreach(Statement statement in Code)
+                {
+                    codeAsList.Add(statement.GetStatementAsOriginalType());
+                }
+                CodeBlock = new StatementBlock(codeAsList.ToArray());
+            }
         }
     }
 }
