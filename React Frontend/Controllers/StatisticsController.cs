@@ -68,21 +68,21 @@ namespace React_Frontend.Controllers
 			}
 		}
 		[HttpGet("candidate")]
-		public string GetDataCandidate(string ID)
+		async public Task<string> GetDataCandidate(string ID)
 		{
-			Dictionary<int, Dictionary<string, int>> data = Api.StatisticsCandidate(ID);
+			Dictionary<int, Dictionary<string, int>> data = await Api.StatisticsCandidate(ID);
 			return JSON.Serialize(data);
 		}
 		[HttpGet("tally")]
-		public string GetDataTally()
+		async public Task<string> GetDataTally()
 		{
-			Dictionary<int, Dictionary<string, Dictionary<int, int>>> data = Api.StatisticsEveryone();
+			Dictionary<int, Dictionary<string, Dictionary<int, int>>> data = await Api.StatisticsEveryone();
 			return JSON.Serialize(data);
 		}
 		[HttpGet("unsolved")]
-		public string GetDataUnsolved()
+		async public Task<string> GetDataUnsolved()
 		{
-			Dictionary<int, int> amountUnsolvedPerLevel = Api.NumberOfCandidatesNotSolvedPerLevel();
+			Dictionary<int, int> amountUnsolvedPerLevel = await Api.NumberOfCandidatesNotSolvedPerLevel();
 			return JSON.Serialize(amountUnsolvedPerLevel);
 		}
 	}
