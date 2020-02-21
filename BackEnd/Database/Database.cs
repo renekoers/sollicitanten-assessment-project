@@ -32,6 +32,10 @@ namespace BackEnd
 
 		async internal static Task<CandidateEntity> GetCandidate(string ID)
 		{
+			if(ID == null)
+			{
+				return null;
+			}
 			return await MongoDB.Find<CandidateEntity>().OneAsync(ID);
 		}
 		async internal static Task<IEnumerable<CandidateEntity>> GetAllUnstartedCandidate()
