@@ -4,7 +4,7 @@ namespace BackEnd
 {
     public class StatementBlock : Statement
     {
-        private readonly Statement[] _statements;
+        public readonly Statement[] _statements;
 
         public StatementBlock(Statement[] statements)
         {

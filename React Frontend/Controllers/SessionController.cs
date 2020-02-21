@@ -25,33 +25,37 @@ namespace React_Frontend.Controllers
 		}
 
 		[HttpGet("levelIsSolved/{levelNumber}")]
-		public bool IsSolved(string levelNumber)
+		async public Task<bool> IsSolved(string levelNumber)
 		{
 			int level = int.Parse(levelNumber);
 			string sessionID = Request.Headers["Authorization"];
-			return Api.LevelIsSolved(sessionID, level);
+			return await Api.LevelIsSolved(sessionID, level);
 		}
 		[HttpGet("retrieveLevel/{levelNumber}")]
-		public string GetLevel(string levelNumber)
+		async public Task<ActionResult<string>> GetLevel(string levelNumber)
 		{
 			int level = int.Parse(levelNumber);
 			string sessionID = Request.Headers["Authorization"];
-			if (Api.LevelHasBeenStarted(sessionID, level))
+			IState levelState = await Api.StartLevelSession(sessionID, level);
+			if(levelState != null)
 			{
-				return JSON.Serialize(Api.ContinueLevelSession(sessionID, level));
-			}
-			else
+				return JSON.Serialize(levelState);
+			} else 
 			{
-				return JSON.Serialize(Api.StartLevelSession(sessionID, level));
+				return BadRequest();
 			}
 		}
 		[HttpPost("pauseLevel")]
-		public StatusCodeResult PauseLevel([FromBody]object levelNumber)
+		async public Task<ActionResult> PauseLevel([FromBody]object levelNumber)
 		{
 			int level = int.Parse(levelNumber.ToString());
 			string sessionID = Request.Headers["Authorization"];
-			Api.PauseLevelSession(sessionID, level);
-			return Ok();
+			if(await Api.StopLevelSession(sessionID,level))
+			{
+				return Ok();
+			} else {
+				return BadRequest();
+			}
 		}
 		[HttpGet("totalAmountLevels")]
 		public int GetTotalAmountLevels()
@@ -70,10 +74,11 @@ namespace React_Frontend.Controllers
 
 		}
 		[HttpGet("getOverview")]
-		public string GetOverview()
+		async public Task<string> GetOverview()
 		{
 			string sessionID = Request.Headers["Authorization"];
-			return JSON.Serialize(Api.GetOverview(sessionID));
+			Overview overview = await Api.GetOverview(sessionID);
+			return JSON.Serialize(overview);
 		}
 
 		/// <summary>

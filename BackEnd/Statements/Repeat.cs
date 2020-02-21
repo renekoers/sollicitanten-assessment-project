@@ -13,6 +13,7 @@ namespace BackEnd
         {
             _amount = amount;
             _statements = statements;
+            this.Command = amount.ToString();
         }
         internal override List<State> ExecuteCommand(Puzzle puzzle)
         {
