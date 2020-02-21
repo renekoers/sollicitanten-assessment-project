@@ -6,11 +6,6 @@ namespace BackEnd
 {
 	public partial class Api
 	{
-		/// <summary>
-		/// Obtain the session from a CandidateEntity. This session should at some point be stopped, and can be used to check the duration etc.
-		/// </summary>
-		/// <param name="ID"></param>
-		/// <returns></returns>
 		public static GameSession GetSession(string ID)
 		{
 			return Repository.GetSession(ID);
@@ -26,49 +21,23 @@ namespace BackEnd
 		}
 		async public static Task<bool> StartSession(string ID)
 		{
-			return await Repository.StartSession(ID);
+			return await Database.StartSession(ID);
 		}
 		async public static Task<bool> EndSession(string ID)
 		{
-			if (await Database.EndSession(ID))
-			{
-				GameSession gameSession = GetSession(ID);
-				gameSession.End();
-				Repository.UpdateSession(ID, gameSession);
-				return true;
-			}
-			else
-			{
-				return false;
-			}
+			return await Database.EndSession(ID);
 		}
         /// Level session methods.
-		public static IState StartLevelSession(string ID, int levelNumber)
+		async public static Task<IState> StartLevelSession(string ID, int levelNumber)
 		{
-			GameSession gameSession = GetSession(ID);
-			LevelSession levelSession = new LevelSession(levelNumber);
-			gameSession.AddLevel(levelSession);
-			Repository.UpdateSession(ID, gameSession);
-
-			return new State(new Puzzle(Level.Get(levelNumber)));
+			return (await Database.StartLevel(ID, levelNumber)) ? new State(new Puzzle(Level.Get(levelNumber))) : null;
 		}
-        
-		public static void PauseLevelSession(string ID, int levelNumber)
+		async public static Task<bool> StopLevelSession(string ID, int levelNumber)
 		{
-			GameSession gameSession = GetSession(ID);
-			LevelSession levelSession = gameSession.GetSession(levelNumber);
-			levelSession.Pause();
-			Repository.UpdateSession(ID, gameSession);
-		}
-		public static IState ContinueLevelSession(string ID, int levelNumber)
-		{
-			GameSession gameSession = GetSession(ID);
-			LevelSession levelSession = gameSession.GetSession(levelNumber);
-			levelSession.Restart();
-			Repository.UpdateSession(ID, gameSession);
-			return new State(new Puzzle(Level.Get(levelNumber)));
+			return await Database.StopLevel(ID, levelNumber);
 		}
 
+		[Obsolete("Remove function after mock data is fixed!!")]
 		public static void EndLevelSession(string ID, int levelNumber)
 		{
 			GameSession gameSession = GetSession(ID);
@@ -77,24 +46,15 @@ namespace BackEnd
 			Repository.UpdateSession(ID, gameSession);
 		}
         /// Check property of session methods.
-		public static bool LevelHasBeenStarted(string ID, int levelNumber)
+		async public static Task<bool> LevelIsSolved(string ID, int levelNumber)
 		{
-			GameSession gameSession = GetSession(ID);
-			return gameSession.GetSession(levelNumber) != null;
-		}
-		public static bool LevelIsSolved(string ID, int levelNumber)
-		{
-			GameSession gameSession = GetSession(ID);
-			LevelSession levelSession = gameSession.GetSession(levelNumber);
-			if (levelSession == null)
-			{
-				return false;
-			}
-			return levelSession.Solved;
+			LevelSession levelSession = await Database.GetLevelSession(ID, levelNumber);
+			return levelSession != null && levelSession.Solved;
 		}
         /// Submit a solution methods.
 		public static IEnumerable<Statement> ParseStatementTreeJson(System.Text.Json.JsonElement statementTreeJson)
 	   => StatementParser.ParseStatementTreeJson(statementTreeJson);
+	   
 		/// <summary>
 		/// Submit a new solution attempt
 		/// </summary>
@@ -102,13 +62,9 @@ namespace BackEnd
 		/// <param name="levelNumber"></param>
 		/// <param name="statements"></param>
 		/// <returns>A LevelSolution object which contains amongst other things a list of IState objects and whether the level was solved or not</returns>
-		public static LevelSolution SubmitSolution(string ID, int levelNumber, Statement[] statements)
+		async public static Task<LevelSolution> SubmitSolution(string ID, int levelNumber, Statement[] statements)
 		{
-			GameSession gameSession = GetSession(ID);
-			LevelSession levelSession = gameSession.GetSession(levelNumber);
-			LevelSolution solution = levelSession.Attempt(statements);
-			Repository.UpdateSession(ID, gameSession);
-			return solution;
+			return await Database.SubmitSolution(ID,levelNumber,statements);
 		}
 
         /// Total methods.
@@ -117,9 +73,10 @@ namespace BackEnd
 			int totalLevels = Level.TotalLevels;
 			return totalLevels;
 		}
-		public static Overview GetOverview(string ID)
+		async public static Task<Overview> GetOverview(string ID)
 		{
-			return new Overview(GetSession(ID));
+			LevelSession[] levelSessions = await Database.GetAllLevelSessions(ID);
+			return new Overview(levelSessions);
 		}
 		async public static Task<TimeSpan> GetRemainingTime(string ID)
 		{

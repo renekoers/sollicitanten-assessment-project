@@ -50,10 +50,10 @@ namespace React_Frontend.Controllers
 			return await Api.IsUnstarted(sessionID);
 		}
 		[HttpGet("isStarted")]
-		public bool isStarted()
+		async public Task<bool> isStarted()
 		{
 			string sessionID = Request.Headers["Authorization"];
-			return Api.IsStarted(sessionID);
+			return await Api.IsStarted(sessionID);
 		}
 		[HttpGet("hasNotYetStarted")]
 		async public Task<bool> IsEligible()

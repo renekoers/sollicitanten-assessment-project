@@ -8,6 +8,7 @@ namespace BackEnd
         public SingleCommand(Command command)
         {
             this._command = command;
+            this.Command = command.ToString();
         }
 
         internal override List<State> ExecuteCommand(Puzzle puzzle)

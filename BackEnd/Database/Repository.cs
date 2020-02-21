@@ -28,18 +28,6 @@ namespace BackEnd
 			GameSessions.Add("1", new GameSession());
 			return ID;
 		}
-		async public static Task<bool> StartSession(string ID)
-		{
-			if (await Database.StartSession(ID))
-			{
-				GameSessions.Add(ID, new GameSession());
-				return true;
-			}
-			else
-			{
-				return false;
-			}
-		}
         /// <summary>
         /// Tallies a given function of a level session for the given level number over all sessions
         /// </summary>
@@ -101,18 +89,6 @@ namespace BackEnd
             }
             return amountUnsolved;
         }
-		public static void CreateTutorialSession()
-		{
-			if (!GameSessions.ContainsKey("0"))
-			{
-				GameSessions.Add("0", new GameSession());
-			}
-			else
-			{
-				GameSessions["0"] = new GameSession();
-			}
-
-		}
 
 		public static GameSession GetSession(string ID)
 		{

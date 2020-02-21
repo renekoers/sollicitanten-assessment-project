@@ -16,7 +16,7 @@ namespace BackEnd
 		}
 		public static LevelSolution SubmitSolutionTutorial(Statement[] statements)
 		{
-			return new LevelSolution(0, new StatementBlock(statements), 0);
+			return new LevelSolution(0, statements, 0);
 		}
 
 
