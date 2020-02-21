@@ -1,6 +1,6 @@
 ﻿import { Header } from "./Header";
 import { Statement } from "./Statement";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import LevelGrid from "./game-grid/LevelGrid";
 import { SkipButton } from "./SkipButton";
 import SylveonBlocks from "../blockly/SylveonBlocks";
@@ -18,6 +18,37 @@ export const Game = props => {
 	const [areStatementsRunning, setAreStatementsRunning] = useState(false);
 	const [isGamesessionFinished, setIsGamesessionFinished] = useState(false);
 
+	const getLevel = useCallback(
+		async level => {
+			await fetch("api/session/retrieveLevel/" + level, {
+				method: "GET",
+				headers: {
+					"Content-Type": "application/json",
+					Authorization: localStorage.getItem("sessionID")
+				}
+			})
+				.then(status)
+				.then(data => {
+					setLevel(data);
+					setLevelNumber(data.puzzleLevel);
+					SylveonBlocks.clearWorkspace();
+				});
+
+			await fetch("api/session/levelIsSolved/" + level, {
+				method: "GET",
+				headers: {
+					"Content-Type": "application/json",
+					Authorization: localStorage.getItem("sessionID")
+				}
+			})
+				.then(response => response.json())
+				.then(data => {
+					setSolved(data);
+				});
+		},
+		[setLevel, setLevelNumber, setSolved]
+	);
+
 	useEffect(() => {
 		getTotalLevelAmount();
 		if (props.match.params.level) {
@@ -25,15 +56,15 @@ export const Game = props => {
 		} else {
 			getLevel(1);
 		}
-	}, []);
-    function status(response){
-        return new Promise(function(resolve, reject){
-            if(response.status === 200){
-                resolve(response.json())
-            } else {
-                reject(response)
-            }
-        })
+	}, [getLevel, props.match.params.level]);
+	function status(response) {
+		return new Promise(function(resolve, reject) {
+			if (response.status === 200) {
+				resolve(response.json());
+			} else {
+				reject(response);
+			}
+		});
 	}
 	const getTotalLevelAmount = async () => {
 		await fetch("api/session/totalAmountLevels")
@@ -43,33 +74,6 @@ export const Game = props => {
 			});
 	};
 
-	const getLevel = async level => {
-		await fetch("api/session/retrieveLevel/" + level, {
-			method: "GET",
-			headers: {
-				"Content-Type": "application/json",
-				Authorization: localStorage.getItem("sessionID")
-			}
-		})
-			.then(status)
-			.then(data => {
-				setLevel(data);
-				setLevelNumber(data.puzzleLevel);
-				SylveonBlocks.clearWorkspace();
-			});
-
-		await fetch("api/session/levelIsSolved/" + level, {
-			method: "GET",
-			headers: {
-				"Content-Type": "application/json",
-				Authorization: localStorage.getItem("sessionID")
-			}
-		})
-			.then(response => response.json())
-			.then(data => {
-				setSolved(data);
-			});
-	};
 	const pauseLevel = async () => {
 		await fetch("api/session/pauseLevel", {
 			method: "POST",
@@ -84,7 +88,7 @@ export const Game = props => {
 		if (levelNumber <= totalLevels) {
 			await pauseLevel();
 		}
-		if(levelNumber !== totalLevels){
+		if (levelNumber !== totalLevels) {
 			getLevel(level.puzzleLevel + 1);
 		}
 	};

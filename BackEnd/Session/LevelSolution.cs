@@ -20,6 +20,7 @@ namespace BackEnd
         public bool IsInfiteLoop;
         [Ignore]
         public List<IState> States { get; private set; }
+        [Ignore]
         public int NumberOfStates => States.Count;
 
         public LevelSolution(int number, Statement[] statements)

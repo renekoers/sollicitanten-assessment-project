@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { Button, ButtonToolbar, ButtonGroup } from "reactstrap";
 import { Redirect } from "react-router-dom";
 import { Header } from "./Header";
@@ -16,20 +16,7 @@ export const Tutorial = () => {
 	const [isSolved, setSolved] = useState(false);
 	const [isLiveSessionStarted, setLiveSessionStarted] = useState(false);
 
-	useEffect(() => {
-		getTutorialLevel();
-	}, []);
-
-    function status(response){
-        return new Promise(function(resolve, reject){
-            if(response.status === 200){
-                resolve(response.json())
-            } else {
-                reject(response)
-            }
-        })
-	}
-	const getTutorialLevel = async () => {
+	const getTutorialLevel = useCallback(async () => {
 		await fetch("api/tutorial/retrieveLevel", {
 			method: "GET",
 			headers: {
@@ -41,7 +28,21 @@ export const Tutorial = () => {
 			.then(data => {
 				setLevel(data);
 			});
-	};
+	}, [tutorialSessionID, setLevel]);
+
+	useEffect(() => {
+		getTutorialLevel();
+	}, [getTutorialLevel]);
+
+	function status(response) {
+		return new Promise(function(resolve, reject) {
+			if (response.status === 200) {
+				resolve(response.json());
+			} else {
+				reject(response);
+			}
+		});
+	}
 
 	const onReceiveTutorialStatementTree = async statementTree => {
 		await fetch("api/tutorial/submitSolution", {
@@ -52,8 +53,8 @@ export const Tutorial = () => {
 			},
 			body: JSON.stringify(statementTree)
 		})
-		.then(status)
-		.then(updateGridFromLevelSolution)
+			.then(status)
+			.then(updateGridFromLevelSolution);
 	};
 
 	/**

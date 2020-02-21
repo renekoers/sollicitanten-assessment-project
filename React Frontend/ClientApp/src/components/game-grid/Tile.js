@@ -14,30 +14,29 @@ import movableImgPlayerLeft from "../../img/game-grid/movable-player-left.png";
 import movableImgPlayerUp from "../../img/game-grid/movable-player-up.png";
 
 export class Tile extends Component {
-
-	getTileImgFromStateString()
-	{
-		switch(this.props.tile.stateString)
-		{
+	getTileImgFromStateString() {
+		switch (this.props.tile.stateString) {
 			case "Empty":
 				return tileImgFloor;
 			case "Wall":
 				return tileImgWall;
 			case "Door":
-				return this.props.tile.isOpen ? tileImgDoorOpen : tileImgDoorClose;
+				return this.props.tile.isOpen
+					? tileImgDoorOpen
+					: tileImgDoorClose;
 			case "Button":
 				return tileImgButton;
 			case "End":
 				return tileImgFinish;
 			default:
-				throw new Error(`Tile state ${this.props.tile.stateString} is not recognized.`);
+				throw new Error(
+					`Tile state ${this.props.tile.stateString} is not recognized.`
+				);
 		}
 	}
 
-	getTopObjectImageFromMovableString()
-	{
-		switch(this.props.tile.movableString)
-		{
+	getTopObjectImageFromMovableString() {
+		switch (this.props.tile.movableString) {
 			case "Box":
 				return movableImgBox;
 			case "Character South":
@@ -48,37 +47,43 @@ export class Tile extends Component {
 				return movableImgPlayerLeft;
 			case "Character North":
 				return movableImgPlayerUp;
+			default:
+				return;
 		}
 	}
 
-	hasTopObject()
-	{
+	hasTopObject() {
 		return this.props.tile.movableString !== "None";
 	}
 
-	renderTopObject()
-	{
+	renderTopObject() {
 		return (
-			<div className="movable tile"
-				style={{ 
+			<div
+				className="movable tile"
+				style={{
 					position: "absolute",
-					backgroundImage: "url(" + this.getTopObjectImageFromMovableString() + ")" 
-					}}>
-			</div>
+					backgroundImage:
+						"url(" + this.getTopObjectImageFromMovableString() + ")"
+				}}
+			></div>
 		);
 	}
 
 	render() {
-		
 		let topObjectRender = null;
-		if(this.hasTopObject())
-			topObjectRender = this.renderTopObject();
+		if (this.hasTopObject()) topObjectRender = this.renderTopObject();
 
 		return (
-			<div className="tile"
-				style={{ backgroundImage: "url(" + this.getTileImgFromStateString() + ")" }}>
-					{topObjectRender}
-			</div>);
+			<div
+				className="tile"
+				style={{
+					backgroundImage:
+						"url(" + this.getTileImgFromStateString() + ")"
+				}}
+			>
+				{topObjectRender}
+			</div>
+		);
 	}
 }
 export default Tile;
