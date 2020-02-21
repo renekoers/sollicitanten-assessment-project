@@ -13,6 +13,14 @@ namespace BackEnd
 
         public IfElse(ConditionParameter parameter, ConditionValue value, bool isTrue, StatementBlock statementsTrue, StatementBlock statementsFalse) : base(parameter, value, isTrue)
         {
+            Statement lastStatement = statementsTrue._statements[statementsTrue._statements.Length-1];
+            if(lastStatement.GetType() == typeof(Else))
+            {
+                List<Statement> statementsTrueToList = new List<Statement>(statementsTrue._statements);
+                statementsFalse = new StatementBlock(lastStatement.Code);
+                statementsTrueToList.RemoveAt(statementsTrueToList.Count-1);
+                statementsTrue = new StatementBlock(statementsTrueToList.ToArray());
+            }
             this._statementsTrue = statementsTrue;
             this._statementsFalse = statementsFalse;
             List<Statement> totalStatements = new List<Statement>(statementsTrue._statements);
@@ -46,21 +54,22 @@ namespace BackEnd
             return 1 + _statementsTrue.GetLines() + _statementsFalse.GetLines();
         }
 
-        internal class Else : Statement
+    }
+    public class Else : Statement
+    {
+        public Else(Statement[] statements) : this(new StatementBlock(statements)){}
+        public Else(StatementBlock statementsFalse)
         {
-            internal Else(StatementBlock statementsFalse)
-            {
-                this.Code = statementsFalse._statements;
-            }
-            internal override List<State> ExecuteCommand(Puzzle puzzle)
-            {
-                throw new System.Exception("Invalid for Else.");
-            }
+            this.Code = statementsFalse._statements;
+        }
+        internal override List<State> ExecuteCommand(Puzzle puzzle)
+        {
+            throw new System.Exception("Invalid for Else.");
+        }
 
-            internal override int GetLines()
-            {
-                throw new System.Exception("Invalid for Else.");
-            }
+        internal override int GetLines()
+        {
+            throw new System.Exception("Invalid for Else.");
         }
     }
 }

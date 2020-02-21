@@ -63,7 +63,18 @@ namespace BackEnd
 
         public LevelSolution GetLeastLinesOfCodeSolution()
         {
-            return Util.Min(Solutions.FindAll(s => s.Solved), s => s.Lines);
+            LevelSolution solution = Util.Min(Solutions.FindAll(s => s.Solved), s => s.Lines);
+            if(solution != null)
+            {
+                try{
+                    solution.ConvertCodeToOriginalTypes();
+                }
+                catch(Exception exception)
+                {
+                    Console.WriteLine(exception.StackTrace);
+                }
+            }
+            return solution;
         }
         public static int GetLines(LevelSession session) => session.GetLeastLinesOfCodeSolution().Lines;
         public static Func<LevelSession,int> GetDurationPerPeriod(int period) => (session => GetDuration(session)/period*period);
