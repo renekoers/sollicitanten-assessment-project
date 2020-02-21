@@ -32,5 +32,6 @@ namespace BackEnd
 		internal bool IsStarted() => started > new DateTime();
 		internal bool IsFinished() => finished > new DateTime();
 		internal bool HasTimeLeft() => IsStarted() && !IsFinished() && DateTime.UtcNow - started < maxDuration;
+		internal TimeSpan GetRemainingTime() => HasTimeLeft() ? maxDuration - (DateTime.UtcNow - started) : TimeSpan.Zero;
 	}
 }
