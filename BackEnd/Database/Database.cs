@@ -68,7 +68,7 @@ namespace BackEnd
 		async internal static Task<bool> StartSession(string ID)
 		{
 			await MongoDB.Update<CandidateEntity>()
-				.Match(candidate => candidate.ID == ID && !candidate.IsStarted())
+				.Match(candidate => candidate.ID == ID && candidate.started == new DateTime())
 				.Modify(candidate => candidate.started, DateTime.UtcNow)
 				.Modify(candidate => candidate.GameResults, CandidateEntity.newGameResults())
 				.ExecuteAsync();
@@ -78,8 +78,9 @@ namespace BackEnd
 		}
 		async internal static Task<bool> EndSession(string ID)
 		{
+			DateTime defaultTime = new DateTime();
 			await MongoDB.Update<CandidateEntity>()
-				.Match(candidate => candidate.ID == ID && candidate.IsStarted() && !candidate.IsFinished())
+				.Match(candidate => candidate.ID == ID && candidate.started != defaultTime && candidate.finished == defaultTime)
 				.Modify(candidate => candidate.finished, DateTime.UtcNow)
 				.ExecuteAsync();
 			// Checks if the candidate with the given ID exists and is finished.
