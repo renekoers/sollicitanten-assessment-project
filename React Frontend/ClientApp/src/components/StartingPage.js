@@ -192,12 +192,22 @@ export const StartingPage = () => {
 						<h1 className="display-4">Welkom, {name}!</h1>
 						<p className="lead">
 							Wanneer je op start drukt volgt een tutorial van het
-							sollicitatieprogrammeerspel. De bedoeling is om jouw
-							karakter op de finish te laten eindigen aan de hand
-							van commando's die jij het geeft. Hierbij is het van
-							belang dit met zo min mogelijk commando's te doen.
+							sollicitatieprogrammeerspel. De bedoeling is om de
+							karakter op de schatkist te laten eindigen aan de
+							hand van commando's die jij het geeft. Het is de
+							bedoeling dat jij dit met zo min mogelijk commando's
+							te doet. Probeer acties die vaak uit moeten worden
+							gevoerd te automatiseren!
 						</p>
-						<p className="lead">Veel geluk pik.</p>
+						<p className="lead">
+							Gedurende de tutorial is er geen tijd. Echter
+							wanneer je de tutorial eindigt start het echte spel!
+							Je hebt dan 20 minuten om zo veel mogelijk levels op
+							te lossen. Wanneer je vastloopt kan je altijd kiezen
+							om eerst met een andere level bezig te gaan. Je kan
+							altijd terug naar een vorige of volgende level.
+						</p>
+						<p className="lead">Veel success gewenst!</p>
 					</Container>
 				</Jumbotron>
 				<Button

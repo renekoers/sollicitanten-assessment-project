@@ -16,9 +16,13 @@ export const HelpPopUp = props => {
 			<Modal isOpen={modal} toggle={toggle} className="modal-xl">
 				<ModalHeader toggle={toggle}>Tutorial</ModalHeader>
 				<ModalBody>
-					Interesante informatie over de applicatie wat van nut kan
-					zijn tot het succesvol uitvoeren van sollicitatie
-					gerelateerde programmeer-opdrachten.
+					Klik op commandos en statements om de character bij de schatkist te laten komen. 
+					[GIF van character die op schatkist loopt]
+
+					Commandos en statements klikken in elkaar om zo het karakter uit te laten voeren wat jij hebt geprogrammeerd.
+					[GIF van statement die wordt geselecteerd en in een conditie oid wordt geklikt]
+
+					Druk op RUN om jou ingevoerde programma uit te voeren!
 				</ModalBody>
 				<ModalFooter>
 					<Button color="primary" onClick={toggle}>
