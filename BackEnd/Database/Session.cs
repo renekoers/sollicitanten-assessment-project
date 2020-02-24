@@ -31,7 +31,7 @@ namespace BackEnd
 		async internal static Task<bool> StartLevel(string ID, int levelNumber)
 		{
 			CandidateEntity candidate = await GetCandidate(ID);
-			if(candidate != null && candidate.HasTimeLeft() || candidate.GameResults == null){
+			if(candidate == null || !candidate.HasTimeLeft() || candidate.GameResults == null){
 				return false;
 			}
 			LevelSession levelSession = candidate.GetLevelSession(levelNumber);
@@ -47,7 +47,7 @@ namespace BackEnd
 		async internal static Task<bool> StopLevel(string ID, int levelNumber)
 		{
 			CandidateEntity candidate = await GetCandidate(ID);
-			if(candidate != null && candidate.GameResults == null){
+			if(candidate == null || candidate.GameResults == null){
 				return false;
 			}
 			LevelSession levelSession = candidate.GetLevelSession(levelNumber);
@@ -64,7 +64,7 @@ namespace BackEnd
 		async internal static Task<LevelSolution> SubmitSolution(string ID, int levelNumber, Statement[] statements)
 		{
 			CandidateEntity candidate = await GetCandidate(ID);
-			if(candidate != null && candidate.HasTimeLeft() || candidate.GameResults == null){
+			if(candidate == null || !candidate.HasTimeLeft() || candidate.GameResults == null){
 				return null;
 			}
 			LevelSession levelSession = candidate.GetLevelSession(levelNumber);
