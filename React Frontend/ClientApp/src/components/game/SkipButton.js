@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
-import "../css/SkipButton.css";
+import "../../css/SkipButton.css";
 
 export class SkipButton extends Component {
 	constructor(props) {

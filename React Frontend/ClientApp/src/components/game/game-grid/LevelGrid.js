@@ -1,6 +1,6 @@
 ﻿import React, { Component } from "react";
 import Tile from "./Tile";
-import "../../css/LevelGrid.css";
+import "../../../css/LevelGrid.css";
 
 export class LevelGrid extends Component {
 	state = {

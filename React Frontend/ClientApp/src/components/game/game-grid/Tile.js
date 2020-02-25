@@ -1,17 +1,17 @@
 ﻿import React, { Component } from "react";
 
-import tileImgFloor from "../../img/game-grid/tile-floor.png";
-import tileImgWall from "../../img/game-grid/tile-wall.png";
-import tileImgDoorClose from "../../img/game-grid/tile-door-close.png";
-import tileImgDoorOpen from "../../img/game-grid/tile-door-open.png";
-import tileImgButton from "../../img/game-grid/tile-button.png";
-import tileImgFinish from "../../img/game-grid/tile-finish.png";
+import tileImgFloor from "../../../img/game-grid/tile-floor.png";
+import tileImgWall from "../../../img/game-grid/tile-wall.png";
+import tileImgDoorClose from "../../../img/game-grid/tile-door-close.png";
+import tileImgDoorOpen from "../../../img/game-grid/tile-door-open.png";
+import tileImgButton from "../../../img/game-grid/tile-button.png";
+import tileImgFinish from "../../../img/game-grid/tile-finish.png";
 
-import movableImgBox from "../../img/game-grid/movable-box.png";
-import movableImgPlayerDown from "../../img/game-grid/movable-player-down.png";
-import movableImgPlayerRight from "../../img/game-grid/movable-player-right.png";
-import movableImgPlayerLeft from "../../img/game-grid/movable-player-left.png";
-import movableImgPlayerUp from "../../img/game-grid/movable-player-up.png";
+import movableImgBox from "../../../img/game-grid/movable-box.png";
+import movableImgPlayerDown from "../../../img/game-grid/movable-player-down.png";
+import movableImgPlayerRight from "../../../img/game-grid/movable-player-right.png";
+import movableImgPlayerLeft from "../../../img/game-grid/movable-player-left.png";
+import movableImgPlayerUp from "../../../img/game-grid/movable-player-up.png";
 
 export class Tile extends Component {
 	getTileImgFromStateString() {

@@ -1,7 +1,7 @@
 ﻿import React, { useState, useEffect, useCallback } from "react";
 import { Timer } from "./Timer";
-import "../css/Header.css";
-import { useInterval } from "../hooks/useInterval";
+import "../../../css/Header.css";
+import { useInterval } from "../../../hooks/useInterval";
 
 export const Header = props => {
 	const [millisecondsRemaining, setMillisecondsRemaining] = useState(1200000);

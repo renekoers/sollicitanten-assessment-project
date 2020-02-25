@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import ReactBlockly from "react-blockly";
-import SylveonBlocks from "../blockly/SylveonBlocks";
-import "../css/statement.css";
+import SylveonBlocks from "../../blockly/SylveonBlocks";
+import "../../css/statement.css";
 
 export class Statement extends Component {
 	static displayName = Statement.name;
