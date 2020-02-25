@@ -21,8 +21,16 @@ namespace BackEnd {
 		/// </summary>
 		/// <returns></returns>
         async public Task<string> ValidateHR(string name){
-            await;
-            return "hashedPassword";
+            try
+            {
+                return "hashedPassword";
+            }
+            catch(Exception e)
+            {
+                Console.WriteLine(e.StackTrace);
+                await Task.Delay(5);
+                return null;
+            }
         }
 
         async public Task<string> AddCandidate(string name)

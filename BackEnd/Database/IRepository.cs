@@ -13,7 +13,7 @@ namespace BackEnd
 
         Task SaveCandidate(CandidateEntity candidate);
 
-        Task<Level> GetTutorialLevel();
+        Task<IState> GetTutorialLevel();
 
         Task<CandidateEntity> GetCandidate(string ID);
 
@@ -26,5 +26,6 @@ namespace BackEnd
         Task<Dictionary<int,Dictionary<string, Dictionary<int, int>>>> GetStatisticsEveryone();
 
         Task<Dictionary<int,int>> GetStatisticsUnsolved();
+        
     }
 }
