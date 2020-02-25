@@ -7,6 +7,7 @@ namespace BackEnd
 	[Name("candidates")]
 	public class CandidateEntity : Entity
 	{
+		private static TimeSpan maxDuration = new TimeSpan(0,20,0);
 		public string Name { get; protected set; }
 		public DateTime started { get; protected set; }
 		public DateTime finished { get; protected set; }
@@ -28,5 +29,9 @@ namespace BackEnd
 		{
 			return (levelNumber>0 && levelNumber-1 <= GameResults.Length) ? GameResults[levelNumber-1] : null;
 		}
+		internal bool IsStarted() => started > new DateTime();
+		internal bool IsFinished() => finished > new DateTime();
+		internal bool HasTimeLeft() => IsStarted() && !IsFinished() && DateTime.UtcNow - started < maxDuration;
+		internal TimeSpan GetRemainingTime() => HasTimeLeft() ? maxDuration - (DateTime.UtcNow - started) : TimeSpan.Zero;
 	}
 }

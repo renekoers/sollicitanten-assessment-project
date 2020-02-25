@@ -21,7 +21,7 @@ namespace BackEnd
         [Ignore]
         public List<IState> States { get; private set; }
         [Ignore]
-        public int NumberOfStates => States.Count;
+        public int NumberOfStates;
 
         public LevelSolution(int number, Statement[] statements)
             : this(number, statements, 0){}
@@ -35,6 +35,7 @@ namespace BackEnd
             States = new List<IState>();
             States.Add(new State(puzzle));
             States.AddRange(CodeBlock.ExecuteCommand(puzzle));
+            NumberOfStates = States.Count-1; // -1 because the original state is automaticly added.
             Solved = puzzle.Finished;
             Lines = CodeBlock.GetLines();
             IsInfiteLoop = CodeBlock.IsInfiniteLoop;
