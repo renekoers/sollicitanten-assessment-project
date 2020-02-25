@@ -36,7 +36,7 @@ namespace BackEnd
 		async public static Task<bool> IsStarted(string ID)
 		{
 			CandidateEntity candidate = await Database.GetCandidate(ID);
-			return candidate != null && candidate.started > new DateTime();
+			return candidate != null && candidate.IsStarted();
 		}
 		///<summary>
 		/// Returns true if candidate still has an active session available.
