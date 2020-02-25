@@ -1,9 +1,9 @@
-﻿import { Header } from "./Header";
+﻿import { Header } from "./header/Header";
 import { Statement } from "./Statement";
 import React, { useState, useEffect, useCallback } from "react";
 import LevelGrid from "./game-grid/LevelGrid";
 import { SkipButton } from "./SkipButton";
-import SylveonBlocks from "../blockly/SylveonBlocks";
+import SylveonBlocks from "../../blockly/SylveonBlocks";
 import { Redirect } from "react-router-dom";
 
 export const Game = props => {

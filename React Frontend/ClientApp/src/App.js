@@ -1,13 +1,13 @@
 import React, { Component } from "react";
 import { Route } from "react-router";
 import { Layout } from "./components/Layout";
-import { Game } from "./components/Game";
-import { Overview } from "./components/overview/Overview";
-import { StartingPage } from "./components/StartingPage";
-import { EndPage } from "./components/EndPage";
-import { MainPage as HR} from "./components/HR/MainPage"; 
-import { Login } from "./components/HR/Login"; 
-import { Tutorial } from "./components/Tutorial";
+import { Game } from "./components/game/Game";
+import { Overview } from "./components/game/overview/Overview";
+import { StartingPage } from "./components/startingpage/StartingPage";
+import { EndPage } from "./components/endpage/EndPage";
+import { MainPage as HR } from "./components/HR/MainPage";
+import { Login } from "./components/HR/Login";
+import { Tutorial } from "./components/game/tutorial/Tutorial";
 
 import "./css/custom.css";
 

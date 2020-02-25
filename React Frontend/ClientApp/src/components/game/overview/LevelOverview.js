@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import "../../css/overview.css";
-import solvedIcon from "../../img/solved.png";
-import unsolvedIcon from "../../img/unsolved.png";
+import "../../../css/overview.css";
+import solvedIcon from "../../../img/solved.png";
+import unsolvedIcon from "../../../img/unsolved.png";
 
 export function LevelOverview(props) {
 	const [levelNumber, setLevelNumber] = useState(0);
