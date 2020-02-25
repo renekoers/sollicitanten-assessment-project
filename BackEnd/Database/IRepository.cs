@@ -13,7 +13,7 @@ namespace BackEnd
 
         Task SaveCandidate(CandidateEntity candidate);
 
-        Task<Level> GetTutorialLevel();
+        Task<IState> GetTutorialLevel();
 
         Task<CandidateEntity> GetCandidate(string ID);
 
