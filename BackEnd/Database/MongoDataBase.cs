@@ -21,16 +21,8 @@ namespace BackEnd {
 		/// </summary>
 		/// <returns></returns>
         async public Task<string> ValidateHR(string name){
-            try
-            {
-                return "hashedPassword";
-            }
-            catch(Exception e)
-            {
-                Console.WriteLine(e.StackTrace);
-                await Task.Delay(5);
-                return null;
-            }
+            await emptyTask();
+            return "hashedPassword";
         }
 
         async public Task<string> AddCandidate(string name)
@@ -45,6 +37,7 @@ namespace BackEnd {
         }
 
         async public Task<IState> GetTutorialLevel(){
+            await emptyTask();
             return new State(new Puzzle(Level.Get(0)));
         }
 
@@ -127,13 +120,17 @@ namespace BackEnd {
         /// Add here extra functions in order to add extra statistics.
         /// </summary>
         /// <returns>Dictionary with for name of the statistic creates data that represents the statistic of the given level.</returns>
-        private static Dictionary<string,Func<LevelSession,int>> GetStatisticsFunctions()
+        private Dictionary<string,Func<LevelSession,int>> GetStatisticsFunctions()
         {
             Dictionary<string,Func<LevelSession,int>> statisticsFunctions = new Dictionary<string,Func<LevelSession, int>>();
             statisticsFunctions.Add("Regels code kortste oplossing", LevelSession.GetLines);
             statisticsFunctions.Add("Tijd tot korste oplossing", LevelSession.GetDuration);
             statisticsFunctions.Add("Pogingen tot korste oplossing", session => session.NumberOfAttemptsForFirstSolved);
             return statisticsFunctions;
+        }
+
+        private Task emptyTask(){
+            return Task.Factory.StartNew(() => {});
         }
     }
 }
