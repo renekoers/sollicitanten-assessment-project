@@ -10,13 +10,13 @@ export const StartingPage = () => {
 		false
 	);
 	const [isCurrentSessionActive, setSessionStatus] = useState(false);
+	const [isNoTokenAvailable, setIsNoTokenAvailable] = useState(false);
 	const [name, setName] = useState(null);
 	const [
 		renderCandidateSelectionPage,
 		setRenderCandidateSelectionPage
 	] = useState(false);
 	const [renderWelcomePage, setRenderWelcomePage] = useState(false);
-	const [isNoTokenAvailable, setIsNoTokenAvailable] = useState(false);
 
 	useEffect(() => {
 		const sessionID = localStorage.getItem("sessionID");
@@ -56,16 +56,6 @@ export const StartingPage = () => {
 			return isStillActive;
 		};
 
-		const getCandidateName = async () => {
-			let candidateName;
-			await fetch("api/candidate/" + localStorage.getItem("sessionID"))
-				.then(checkStatus)
-				.then(data => {
-					candidateName = data.name;
-				});
-			return candidateName;
-		};
-
 		const hasCandidateNotYetStarted = async () => {
 			let hasNotYetStarted;
 			await fetch("api/candidate/hasNotYetStarted", {
@@ -80,6 +70,16 @@ export const StartingPage = () => {
 					hasNotYetStarted = data;
 				});
 			return hasNotYetStarted;
+		};
+
+		const getCandidateName = async () => {
+			let candidateName;
+			await fetch("api/candidate/" + localStorage.getItem("sessionID"))
+				.then(checkStatus)
+				.then(data => {
+					candidateName = data.name;
+				});
+			return candidateName;
 		};
 
 		const sessionIDHandling = async () => {
@@ -113,13 +113,22 @@ export const StartingPage = () => {
 		setSessionStatus
 	]);
 
+	const tutorialSessionRedirect = () => {
+		if (isTutorialSessionStarted) {
+			return <Redirect to="/tutorialsession" />;
+		}
+	};
+
 	const startTutorialSession = () => {
 		setTutorialSessionStatus(true);
 	};
 
-	const tutorialSessionRedirect = () => {
-		if (isTutorialSessionStarted) {
-			return <Redirect to="/tutorialsession" />;
+	const selectedCandidateNameCallBack = name => {
+		if (name !== null) {
+			setName(name);
+			setRenderWelcomePage(true);
+		} else {
+			return;
 		}
 	};
 
@@ -132,15 +141,6 @@ export const StartingPage = () => {
 	const HRLoginRedirect = () => {
 		if (isNoTokenAvailable) {
 			return <Redirect to="/HR/login" />;
-		}
-	};
-
-	const selectedCandidateNameCallBack = name => {
-		if (name !== null) {
-			setName(name);
-			setRenderWelcomePage(true);
-		} else {
-			return;
 		}
 	};
 

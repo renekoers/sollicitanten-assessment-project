@@ -1,13 +1,14 @@
 import React from "react";
 import "../../css/HR.css";
 
-export function AddCandidate(props) {
-	function checkenter(event) {
+export const AddCandidate = props => {
+	const handleKeyPress = event => {
 		if (event.key === "Enter") {
 			addCandidate(event);
 		}
-	}
-	async function addCandidate(event) {
+	};
+
+	const addCandidate = event => {
 		document.querySelector("#loginerror").innerHTML = " ";
 		document.querySelector(".popupButton").style["display"] = "none";
 		let credentials = event.target;
@@ -16,6 +17,7 @@ export function AddCandidate(props) {
 		}
 		credentials.querySelector("#noteAdd").innerHTML = " ";
 		var name = credentials.querySelector("#username").value;
+
 		fetch("api/HR/candidate", {
 			method: "POST",
 			headers: {
@@ -40,8 +42,9 @@ export function AddCandidate(props) {
 					props.onInvalidSession(errorMessage);
 				}
 			});
-	}
-	function translateErrorStatusCodeToString(statusCode) {
+	};
+
+	const translateErrorStatusCodeToString = statusCode => {
 		if (statusCode === 422) {
 			return "Vul eerst een naam in.";
 		} else if (statusCode === 401) {
@@ -49,8 +52,9 @@ export function AddCandidate(props) {
 		} else {
 			return "Er is iets mis gegaan. Probeer het later opnieuw.";
 		}
-	}
-	function status(response) {
+	};
+
+	const status = response => {
 		return new Promise(function(resolve, reject) {
 			if (response.status === 200) {
 				resolve("OK");
@@ -58,7 +62,8 @@ export function AddCandidate(props) {
 				reject(response.status);
 			}
 		});
-	}
+	};
+
 	return (
 		<article className="singleBlock">
 			<div className="login">Voeg kandidaat toe</div>
@@ -66,12 +71,12 @@ export function AddCandidate(props) {
 			<div>
 				<div className="credentials">
 					<div>
-						Naam kandidaat:{" "}
+						{"Naam kandidaat:"}
 						<input
 							placeholder="Naam"
 							type="string"
 							id="username"
-							onKeyPress={checkenter}
+							onKeyPress={handleKeyPress}
 						/>
 					</div>
 				</div>
@@ -84,4 +89,4 @@ export function AddCandidate(props) {
 			</div>
 		</article>
 	);
-}
+};

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { BarChart, Bar, XAxis, YAxis, Cell, CartesianGrid } from "recharts";
-import "../../css/Statistics.css";
+import "../../../css/Statistics.css";
 
 export const Statistics = props => {
 	const [id, setId] = useState(props.id);
@@ -127,8 +127,7 @@ const AxisLabel = ({ axisType, x, y, width, height, stroke, children }) => {
 			y={cy}
 			transform={`rotate(${rot})`}
 			textAnchor="middle"
-			stroke={stroke}
-		>
+			stroke={stroke}>
 			{children}
 		</text>
 	);
@@ -166,8 +165,7 @@ const LevelBarChart = props => {
 						x={25}
 						y={-75}
 						width={0}
-						height={300}
-					>
+						height={300}>
 						Kandidaten
 					</AxisLabel>
 				}
