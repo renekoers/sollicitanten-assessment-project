@@ -12,15 +12,24 @@ namespace React_Frontend.Controllers
 	[Route("api/statistics"), Authorize]
 	public class StatisticsController : Controller
 	{
+		private IRepository _repo;
+		public StatisticsController() : this(new MongoDataBase()){}
+		public StatisticsController(IRepository repo) : base()
+		{
+			_repo = repo;
+		}
+
 		[HttpGet("newFinished")]
 		async public Task<ActionResult<string>> GetNewFinished(string time)
 		{
-			string timeReceivedRequest = DateTime.UtcNow.ToString();
-			if(time==null){
+			string timeReceivedRequest = DateTime.UtcNow.ToString(); // The time of receiving will be send in the response
+			if(time==null){ // If no time is given, then this method will get the time from the token
 				ClaimsIdentity identity = (ClaimsIdentity)User.Identity;
 				time = identity.FindFirst("Time").Value;
 			}
-			DateTime givenTime = DateTime.Parse(time);
+			try{
+				DateTime givenTime = DateTime.Parse(time);
+			}
 			List<string> newFinishedIDs = await Api.GetFinishedIDsAfterTime(givenTime);
 			if(newFinishedIDs.Count > 0){
 				return JSON.Serialize(new {IDs = newFinishedIDs , time = timeReceivedRequest});
