@@ -69,27 +69,5 @@ namespace BackEnd
 			// Checks if candidate exists && candidate is started
 			return candidate != null && !candidate.IsStarted();
 		}
-		async internal static Task<bool> StartSession(string ID)
-		{
-			await MongoDB.Update<CandidateEntity>()
-				.Match(candidate => candidate.ID == ID && candidate.started == new DateTime())
-				.Modify(candidate => candidate.started, DateTime.UtcNow)
-				.Modify(candidate => candidate.GameResults, CandidateEntity.newGameResults())
-				.ExecuteAsync();
-			// Checks if the candidate with the given ID exists and is started.
-			CandidateEntity foundCandidate = await GetCandidate(ID);
-			return foundCandidate != null && foundCandidate.IsStarted() && foundCandidate.GameResults != null;
-		}
-		async internal static Task<bool> EndSession(string ID)
-		{
-			DateTime defaultTime = new DateTime();
-			await MongoDB.Update<CandidateEntity>()
-				.Match(candidate => candidate.ID == ID && candidate.started != defaultTime && candidate.finished == defaultTime)
-				.Modify(candidate => candidate.finished, DateTime.UtcNow)
-				.ExecuteAsync();
-			// Checks if the candidate with the given ID exists and is finished.
-			CandidateEntity foundCandidate = await GetCandidate(ID);
-			return foundCandidate != null && foundCandidate.IsFinished();
-		}
 	}
 }
