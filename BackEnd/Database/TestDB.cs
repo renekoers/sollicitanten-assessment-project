@@ -18,9 +18,9 @@ namespace BackEnd {
 		{
             await new Task(() => {});
 			CandidateEntity candidate = new CandidateEntity(name);
-            string ID = TestRepo.Count.ToString();
-			TestRepo.Add(ID, candidate);
-			return ID;
+            candidate.ID = TestRepo.Count.ToString();
+			TestRepo.Add(candidate.ID, candidate);
+			return candidate.ID;
 		}
 
         async public Task SaveCandidate(CandidateEntity candidate)
