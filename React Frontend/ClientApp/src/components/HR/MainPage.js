@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { Redirect, Link } from "react-router-dom";
 import { AddCandidate } from "./AddCandidate";
-import { Results } from "./Results";
+import { Results } from "./Statistics/Results";
 import { useInterval } from "../../hooks/useInterval";
 import "../../css/HR.css";
 
-export function MainPage() {
+export const MainPage = () => {
 	const [token, setToken] = useState(localStorage.getItem("token"));
 	const [isValid, setIsValid] = useState(null);
 	const [lastCheck, setLastCheck] = useState(null);
@@ -184,4 +184,4 @@ export function MainPage() {
 			)}
 		</div>
 	);
-}
+};
