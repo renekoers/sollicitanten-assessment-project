@@ -1,20 +1,21 @@
 ﻿import React, { useState, useEffect, useCallback } from "react";
-import { Redirect } from "react-router-dom";
 import SylveonBlocks from "../../blockly/SylveonBlocks";
+import { Redirect } from "react-router-dom";
 import { Header } from "./header/Header";
 import { Statement } from "./Statement";
-import { Gamegrid } from "./game-grid/GameGrid";
+import { LevelGrid } from "./game-grid/LevelGrid";
+import { SkipButton } from "./game-grid/SkipButton";
 
 export const Game = props => {
 	const [level, setLevel] = useState(null);
+	const [solved, setSolved] = useState(false);
 	const [levelNumber, setLevelNumber] = useState(1);
-	const [totalLevelAmount, setTotalLevelAmount] = useState(0);
-	const [isGamesessionFinished, setIsGamesessionFinished] = useState(false);
-	const [isSolved, setIsSolved] = useState(false);
+	const [totalLevels, setTotalLevels] = useState(0);
 	const [areStatementsRunning, setAreStatementsRunning] = useState(false);
+	const [isGamesessionFinished, setIsGamesessionFinished] = useState(false);
 
 	const STATE_CHANGE_ANIMATION_INTERVAL_TIME = 1000;
-	let currentStateTimeoutID = null;
+	let _currentStateTimeoutID = null;
 
 	const getLevel = useCallback(
 		async level => {
@@ -41,31 +42,65 @@ export const Game = props => {
 			})
 				.then(response => response.json())
 				.then(data => {
-					setIsSolved(data);
+					setSolved(data);
 				});
 		},
-		[setLevel, setLevelNumber, setIsSolved]
+		[setLevel, setLevelNumber, setSolved]
 	);
 
 	useEffect(() => {
-		setTotalLevelAmount(totalLevelAmount);
+		getTotalLevelAmount();
 		if (props.match.params.level) {
 			getLevel(props.match.params.level);
 		} else {
 			getLevel(1);
 		}
-	}, [getLevel, props.match.params.level, totalLevelAmount]);
+	}, [getLevel, props.match.params.level]);
 
-	useEffect(() => {
-		const getTotalLevelAmount = async () => {
-			await fetch("api/session/totalAmountLevels")
-				.then(response => response.json())
-				.then(data => {
-					setTotalLevelAmount(data);
-				});
-		};
-		getTotalLevelAmount();
-	}, []);
+	const status = response => {
+		return new Promise(function(resolve, reject) {
+			if (response.status === 200) {
+				resolve(response.json());
+			} else {
+				reject(response);
+			}
+		});
+	};
+
+	const getTotalLevelAmount = async () => {
+		await fetch("api/session/totalAmountLevels")
+			.then(response => response.json())
+			.then(data => {
+				setTotalLevels(data);
+			});
+	};
+
+	const pauseLevel = async () => {
+		await fetch("api/session/pauseLevel", {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+				Authorization: localStorage.getItem("sessionID")
+			},
+			body: JSON.stringify(levelNumber)
+		});
+	};
+
+	const nextLevel = async () => {
+		if (levelNumber <= totalLevels) {
+			await pauseLevel();
+		}
+		if (levelNumber !== totalLevels) {
+			getLevel(level.puzzleLevel + 1);
+		}
+	};
+
+	const previousLevel = async () => {
+		if (levelNumber !== 1) {
+			await pauseLevel();
+			getLevel(level.puzzleLevel - 1);
+		}
+	};
 
 	const onReceiveStatementTree = async statementTree => {
 		setAreStatementsRunning(true);
@@ -89,21 +124,12 @@ export const Game = props => {
 	 * @param {*} levelSolution The LevelSolution as returned by the API (See: BackEnd.Api.SubmitSolution(int, int, Statement[]))
 	 */
 	const updateGridFromLevelSolution = levelSolution => {
-		if (currentStateTimeoutID !== null) clearTimeout(currentStateTimeoutID);
-		updateGridFromLevelSolutionAtStateIndex(levelSolution, 0);
+		if (_currentStateTimeoutID !== null)
+			clearTimeout(_currentStateTimeoutID);
+		_updateGridFromLevelSolutionAtStateIndex(levelSolution, 0);
 	};
 
-	const status = response => {
-		return new Promise(function(resolve, reject) {
-			if (response.status === 200) {
-				resolve(response.json());
-			} else {
-				reject(response);
-			}
-		});
-	};
-
-	const updateGridFromLevelSolutionAtStateIndex = (
+	const _updateGridFromLevelSolutionAtStateIndex = (
 		levelSolution,
 		currentStateIndex
 	) => {
@@ -112,13 +138,13 @@ export const Game = props => {
 		const solved = isFinalState && levelSolution.solved;
 		const currentState = levelSolution.states[currentStateIndex];
 
-		setIsSolved(solved);
+		setSolved(solved);
 		setLevel(currentState);
 
 		if (!isFinalState) {
-			currentStateTimeoutID = setTimeout(
+			_currentStateTimeoutID = setTimeout(
 				() =>
-					updateGridFromLevelSolutionAtStateIndex(
+					_updateGridFromLevelSolutionAtStateIndex(
 						levelSolution,
 						currentStateIndex + 1
 					),
@@ -126,13 +152,20 @@ export const Game = props => {
 			);
 		} // Set to null to indicate the sequence has been completed (and avoid potential conflicts with other timeouts).
 		else {
-			currentStateTimeoutID = null;
+			_currentStateTimeoutID = null;
 			setAreStatementsRunning(false);
 		}
 	};
 
-	const sessionIsOverCallback = isSessionOver => {
-		setIsGamesessionFinished(isSessionOver);
+	/**
+	 * @returns JSX Levelgrid depending on the current levelnumber
+	 */
+	const renderLevelGrid = () => {
+		let levelGrid;
+		if (level !== null) {
+			levelGrid = <LevelGrid puzzle={level} isComplete={solved} />;
+		}
+		return levelGrid;
 	};
 
 	const redirectToEndPage = () => {
@@ -140,6 +173,10 @@ export const Game = props => {
 			localStorage.removeItem("sessionID");
 			return <Redirect to="/results" />;
 		}
+	};
+
+	const sessionIsOverCallback = isSessionOver => {
+		setIsGamesessionFinished(isSessionOver);
 	};
 
 	return (
@@ -157,13 +194,13 @@ export const Game = props => {
 					/>
 				</div>
 				<div style={{ width: "50%", float: "right" }}>
-					<Gamegrid
-						level={level}
-						levelNumber={levelNumber}
-						totalLevelAmount={totalLevelAmount}
-						isSolved={isSolved}
-						getLevel={getLevel.bind(this)}
-						areStatementsRunning={areStatementsRunning}
+					{renderLevelGrid()}
+					<SkipButton
+						onClickPrevious={previousLevel.bind(this)}
+						onClickNext={nextLevel.bind(this)}
+						disabledPrevious={levelNumber === 1}
+						lastLevel={levelNumber === totalLevels}
+						running={areStatementsRunning}
 					/>
 				</div>
 			</div>
