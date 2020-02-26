@@ -15,6 +15,7 @@ export const CanditateSelectionPage = props => {
 		null
 	);
 	const [availableCandidates, setAvailableCandidates] = useState(null);
+
 	const selectedCandidateNameCallBack = props.selectedCandidateNameCallBack;
 
 	useEffect(() => {
@@ -40,7 +41,7 @@ export const CanditateSelectionPage = props => {
 				});
 		};
 		getAllUnstartedCandidates();
-	},[]);
+	}, []);
 
 	const handleCandidateSelection = () => {
 		localStorage.setItem("sessionID", dropdownValue);

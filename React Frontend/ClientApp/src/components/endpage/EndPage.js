@@ -1,7 +1,7 @@
 ﻿import React from "react";
 import { Jumbotron, Container } from "reactstrap";
 
-export const EndPage = props => {
+export const EndPage = () => {
 	return (
 		<div>
 			<Jumbotron fluid>

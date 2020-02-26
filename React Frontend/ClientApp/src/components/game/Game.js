@@ -1,22 +1,21 @@
-﻿import { Header } from "./header/Header";
-import { Statement } from "./Statement";
-import React, { useState, useEffect, useCallback } from "react";
-import LevelGrid from "./game-grid/LevelGrid";
-import { SkipButton } from "./SkipButton";
+﻿import React, { useState, useEffect, useCallback } from "react";
 import SylveonBlocks from "../../blockly/SylveonBlocks";
 import { Redirect } from "react-router-dom";
+import { Header } from "./header/Header";
+import { Statement } from "./Statement";
+import { LevelGrid } from "./game-grid/LevelGrid";
+import { SkipButton } from "./game-grid/SkipButton";
 
 export const Game = props => {
-	let _currentStateTimeoutID = null;
-
-	const STATE_CHANGE_ANIMATION_INTERVAL_TIME = 1000;
-
 	const [level, setLevel] = useState(null);
 	const [solved, setSolved] = useState(false);
 	const [levelNumber, setLevelNumber] = useState(1);
 	const [totalLevels, setTotalLevels] = useState(0);
 	const [areStatementsRunning, setAreStatementsRunning] = useState(false);
 	const [isGamesessionFinished, setIsGamesessionFinished] = useState(false);
+
+	const STATE_CHANGE_ANIMATION_INTERVAL_TIME = 1000;
+	let _currentStateTimeoutID = null;
 
 	const getLevel = useCallback(
 		async level => {
@@ -57,7 +56,8 @@ export const Game = props => {
 			getLevel(1);
 		}
 	}, [getLevel, props.match.params.level]);
-	function status(response) {
+
+	const status = response => {
 		return new Promise(function(resolve, reject) {
 			if (response.status === 200) {
 				resolve(response.json());
@@ -65,7 +65,8 @@ export const Game = props => {
 				reject(response);
 			}
 		});
-	}
+	};
+
 	const getTotalLevelAmount = async () => {
 		await fetch("api/session/totalAmountLevels")
 			.then(response => response.json())
@@ -84,6 +85,7 @@ export const Game = props => {
 			body: JSON.stringify(levelNumber)
 		});
 	};
+
 	const nextLevel = async () => {
 		if (levelNumber <= totalLevels) {
 			await pauseLevel();
@@ -92,6 +94,7 @@ export const Game = props => {
 			getLevel(level.puzzleLevel + 1);
 		}
 	};
+
 	const previousLevel = async () => {
 		if (levelNumber !== 1) {
 			await pauseLevel();

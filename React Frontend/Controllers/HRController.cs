@@ -24,7 +24,7 @@ namespace React_Frontend.Controllers
 			string username = value.ToString();
 			credentials.TryGetProperty("password", out value);
 			string password = value.ToString();
-			if (username == null || password == null)
+			if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
 			{
 				return BadRequest();
 			}

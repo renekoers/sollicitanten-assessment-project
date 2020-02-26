@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import "../../css/SkipButton.css";
+import "../../../css/SkipButton.css";
 
 export function StatisticsButtons(props) {
 	const [classNamesPrevious, setClassNamesPrevious] = useState(null);
@@ -31,15 +31,13 @@ export function StatisticsButtons(props) {
 			<button
 				disabled={props.disabledPrevious}
 				className={classNamesPrevious}
-				onClick={previousButtonClicked}
-			>
+				onClick={previousButtonClicked}>
 				Vorige kandidaat
 			</button>
 			<button
 				disabled={props.disabledNext}
 				className={classNamesNext}
-				onClick={nextButtonClicked}
-			>
+				onClick={nextButtonClicked}>
 				Volgende kandidaat
 			</button>
 		</div>

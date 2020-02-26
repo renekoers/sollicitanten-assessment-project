@@ -26,7 +26,7 @@ namespace BackEnd {
         async public Task SaveCandidate(CandidateEntity candidate)
         {
             await new Task(() => {});
-            TestRepo[candidate.Name] = candidate;
+            TestRepo[candidate.ID] = candidate;
         }
 
         async public Task<IState> GetTutorialLevel()
