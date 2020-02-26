@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -19,6 +20,12 @@ namespace React_Frontend.Controllers
 			_repo = repo;
 		}
 
+        /// <summary>
+        /// Creates a list of IDs of candidates that are finished after a given time.
+        /// </summary>
+        /// <returns>List of IDs. 
+		/// Returns Bad Request if the time can not be parsed.
+		/// Returns Not Found if there is no such candidate.</returns>
 		[HttpGet("newFinished")]
 		async public Task<ActionResult<string>> GetNewFinished(string time)
 		{
@@ -27,72 +34,180 @@ namespace React_Frontend.Controllers
 				ClaimsIdentity identity = (ClaimsIdentity)User.Identity;
 				time = identity.FindFirst("Time").Value;
 			}
-			try{
-				DateTime givenTime = DateTime.Parse(time);
+			DateTime givenTime;
+			try
+			{
+				givenTime = DateTime.Parse(time);
 			}
-			List<string> newFinishedIDs = await Api.GetFinishedIDsAfterTime(givenTime);
-			if(newFinishedIDs.Count > 0){
-				return JSON.Serialize(new {IDs = newFinishedIDs , time = timeReceivedRequest});
-			} else {
+			catch(FormatException)
+			{
+				return BadRequest(timeReceivedRequest);
+			}
+			List<CandidateEntity> newFinishedCandidates = await _repo.GetCandidatesAfterTime(givenTime);
+			if(newFinishedCandidates.Count==0)
+			{
 				return NotFound(timeReceivedRequest);
 			}
+			List<string> newFinishedIDs = newFinishedCandidates.Select(candidate => candidate.ID).ToList();
+			return JSON.Serialize(new {IDs = newFinishedIDs , time = timeReceivedRequest});
 		}
-		[HttpGet("nextFinished")]
-		async public Task<ActionResult<string>> GetNextFinished(string ID)
-		{
-			string nextID = await Api.GetNextFinishedID(ID);
-			if (nextID == null)
-			{
-				return NotFound();
-			}
-			else
-			{
-				return nextID;
-			}
-		}
+
+        /// <summary>
+        /// Finds the ID of the last candidate that is finished before a given candidate.
+        /// </summary>
+        /// <returns> ID of the found candidate.
+		/// Returns Bad Request if ID is incorrect or the candidate is not finished yet.
+		/// Returns Not Found if there is no such candidate.</returns>
 		[HttpGet("previousFinished")]
 		async public Task<ActionResult<string>> GetPreviousFinished(string ID)
 		{
-			string previousID = await Api.GetPreviousFinishedID(ID);
-			if (previousID == null)
+			CandidateEntity currentCandidate = await _repo.GetCandidate(ID);
+			if (currentCandidate == null || !currentCandidate.IsFinished())
+			{
+				return BadRequest();
+			}
+			CandidateEntity lastFinishedCandidate = await _repo.GetLastCandidateBefore(currentCandidate.finished);
+			if (lastFinishedCandidate == null)
 			{
 				return NotFound();
 			}
 			else
 			{
-				return previousID;
+				return lastFinishedCandidate.ID;
 			}
 		}
+
+        /// <summary>
+        /// Finds the ID of the first candidate that is finished after a given candidate.
+        /// </summary>
+        /// <returns> ID of the found candidate.
+		/// Returns Bad Request if ID is incorrect or the candidate is not finished yet.
+		/// Returns Not Found if there is no such candidate.</returns>
+		[HttpGet("nextFinished")]
+		async public Task<ActionResult<string>> GetNextFinished(string ID)
+		{
+			CandidateEntity currentCandidate = await _repo.GetCandidate(ID);
+			if (currentCandidate == null || !currentCandidate.IsFinished())
+			{
+				return BadRequest();
+			}
+			CandidateEntity nextFinishedCandidate = (await _repo.GetCandidatesAfterTime(currentCandidate.finished)).FirstOrDefault();
+			if (nextFinishedCandidate == null)
+			{
+				return NotFound();
+			}
+			else
+			{
+				return nextFinishedCandidate.ID;
+			}
+		}
+		
+        /// <summary>
+        /// Finds the ID of the last candidate that is finished.
+        /// </summary>
+        /// <returns> ID of the found candidate.
+		/// Returns Not Found if there is no such candidate (i.e. the database does not contains any finished candidates).</returns>
 		[HttpGet("lastFinished")]
 		async public Task<ActionResult<string>> GetLastFinished()
 		{
-			string lastID = await Api.GetLastFinishedID();
-			if (lastID == null)
+			CandidateEntity lastFinishedCandidate = await _repo.GetLastCandidateBefore(DateTime.UtcNow);
+			if (lastFinishedCandidate == null)
 			{
 				return NotFound();
 			}
 			else
 			{
-				return lastID;
+				return lastFinishedCandidate.ID;
 			}
 		}
+
+		/// Making statistics
+
+        /// <summary>
+        /// Creates a dictionary consisting of all statistics of a candidate.
+        /// </summary>
+        /// <returns>Dictionary with for every level has a dictionary of name of the statistic and the data.
+		/// Returns Bad Request if the ID is invalid or the candidate is not finished.</returns>
 		[HttpGet("candidate")]
-		async public Task<string> GetDataCandidate(string ID)
+		async public Task<ActionResult<string>> MakeStatisticsCandidate(string ID)
 		{
-			Dictionary<int, Dictionary<string, int>> data = await Api.StatisticsCandidate(ID);
-			return JSON.Serialize(data);
+			CandidateEntity candidate = await _repo.GetCandidate(ID);
+			if(candidate == null || !candidate.IsFinished())
+			{
+				return BadRequest();
+			}
+            Dictionary<string,Func<LevelSession,int>> statisticsFunctions = GetStatisticsFunctions();
+            Dictionary<int,Dictionary<string,int>> dataCandidate = new Dictionary<int,Dictionary<string,int>>();
+            for (int levelNumber=1; levelNumber<=Level.TotalLevels;levelNumber++)
+            {
+                LevelSession levelSession = candidate.GetLevelSession(levelNumber);
+                if(!levelSession.Solved)
+                {
+                    continue;
+                }
+                Dictionary<string,int> dataSingleLevel = new Dictionary<string, int>();
+                foreach(KeyValuePair<string,Func<LevelSession,int>> nameDataAndFunctionToIntPair in statisticsFunctions){
+                    dataSingleLevel.Add(nameDataAndFunctionToIntPair.Key, nameDataAndFunctionToIntPair.Value(levelSession));
+                }
+                dataCandidate.Add(levelNumber,dataSingleLevel);
+                
+            }
+			return JSON.Serialize(dataCandidate);
 		}
+		
+        /// <summary>
+        /// Creates a dictionary consisting of all statistics of all candidates.
+        /// </summary>
+        /// <returns>Dictionary with for every level has a dictionary of name of the statistic and the combination of data and number of candidates.</returns>
 		[HttpGet("tally")]
-		async public Task<string> GetDataTally()
+		async public Task<string> MakeStatisticsEveryone()
 		{
-			Dictionary<int, Dictionary<string, Dictionary<int, int>>> data = await Api.StatisticsEveryone();
-			return JSON.Serialize(data);
+            Dictionary<string,Func<LevelSession,int>> statisticsFunctions = GetStatisticsFunctions();
+            Dictionary<int,Dictionary<string, Dictionary<int, int>>> dataEveryone = new Dictionary<int,Dictionary<string, Dictionary<int, int>>>();
+            for (int levelNumber=1; levelNumber<=Level.TotalLevels;levelNumber++)
+            {
+                Dictionary<string,Dictionary<int, int>> dataSingleLevel = new Dictionary<string, Dictionary<int, int>>();
+                foreach(KeyValuePair<string,Func<LevelSession,int>> nameDataAndFunctionToIntPair in statisticsFunctions){
+                    Func<LevelSession,int> functionStatistic = nameDataAndFunctionToIntPair.Value;
+					List<CandidateEntity> listOfCandidatesWithScores = await _repo.GetListOfCandidatesWithScores(levelNumber);
+                    var pairingScoreAmountCandidates = listOfCandidatesWithScores.GroupBy(candidate => functionStatistic(candidate.GameResults[levelNumber-1]))
+						.Select(result => new { Score = result.Key, AmountCandidates = result.Count() })
+                        .OrderBy(result => result.Score);
+					Dictionary<int,int> levelStatistic = pairingScoreAmountCandidates.ToDictionary(result => result.Score, result => result.AmountCandidates);
+                    dataSingleLevel.Add(nameDataAndFunctionToIntPair.Key, levelStatistic);
+                }
+                dataEveryone.Add(levelNumber, dataSingleLevel);
+            }
+			return JSON.Serialize(dataEveryone);
 		}
+		
+        /// <summary>
+        /// This method creates a dictionary consisting of the number of candidates that did not solve a certain level.
+        /// </summary>
+        /// <returns></returns>
 		[HttpGet("unsolved")]
-		async public Task<string> GetDataUnsolved()
+		async public Task<string> GetAmountUnsolvedPerLevel()
 		{
-			Dictionary<int, int> amountUnsolvedPerLevel = await Api.NumberOfCandidatesNotSolvedPerLevel();
-			return JSON.Serialize(amountUnsolvedPerLevel);
+            Dictionary<int,int> amountUnsolved = new Dictionary<int, int>();
+            for(int levelNumber=1; levelNumber<=Level.TotalLevels;levelNumber++)
+            {
+				amountUnsolved[levelNumber] = await _repo.GetAmountUnsolved(levelNumber);
+            }
+			return JSON.Serialize(amountUnsolved);
 		}
+
+        /// <summary>
+        /// Creates a list of functions that maps a levelSession to an int. This function are used in constructing dictionaries that represents the statistics.
+        /// Add here extra functions in order to add extra statistics.
+        /// </summary>
+        /// <returns>Dictionary with for name of the statistic creates data that represents the statistic of the given level.</returns>
+        private static Dictionary<string,Func<LevelSession,int>> GetStatisticsFunctions()
+        {
+            Dictionary<string,Func<LevelSession,int>> statisticsFunctions = new Dictionary<string,Func<LevelSession, int>>();
+            statisticsFunctions.Add("Regels code kortste oplossing", LevelSession.GetLines);
+            statisticsFunctions.Add("Tijd tot korste oplossing", LevelSession.GetDuration);
+            statisticsFunctions.Add("Pogingen tot korste oplossing", session => session.NumberOfAttemptsForFirstSolved);
+            return statisticsFunctions;
+        }
 	}
 }
