@@ -99,7 +99,9 @@ namespace BackEnd
                 Dictionary<string,Dictionary<int, int>> dataSingleLevel = new Dictionary<string, Dictionary<int, int>>();
                 foreach(KeyValuePair<string,Func<LevelSession,int>> nameDataAndFunctionToIntPair in statisticsFunctions){
                     Func<LevelSession,int> functionStatistic = nameDataAndFunctionToIntPair.Value;
-					List<CandidateEntity> listOfCandidatesWithScores = await MongoDataBase.GetListOfCandidatesWithScores(levelNumber);
+					List<CandidateEntity> listOfCandidatesWithScores = await MongoDB.Collection<CandidateEntity>().AsQueryable()
+						.Where(candidate => candidate.finished > new DateTime() && candidate.GameResults[levelNumber-1].Solved)
+						.ToListAsync();
                     var pairingScoreAmountCandidates = listOfCandidatesWithScores.GroupBy(candidate => functionStatistic(candidate.GameResults[levelNumber-1]))
 						.Select(result => new { Score = result.Key, AmountCandidates = result.Count() })
                         .OrderBy(result => result.Score);
@@ -120,7 +122,8 @@ namespace BackEnd
             Dictionary<int,int> amountUnsolved = new Dictionary<int, int>();
             for(int levelNumber=1; levelNumber<=Level.TotalLevels;levelNumber++)
             {
-				amountUnsolved[levelNumber] = await MongoDataBase.GetAmountUnsolved(levelNumber);
+				amountUnsolved[levelNumber] = await MongoDB.Collection<CandidateEntity>().AsQueryable()
+					.CountAsync(candidate => candidate.finished > new DateTime() && !candidate.GameResults[levelNumber-1].Solved);
             }
             return amountUnsolved;
         }
