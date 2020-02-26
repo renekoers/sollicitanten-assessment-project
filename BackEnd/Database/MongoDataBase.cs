@@ -69,7 +69,7 @@ namespace BackEnd {
 
         async public Task<CandidateEntity> GetLastCandidateBefore(DateTime dateTime){
             IEnumerable<CandidateEntity> newFinishedCandidates = await MongoDB.Find<CandidateEntity>()
-                .Match(candidate => (candidate.finished < dateTime))
+                .Match(candidate => (candidate.finished < dateTime && candidate.finished > new DateTime()))
                 .Sort(candidate => candidate.finished, Order.Descending)
                 .ExecuteAsync();
 			return newFinishedCandidates.ToList().First();
@@ -92,20 +92,6 @@ namespace BackEnd {
         async public Task<int> GetAmountUnsolved(int levelNumber){
             return await MongoDB.Collection<CandidateEntity>().AsQueryable()
 					.CountAsync(candidate => candidate.finished > new DateTime() && !candidate.GameResults[levelNumber-1].Solved);
-        }
-
-        /// <summary>
-        /// Creates a list of functions that maps a levelSession to an int. This function are used in constructing dictionaries that represents the statistics.
-        /// Add here extra functions in order to add extra statistics.
-        /// </summary>
-        /// <returns>Dictionary with for name of the statistic creates data that represents the statistic of the given level.</returns>
-        private Dictionary<string,Func<LevelSession,int>> GetStatisticsFunctions()
-        {
-            Dictionary<string,Func<LevelSession,int>> statisticsFunctions = new Dictionary<string,Func<LevelSession, int>>();
-            statisticsFunctions.Add("Regels code kortste oplossing", LevelSession.GetLines);
-            statisticsFunctions.Add("Tijd tot korste oplossing", LevelSession.GetDuration);
-            statisticsFunctions.Add("Pogingen tot korste oplossing", session => session.NumberOfAttemptsForFirstSolved);
-            return statisticsFunctions;
         }
 
         private Task emptyTask(){
