@@ -6,9 +6,10 @@ namespace BackEnd
 {
 	public partial class Api
 	{
-		async public static Task<bool> AddCandidate(string name)
+		MongoDataBase MDB = new MongoDataBase();
+		async public Task<bool> AddCandidate(string name)
 		{
-			return await Database.AddNewCandidate(name) != null;
+			return await MDB.AddCandidate(name) != null;
 		}
 		/// <summary>
 		/// This method creates a list of all IDs of candidates that finished a session after a given time

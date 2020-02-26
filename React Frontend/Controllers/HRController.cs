@@ -9,8 +9,18 @@ namespace React_Frontend.Controllers
 {
 	[ApiController]
 	[Route("api/HR"), Authorize]
-	public class CredentialsController : Controller
+	public class HRController : Controller
 	{
+
+		private IRepository myDatabase;
+		public HRController(){
+			this.myDatabase = new MongoDataBase();
+		}
+
+		public HRController(string testing){
+			this.myDatabase = new TestDB();
+		}
+	
 
 		[HttpPost("login"), AllowAnonymous]
 		/// <summary>
@@ -49,7 +59,7 @@ namespace React_Frontend.Controllers
 			if(name == "" || name == null){
 				return UnprocessableEntity();
 			}
-			if (await Api.AddCandidate(name))
+			if (await myDatabase.AddCandidate(name) != null)
 			{
 				return Ok();
 			}

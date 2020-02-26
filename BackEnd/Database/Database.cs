@@ -15,12 +15,12 @@ namespace BackEnd
 		"sylveon");
 
 
-		async internal static Task<string> AddNewCandidate(string name)
-		{
-			CandidateEntity candidate = new CandidateEntity(name);
-			await MongoDB.SaveAsync(candidate);
-			return candidate.ID;
-		}
+		// async internal static Task<string> AddNewCandidate(string name)
+		// {
+		// 	CandidateEntity candidate = new CandidateEntity(name);
+		// 	await MongoDB.SaveAsync(candidate);
+		// 	return candidate.ID;
+		// }
 		async internal static Task<CandidateEntity> GetCandidate()
 		{
 			List<CandidateEntity> unstartedCandidates = await MongoDB.Find<CandidateEntity>()
