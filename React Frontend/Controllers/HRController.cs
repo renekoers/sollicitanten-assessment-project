@@ -17,7 +17,7 @@ namespace React_Frontend.Controllers
 			this.myDatabase = new MongoDataBase();
 		}
 
-		public HRController(string testing){
+		public HRController(IRepository testDB){
 			this.myDatabase = new TestDB();
 		}
 	
