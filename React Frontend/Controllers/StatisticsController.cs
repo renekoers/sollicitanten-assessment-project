@@ -13,11 +13,11 @@ namespace React_Frontend.Controllers
 	[Route("api/statistics"), Authorize]
 	public class StatisticsController : Controller
 	{
+		
 		private IRepository _repo;
-		public StatisticsController() : this(new MongoDataBase()){}
-		public StatisticsController(IRepository repo) : base()
+		public StatisticsController(IRepository repo = null) : base()
 		{
-			_repo = repo;
+			_repo = repo == null ? new MongoDataBase() : repo;
 		}
 
         /// <summary>
