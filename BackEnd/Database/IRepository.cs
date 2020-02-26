@@ -23,9 +23,8 @@ namespace BackEnd
 
         Task<CandidateEntity> GetLastCandidateBefore(DateTime dateTime);
 
-        Task<Dictionary<int,Dictionary<string, Dictionary<int, int>>>> GetStatisticsEveryone();
+        Task<List<CandidateEntity>> GetListOfCandidatesWithScores(int LevelNumber);
 
-        Task<Dictionary<int,int>> GetStatisticsUnsolved();
-        
+        Task<int> GetAmountUnsolved(int levelNumber);
     }
 }
