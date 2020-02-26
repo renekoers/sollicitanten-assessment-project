@@ -90,19 +90,5 @@ namespace React_Frontend.Controllers
 			return await myDatabase.GetLastCandidateBefore(dateTime);
 		}
 
-		/// <summary>
-		/// This method finds the first CandidateEntity that ended the session after the given ID.
-		/// </summary>
-		/// <returns>CandidateEntity if there exists one</returns>
-		async public Task<CandidateEntity> GetNextFinishedID(string ID)
-		{
-			return await myDatabase.GetNextFinishedID(ID);
-		}
-
-		async public static Task<string> GetLastFinishedID()
-		{
-			return await Database.GetLastFinishedID();
-		}
-
 	}
 }
