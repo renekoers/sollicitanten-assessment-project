@@ -11,7 +11,7 @@ namespace React_Frontend.Controllers
 	[Route("api/statement")]
 	public class StatementController : Controller
 	{
-		[HttpPost("{levelId}")]
+		[HttpPost("{levelNumber}")]
 		async public Task<ActionResult<string>> PostStatements([FromHeader(Name="Authorization")] string sessionID, int levelNumber, [FromBody] JsonElement statementTreeJson)
 		{
 			IEnumerable<Statement> statements = Api.ParseStatementTreeJson(statementTreeJson);
