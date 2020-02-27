@@ -19,13 +19,6 @@ namespace BackEnd
 			return new LevelSolution(0, statements, 0);
 		}
 
-
-
-		public static long GetEpochTime()
-		{
-			return DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
-		}
-
 		/// <summary>
 		/// Used to insert some solutions of the levels to see the graphs
 		/// </summary>
