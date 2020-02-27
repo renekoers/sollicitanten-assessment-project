@@ -22,9 +22,8 @@ namespace React_Frontend.Controllers
 		/// Returns Bad Request if the ID is invalid or the candidate is already started.
 		/// Returns Server Error if there went something wrong with saving the candidate.</returns>
 		[HttpGet("startsession")]
-		async public Task<ActionResult> StartSession()
+		async public Task<ActionResult> StartSession([FromHeader(Name="Authorization")] string sessionID)
 		{
-			string sessionID = Request.Headers["Authorization"];
             CandidateEntity candidate = await _repo.GetCandidate(sessionID);
             if(candidate == null || candidate.IsStarted())
             {
