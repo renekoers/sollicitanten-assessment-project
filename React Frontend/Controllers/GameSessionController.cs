@@ -117,6 +117,12 @@ namespace React_Frontend.Controllers
 			}
 			else
 			{
+				foreach(LevelSession levelSession in candidate.GameResults)
+				{
+					levelSession.Stop();
+				}
+				await _repo.SaveCandidate(candidate);
+				await EndSession(sessionID);
 				return new StatusCodeResult(410);
 			}
 		}
