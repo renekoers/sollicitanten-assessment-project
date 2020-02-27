@@ -21,14 +21,14 @@ namespace React_Frontend.Controllers
         /// Returns Gone if there is no time left (i.e. time is up or session is over).
 		/// Returns Server Error if there went something wrong with saving the candidate.</returns>
 		[HttpGet("retrieveLevel/{levelNumber}")]
-		async public Task<ActionResult<string>> GetLevel([FromHeader(Name="Authorization")] string sessionID, string levelNumber)
+		async public Task<ActionResult<string>> StartLevel([FromHeader(Name="Authorization")] string sessionID, string levelNumber)
 		{
             if(!int.TryParse(levelNumber, out int level))
             {
                 return BadRequest();
             }
             CandidateEntity candidate = await _repo.GetCandidate(sessionID);
-			if(candidate == null || candidate.GameResults == null){
+			if(candidate == null || !candidate.IsStarted()){
 				return BadRequest();
 			}
             if(!candidate.HasTimeLeft())
