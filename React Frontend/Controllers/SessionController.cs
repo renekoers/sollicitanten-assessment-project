@@ -12,31 +12,15 @@ namespace React_Frontend.Controllers
 	{
 
 		[HttpGet("levelIsSolved/{levelNumber}")]
-		async public Task<bool> IsSolved(string levelNumber)
+		async public Task<bool> IsSolved([FromHeader(Name="Authorization")] string sessionID, string levelNumber)
 		{
 			int level = int.Parse(levelNumber);
-			string sessionID = Request.Headers["Authorization"];
 			return await Api.LevelIsSolved(sessionID, level);
 		}
-		[HttpGet("retrieveLevel/{levelNumber}")]
-		async public Task<ActionResult<string>> GetLevel(string levelNumber)
-		{
-			int level = int.Parse(levelNumber);
-			string sessionID = Request.Headers["Authorization"];
-			IState levelState = await Api.StartLevelSession(sessionID, level);
-			if(levelState != null)
-			{
-				return JSON.Serialize(levelState);
-			} else 
-			{
-				return BadRequest();
-			}
-		}
 		[HttpPost("pauseLevel")]
-		async public Task<ActionResult> PauseLevel([FromBody]object levelNumber)
+		async public Task<ActionResult> PauseLevel([FromHeader(Name="Authorization")] string sessionID, [FromBody]object levelNumber)
 		{
 			int level = int.Parse(levelNumber.ToString());
-			string sessionID = Request.Headers["Authorization"];
 			if(await Api.StopLevelSession(sessionID,level))
 			{
 				return Ok();

@@ -20,22 +20,6 @@ namespace BackEnd
 			return candidate.GetLevelSession(levelNumber);
 		}
 		/// Changing progress of a levelSession
-		async internal static Task<bool> StartLevel(string ID, int levelNumber)
-		{
-			CandidateEntity candidate = await GetCandidate(ID);
-			if(candidate == null || !candidate.HasTimeLeft() || candidate.GameResults == null){
-				return false;
-			}
-			LevelSession levelSession = candidate.GetLevelSession(levelNumber);
-			if(levelSession == null)
-			{
-				return false;
-			}
-			levelSession.Start();
-			await candidate.SaveAsync();
-			CandidateEntity foundCandidate = await GetCandidate(ID);
-			return foundCandidate.GetLevelSession(levelNumber).InProgress;
-		}
 		async internal static Task<bool> StopLevel(string ID, int levelNumber)
 		{
 			CandidateEntity candidate = await GetCandidate(ID);

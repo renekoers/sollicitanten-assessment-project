@@ -11,10 +11,6 @@ namespace BackEnd
 			return Repository.GetSession(ID);
 		}
         /// Level session methods.
-		async public static Task<IState> StartLevelSession(string ID, int levelNumber)
-		{
-			return (await Database.StartLevel(ID, levelNumber)) ? new State(new Puzzle(Level.Get(levelNumber))) : null;
-		}
 		async public static Task<bool> StopLevelSession(string ID, int levelNumber)
 		{
 			return await Database.StopLevel(ID, levelNumber);
