@@ -19,7 +19,7 @@ namespace UnitTest
             GameSessionController controller = new GameSessionController(repo);
             string id = await repo.AddCandidate("Test");
             ActionResult result = await controller.StartSession(id);
-            Assert.IsInstanceOfType(result, typeof(OkResult));
+            Assert.IsTrue(((StatusCodeResult) result).StatusCode == 200);
         }
         [TestMethod]
         public async Task StartSessionSetsStartedTest()
@@ -39,7 +39,7 @@ namespace UnitTest
             GameSessionController controller = new GameSessionController(repo);
             string id = await repo.AddCandidate("Test");
             ActionResult result = await controller.StartSession(id + "NOT");
-            Assert.IsNotInstanceOfType(result, typeof(OkResult));
+            Assert.IsFalse(((StatusCodeResult) result).StatusCode == 200);
         }
         [TestMethod]
         public async Task CanNotStartSessionIfSessionIsAlreadyStartedTest()
@@ -62,7 +62,7 @@ namespace UnitTest
             string id = await repo.AddCandidate("Test");
             await controller.StartSession(id);
             ActionResult result = await controller.EndSession(id);
-            Assert.IsInstanceOfType(result, typeof(OkResult));
+            Assert.IsTrue(((StatusCodeResult) result).StatusCode == 200);
         }
         [TestMethod]
         public async Task EndSessionSetsFinishedTest()
@@ -84,7 +84,7 @@ namespace UnitTest
             string id = await repo.AddCandidate("Test");
             await controller.StartSession(id);
             ActionResult result = await controller.EndSession(id + "NOT");
-            Assert.IsNotInstanceOfType(result, typeof(OkResult));
+            Assert.IsFalse(((StatusCodeResult) result).StatusCode == 200);
         }
         [TestMethod]
         public async Task CanNotEndSessionIfSessionIsNotStartedTest()
@@ -117,7 +117,7 @@ namespace UnitTest
             GameSessionController controller = new GameSessionController(repo);
             string id = await repo.AddCandidate("Test");
             ActionResult<string> result = await controller.GetOverview(id);
-            Assert.IsNotInstanceOfType(result.Result, typeof(OkResult));
+            Assert.IsFalse(((StatusCodeResult) result.Result).StatusCode == 200);
             Assert.IsNull(result.Value);
         }
         [TestMethod]
@@ -140,7 +140,7 @@ namespace UnitTest
             GameSessionController controller = new GameSessionController(repo);
             string id = await repo.AddCandidate("Test");
             ActionResult<long> result = await controller.GetRemainingTime(id);
-            Assert.IsNotInstanceOfType(result.Result, typeof(OkResult));
+            Assert.IsFalse(((StatusCodeResult) result.Result).StatusCode == 200);
             Assert.AreEqual(0,result.Value);
         }
         [TestMethod]
@@ -152,7 +152,7 @@ namespace UnitTest
             await controller.StartSession(id);
             await controller.EndSession(id);
             ActionResult<long> result = await controller.GetRemainingTime(id);
-            Assert.IsNotInstanceOfType(result.Result, typeof(OkResult));
+            Assert.IsFalse(((StatusCodeResult) result.Result).StatusCode == 200);
             Assert.AreEqual(0,result.Value);
         }
         [TestMethod]
@@ -163,6 +163,7 @@ namespace UnitTest
             string id = await repo.AddCandidate("Test");
             await controller.StartSession(id);
             ActionResult<long> result = await controller.GetRemainingTime(id);
+            Assert.IsTrue(result.Result == null || ((StatusCodeResult) result.Result).StatusCode == 200);
             Assert.IsTrue(result.Value > 0);
         }
     }
