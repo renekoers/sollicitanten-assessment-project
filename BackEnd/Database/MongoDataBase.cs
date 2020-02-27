@@ -72,7 +72,7 @@ namespace BackEnd {
                 .Match(candidate => (candidate.finished < dateTime && candidate.finished > new DateTime()))
                 .Sort(candidate => candidate.finished, Order.Descending)
                 .ExecuteAsync();
-			return newFinishedCandidates.ToList().First();
+			return newFinishedCandidates.ToList().FirstOrDefault();
         }
 
         /// <summary>

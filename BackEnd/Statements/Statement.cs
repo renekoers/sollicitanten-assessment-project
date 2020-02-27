@@ -33,10 +33,6 @@ namespace BackEnd
 			if (Condition != null)
 			{
 				inputForConstructor.AddRange(Condition.ToObjectList());
-				foreach (object obj in Condition.ToObjectList())
-				{
-					Console.WriteLine(obj.GetType() + ": " + obj.ToString());
-				}
 			}
 			if (Command != null)
 			{

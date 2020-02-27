@@ -69,9 +69,8 @@ namespace BackEnd
                 try{
                     solution.ConvertCodeToOriginalTypes();
                 }
-                catch(Exception exception)
+                catch(Exception)
                 {
-                    Console.WriteLine(exception.StackTrace);
                 }
             }
             return solution;
