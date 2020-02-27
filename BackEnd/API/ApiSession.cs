@@ -10,23 +10,6 @@ namespace BackEnd
 		{
 			return Repository.GetSession(ID);
 		}
-		/// <summary>
-		/// Start a new session for a new CandidateEntity.!-- This method is used in mockdata and tests!!!!
-		/// </summary>
-		/// <returns>The ID of the newly created CandidateEntity used to access their session</returns>
-		[Obsolete("Use StartSession(string ID) instead")]
-		public static string StartSession()
-		{
-			return Repository.CreateSession();
-		}
-		async public static Task<bool> StartSession(string ID)
-		{
-			return await Database.StartSession(ID);
-		}
-		async public static Task<bool> EndSession(string ID)
-		{
-			return await Database.EndSession(ID);
-		}
         /// Level session methods.
 		async public static Task<IState> StartLevelSession(string ID, int levelNumber)
 		{
@@ -65,28 +48,6 @@ namespace BackEnd
 		async public static Task<LevelSolution> SubmitSolution(string ID, int levelNumber, Statement[] statements)
 		{
 			return await Database.SubmitSolution(ID,levelNumber,statements);
-		}
-
-        /// Total methods.
-		public static int GetTotalLevelAmount()
-		{
-			int totalLevels = Level.TotalLevels;
-			return totalLevels;
-		}
-		async public static Task<Overview> GetOverview(string ID)
-		{
-			LevelSession[] levelSessions = await Database.GetAllLevelSessions(ID);
-			return new Overview(levelSessions);
-		}
-		async public static Task<TimeSpan> GetRemainingTime(string ID)
-		{
-			CandidateEntity candidate = await Database.GetCandidate(ID);
-			if(candidate == null)
-			{
-				return TimeSpan.Zero;
-			}
-			return candidate.GetRemainingTime(); 
-
 		}
     }
 }

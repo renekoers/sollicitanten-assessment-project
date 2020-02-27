@@ -19,14 +19,6 @@ namespace BackEnd
 			}
 			return candidate.GetLevelSession(levelNumber);
 		}
-		async internal static Task<LevelSession[]> GetAllLevelSessions(string ID)
-		{
-			CandidateEntity candidate = await GetCandidate(ID);
-			if(candidate == null){
-				return null;
-			}
-			return candidate.GameResults;
-		}
 		/// Changing progress of a levelSession
 		async internal static Task<bool> StartLevel(string ID, int levelNumber)
 		{
