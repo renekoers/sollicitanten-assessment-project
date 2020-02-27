@@ -3,7 +3,7 @@ using Newtonsoft.Json.Serialization;
 
 namespace React_Frontend.Controllers
 {
-    internal class JSON
+    public class JSON
     {
         private static DefaultContractResolver contractResolver = new DefaultContractResolver
         {
@@ -12,7 +12,7 @@ namespace React_Frontend.Controllers
                 OverrideSpecifiedNames = false
             }
         };
-        internal static string Serialize(object obj)
+        public static string Serialize(object obj)
         {
             return JsonConvert.SerializeObject(obj, new JsonSerializerSettings
             {
@@ -20,7 +20,7 @@ namespace React_Frontend.Controllers
                 Formatting = Formatting.Indented
             });
         }
-        internal static object Deserialize(string obj)
+        public static object Deserialize(string obj)
         {
             return JsonConvert.DeserializeObject(obj, new JsonSerializerSettings
             {
