@@ -33,7 +33,7 @@ namespace React_Frontend.Controllers
 			}
             if(!candidate.HasTimeLeft())
             {
-				GameSessionController controller = new GameSessionController();
+				GameSessionController controller = new GameSessionController(_repo);
 				await StopLevel(sessionID, level);
 				await controller.EndSession(sessionID);
                 return new StatusCodeResult(410);
