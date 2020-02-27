@@ -68,24 +68,5 @@ namespace React_Frontend.Controllers
 			}
 
 		}
-
-		/// <summary>
-		/// This method creates a list of all candidates that finished a session after a given time
-		/// </summary>
-		/// <returns>List of Candidates</returns>
-		async public Task<List<CandidateEntity>> GetFinishedCandidatesAfterTime(DateTime dateTime)
-		{
-			return await myDatabase.GetCandidatesAfterTime(dateTime);
-		}
-
-		/// <summary>
-		/// This method finds the last CandidateEntity that ended the session before the given DateTime.
-		/// </summary>
-		/// <returns>Candidate if there exists one</returns>
-		async public Task<CandidateEntity> GetPreviousFinishedCandidate(DateTime dateTime)
-		{
-			return await myDatabase.GetLastCandidateBefore(dateTime);
-		}
-
 	}
 }
