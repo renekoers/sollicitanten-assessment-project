@@ -10,19 +10,6 @@ namespace React_Frontend.Controllers
 	[Route("api/session")]
 	public class SessionController : Controller
 	{
-		[HttpGet("startsession")]
-		async public Task<ActionResult> StartSession()
-		{
-			string sessionID = Request.Headers["Authorization"];
-			if (await Api.StartSession(sessionID))
-			{
-				return Ok();
-			}
-			else
-			{
-				return BadRequest();
-			}
-		}
 
 		[HttpGet("levelIsSolved/{levelNumber}")]
 		async public Task<bool> IsSolved(string levelNumber)
@@ -56,50 +43,6 @@ namespace React_Frontend.Controllers
 			} else {
 				return BadRequest();
 			}
-		}
-		[HttpGet("totalAmountLevels")]
-		public int GetTotalAmountLevels()
-		{
-			return Api.GetTotalLevelAmount();
-		}
-		[HttpPost("endSession")]
-		async public Task<StatusCodeResult> EndSession()
-		{
-			string sessionID = Request.Headers["Authorization"];
-			if (await Api.EndSession(sessionID))
-			{
-				return Ok();
-			}
-			return Conflict();
-
-		}
-		[HttpGet("getOverview")]
-		async public Task<string> GetOverview()
-		{
-			string sessionID = Request.Headers["Authorization"];
-			Overview overview = await Api.GetOverview(sessionID);
-			return JSON.Serialize(overview);
-		}
-
-		/// <summary>
-		/// Returns the remaining time the session has (starting at 20 minutes) in milliseconds.
-		/// </summary>
-		/// <param name="ID"> Session ID</param>
-		/// <returns> Remaining time in milliseconds</returns>
-		[HttpGet("remainingTime")]
-		async public Task<ActionResult<long>> GetRemainingTime()
-		{
-			string sessionID = Request.Headers["Authorization"];
-			TimeSpan remainingTime = await Api.GetRemainingTime(sessionID);
-			if(remainingTime != TimeSpan.Zero)
-			{
-				return (long) Math.Floor(remainingTime.TotalMilliseconds);
-			}
-			else
-			{
-				return new StatusCodeResult(410);
-			}
-
 		}
 	}
 }
