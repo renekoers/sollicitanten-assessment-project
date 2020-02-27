@@ -50,9 +50,8 @@ namespace React_Frontend.Controllers
 		/// Returns Bad Request if the ID is invalid or the session of the candidate is not in progress.
 		/// Returns Server Error if there went something wrong with saving the candidate.</returns>
 		[HttpPost("endSession")]
-		async public Task<StatusCodeResult> EndSession()
+		async public Task<StatusCodeResult> EndSession([FromHeader(Name="Authorization")] string sessionID)
 		{
-			string sessionID = Request.Headers["Authorization"];
             CandidateEntity candidate = await _repo.GetCandidate(sessionID);
             if(candidate == null || !candidate.IsStarted() || candidate.IsFinished())
             {
@@ -86,12 +85,10 @@ namespace React_Frontend.Controllers
         /// Creates an overview with for each level the number of lines, par and if it is solved.
         /// </summary>
         /// <returns> 
-		/// Returns Bad Request if the ID is invalid or not started.
-		/// Returns Server Error if there went something wrong with saving the candidate.</returns>
+		/// Returns Bad Request if the ID is invalid or not started.</returns>
 		[HttpGet("getOverview")]
-		async public Task<ActionResult<string>> GetOverview()
+		async public Task<ActionResult<string>> GetOverview([FromHeader(Name="Authorization")] string sessionID)
 		{
-			string sessionID = Request.Headers["Authorization"];
             CandidateEntity candidate = await _repo.GetCandidate(sessionID);
             if(candidate == null || !candidate.IsStarted())
             {
@@ -108,9 +105,8 @@ namespace React_Frontend.Controllers
         /// Returns Bad Request if the ID is invalid or not started.
         /// Returns Gone if there is no time left (i.e. time is up or session is over/</returns>
 		[HttpGet("remainingTime")]
-		async public Task<ActionResult<long>> GetRemainingTime()
+		async public Task<ActionResult<long>> GetRemainingTime([FromHeader(Name="Authorization")] string sessionID)
 		{
-			string sessionID = Request.Headers["Authorization"];
             CandidateEntity candidate = await _repo.GetCandidate(sessionID);
             if(candidate == null || !candidate.IsStarted())
             {
