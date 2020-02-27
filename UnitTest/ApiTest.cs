@@ -6,13 +6,6 @@
 // 	[TestClass]
 // 	public class ApiTest
 // 	{
-// 		[TestMethod]
-// 		public void GetLevelNumberTest()
-// 		{
-// 			string ID = Api.StartSession();
-// 			IState level = Api.StartLevelSession(ID, 1);
-// 			Assert.AreEqual(1, level.PuzzleLevel);
-// 		}
 
 // 		[TestMethod]
 // 		public void AddCandidateTest()
