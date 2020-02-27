@@ -9,16 +9,6 @@ namespace BackEnd
 {
 	public partial class Database
 	{
-		/// Get properties of a certain session
-		async internal static Task<LevelSession> GetLevelSession(string ID, int levelNumber)
-		{
-			CandidateEntity candidate = await GetCandidate(ID);
-			if(candidate == null || candidate.GameResults == null)
-			{
-				return null;
-			}
-			return candidate.GetLevelSession(levelNumber);
-		}
 		/// Saving a solution to a levelsession
 		async internal static Task<LevelSolution> SubmitSolution(string ID, int levelNumber, Statement[] statements)
 		{
