@@ -2,9 +2,9 @@ import React, { useState, useEffect, useCallback } from "react";
 import { Jumbotron, Container } from "reactstrap";
 import { Statistics } from "./Statistics";
 import { StatisticsButtons } from "./StatisticsButtons";
-import "../../css/HR.css";
+import "../../../css/HR.css";
 
-export function Results(props) {
+export const Results = props => {
 	const [name, setName] = useState(null);
 	const [firstID, setFirstID] = useState(1);
 	const [lastID, setLastID] = useState(props.lastID);
@@ -39,7 +39,7 @@ export function Results(props) {
 			});
 	}, [id, getLastID, setID, lastID, props]);
 
-	async function getPreviousID() {
+	const getPreviousID = async () => {
 		document.querySelector("#loginerror").innerHTML = " ";
 		document.querySelector(".popupButton").style["display"] = "none";
 		await fetch("api/statistics/previousFinished?ID=" + id, {
@@ -60,8 +60,8 @@ export function Results(props) {
 					);
 				}
 			});
-	}
-	async function getNextID() {
+	};
+	const getNextID = async () => {
 		document.querySelector("#loginerror").innerHTML = " ";
 		document.querySelector(".popupButton").style["display"] = "none";
 		await fetch("api/statistics/nextFinished?ID=" + id, {
@@ -82,8 +82,8 @@ export function Results(props) {
 					);
 				}
 			});
-	}
-	async function status(response) {
+	};
+	const status = async response => {
 		return await new Promise(async function(resolve, reject) {
 			if (response.status === 200) {
 				resolve(await response.text());
@@ -91,8 +91,8 @@ export function Results(props) {
 				reject(response.status);
 			}
 		});
-	}
-	function statusToJSON(response) {
+	};
+	const statusToJSON = response => {
 		return new Promise(function(resolve, reject) {
 			if (response.status === 200) {
 				resolve(response.json());
@@ -100,14 +100,14 @@ export function Results(props) {
 				reject(response.status);
 			}
 		});
-	}
-	function translateErrorStatusCodeToString(statusCode) {
+	};
+	const translateErrorStatusCodeToString = statusCode => {
 		if (statusCode === 401) {
 			return "De sessie is verlopen. Log opnieuw in.";
 		} else {
 			return "Er is iets mis gegaan. Probeer het later opnieuw.";
 		}
-	}
+	};
 	if (id === 0) {
 		return <div />;
 	}
@@ -127,4 +127,4 @@ export function Results(props) {
 			</Jumbotron>
 		</div>
 	);
-}
+};

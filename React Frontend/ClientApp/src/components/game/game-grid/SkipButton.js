@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
-import "../../css/SkipButton.css";
+import "../../../css/SkipButton.css";
 
 export class SkipButton extends Component {
 	constructor(props) {
@@ -29,8 +29,7 @@ export class SkipButton extends Component {
 					<button
 						disabled={running}
 						className={running ? classNames : "skipButton"}
-						onClick={this.nextButtonClicked}
-					>
+						onClick={this.nextButtonClicked}>
 						Overview
 					</button>
 				</Link>
@@ -44,8 +43,7 @@ export class SkipButton extends Component {
 							? classNames
 							: "skipButton"
 					}
-					onClick={this.nextButtonClicked}
-				>
+					onClick={this.nextButtonClicked}>
 					Next level
 				</button>
 			);
@@ -55,8 +53,7 @@ export class SkipButton extends Component {
 				<button
 					disabled={this.props.disabledPrevious || running}
 					className={classNames}
-					onClick={this.previousButtonClicked}
-				>
+					onClick={this.previousButtonClicked}>
 					Previous level
 				</button>
 				{nextButton}
