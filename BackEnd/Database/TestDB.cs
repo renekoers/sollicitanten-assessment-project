@@ -65,7 +65,7 @@ namespace BackEnd {
             await new Task(() => {});
             List<CandidateEntity> finishedCandidatesBefore = TestRepo.Where(pair => pair.Value.finished < dateTime && pair.Value.IsFinished())
                                                                     .Select(pair => pair.Value).OrderByDescending(candidate => candidate.finished).ToList();
-            return finishedCandidatesBefore.Count>0 ? finishedCandidatesBefore.First() : null;
+            return finishedCandidatesBefore.FirstOrDefault();
         }
         async public Task<List<CandidateEntity>> GetListOfCandidatesWithScores(int levelNumber)
         {
