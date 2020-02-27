@@ -57,7 +57,6 @@ namespace React_Frontend.Controllers
             {
                 return BadRequest();
             }
-            candidate.GameResults = CandidateEntity.newGameResults();
             candidate.finished = DateTime.UtcNow;
             await _repo.SaveCandidate(candidate);
             CandidateEntity candidateCheck = await _repo.GetCandidate(sessionID);
@@ -67,7 +66,7 @@ namespace React_Frontend.Controllers
 			}
 			else
 			{
-				return StatusCode(500);
+				return new StatusCodeResult(500);
 			}
 		}
         
