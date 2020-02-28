@@ -6,7 +6,7 @@ namespace BackEnd
     {
         public Tile[,] AllTiles { get; private set; }
         public ICharacter Character { get; private set; }
-        internal FinishTile Finish { get; private set; }
+        public FinishTile Finish { get; private set; }
         public bool Finished => Character.Position == Finish;
         public int LevelNumber { get; private set; }
 
@@ -46,6 +46,7 @@ namespace BackEnd
             int[][] doors = level.Doors;
             foreach (var button in buttons)
             {
+                bool foundDoor = false;
                 foreach (var door in doors)
                 {
                     if (button[0] == door[0])
@@ -53,10 +54,13 @@ namespace BackEnd
                         DoorTile doorTile = new DoorTile();
                         AllTiles[door[1], door[2]] = doorTile;
                         AllTiles[button[1], button[2]] = new ButtonTile(doorTile);
+                        foundDoor = true;
                         break;
                     }
                 }
-                throw new ArgumentException("Can not find the right door for every button.");
+                if(!foundDoor){
+                    throw new ArgumentException("Can not find the right door for every button.");
+                }
             }
         }
 
@@ -85,7 +89,7 @@ namespace BackEnd
             int[] start = level.PositionCharacter;
             if(!AllTiles[start[0], start[1]].Passable)
             {
-                throw new ArgumentException("Character can only be placed on passable tiles.")
+                throw new ArgumentException("Character can only be placed on passable tiles.");
             }
             Character = new Character(AllTiles[start[0], start[1]], level.DirectionCharacter);
         }
@@ -104,7 +108,7 @@ namespace BackEnd
                 {
                     if(!tile.DropOnto(new Box()))
                     {
-                        throw new ArgumentException("Can not correctly place all the boxes.")
+                        throw new ArgumentException("Can not correctly place all the boxes.");
                     }
                 }
             }
