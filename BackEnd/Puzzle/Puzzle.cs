@@ -56,25 +56,14 @@ namespace BackEnd
                         break;
                     }
                 }
-
+                throw new ArgumentException("Can not find the right door for every button.");
             }
         }
 
-        void PlaceBoxes(Level level)
+        void CreateFinish(Level level)
         {
-            int[][] boxes = level.Boxes;
-            foreach (var box in boxes)
-            {
-                Tile tile = AllTiles[box[0], box[1]];
-                if (Character.Position == tile)
-                {
-                    Character.HeldItem = new Box();
-                }
-                else
-                {
-                    tile.ContainedItem = new Box();
-                }
-            }
+            int[] finish = level.End;
+            AllTiles[finish[0], finish[1]] = Finish = new FinishTile();
         }
 
         void CreatePassableTiles()
@@ -91,16 +80,34 @@ namespace BackEnd
             }
         }
 
-        void CreateFinish(Level level)
-        {
-            int[] finish = level.End;
-            AllTiles[finish[0], finish[1]] = Finish = new FinishTile();
-        }
-
         void CreateCharacter(Level level)
         {
             int[] start = level.PositionCharacter;
+            if(!AllTiles[start[0], start[1]].Passable)
+            {
+                throw new ArgumentException("Character can only be placed on passable tiles.")
+            }
             Character = new Character(AllTiles[start[0], start[1]], level.DirectionCharacter);
+        }
+
+        void PlaceBoxes(Level level)
+        {
+            int[][] boxes = level.Boxes;
+            foreach (var box in boxes)
+            {
+                Tile tile = AllTiles[box[0], box[1]];
+                if (Character.Position == tile)
+                {
+                    Character.HeldItem = new Box();
+                }
+                else
+                {
+                    if(!tile.DropOnto(new Box()))
+                    {
+                        throw new ArgumentException("Can not correctly place all the boxes.")
+                    }
+                }
+            }
         }
 
         void SetNeighbours()
