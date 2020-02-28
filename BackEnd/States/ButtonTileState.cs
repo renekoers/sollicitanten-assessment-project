@@ -8,5 +8,6 @@ namespace BackEnd
         {
         }
         public bool Equals(ButtonTileState otherButton) => Equals((TileState) otherButton) && Door.Equals(otherButton.Door);
+        public override int GetHashCode() => base.GetHashCode()*2 + Door.GetHashCode();
     }
 }
