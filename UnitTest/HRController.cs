@@ -16,32 +16,32 @@ namespace UnitTest {
 
         private HRController hrController = new HRController(new TestDB());
         
-        [TestMethod]
-        public async Task LoginTest(){
-            JsonElement credentials = await (JsonElement) JSON.Serialize("\"username\":\"testUsername\",\"password\":\"testPassword\"");
-            ActionResult<string> response = hrController.Login(credentials);
-            // string token = JWT.CreateToken("testUsername", "testPassword");
-            // ActionResult<string> msg = JSON.Serialize("Bearer " + token);
+        // [TestMethod]
+        // public async Task LoginTest(){
+        //     JsonElement credentials = await (JsonElement) JSON.Serialize("\"username\":\"testUsername\",\"password\":\"testPassword\"");
+        //     ActionResult<string> response = hrController.Login(credentials);
+        //     // string token = JWT.CreateToken("testUsername", "testPassword");
+        //     // ActionResult<string> msg = JSON.Serialize("Bearer " + token);
 
-            Assert.AreEqual(response, response);
-        }
+        //     Assert.AreEqual(response, response);
+        // }
 
         [TestMethod]
         public async Task AddCandidateSuccess() {
-            var response = await hrController.AddCandidate("testadd");
-            Assert.IsInstanceOfType(response, typeof(OkResult));
+            ActionResult<string> response = await hrController.AddCandidate("testadd");
+            Assert.AreEqual(((StatusCodeResult) response.Result).StatusCode, 200);
         }
 
          [TestMethod]
         public async Task AddCandidateEmptyStringAsName() {
-            var response = await hrController.AddCandidate("");
-            Assert.IsInstanceOfType(response, typeof(UnprocessableEntityResult));
+            ActionResult<string> response = await hrController.AddCandidate("");
+            Assert.AreEqual(((StatusCodeResult) response.Result).StatusCode, 422);
         }
 
          [TestMethod]
         public async Task AddCandidateNameIsNull() {
-            var response = await hrController.AddCandidate(null);
-            Assert.IsInstanceOfType(response, typeof(UnprocessableEntityResult));
+            ActionResult<string> response = await hrController.AddCandidate(null);
+            Assert.AreEqual(((StatusCodeResult) response.Result).StatusCode, 422);
         }
 
         
