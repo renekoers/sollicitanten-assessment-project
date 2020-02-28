@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using BackEnd;
@@ -39,7 +38,7 @@ namespace React_Frontend.Controllers
 			}
 			else
 			{
-				return StatusCode(500);
+				return new StatusCodeResult(500);
 			}
 		}
 
@@ -102,7 +101,7 @@ namespace React_Frontend.Controllers
 		/// </summary>
 		/// <returns> Remaining time in milliseconds.
         /// Returns Bad Request if the ID is invalid or not started.
-        /// Returns Gone if there is no time left (i.e. time is up or session is over/</returns>
+        /// Returns Gone if there is no time left (i.e. time is up or session is over)./</returns>
 		[HttpGet("remainingTime")]
 		async public Task<ActionResult<long>> GetRemainingTime([FromHeader(Name="Authorization")] string sessionID)
 		{
@@ -118,6 +117,12 @@ namespace React_Frontend.Controllers
 			}
 			else
 			{
+				foreach(LevelSession levelSession in candidate.GameResults)
+				{
+					levelSession.Stop();
+				}
+				await _repo.SaveCandidate(candidate);
+				await EndSession(sessionID);
 				return new StatusCodeResult(410);
 			}
 		}

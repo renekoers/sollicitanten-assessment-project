@@ -61,7 +61,7 @@ namespace BackEnd {
         async public Task<List<CandidateEntity>> GetCandidatesAfterTime(DateTime dateTime)
         {
             await emptyTask();
-            return TestRepo.Where(pair => pair.Value.finished > dateTime).Select(pair => pair.Value).ToList();
+            return TestRepo.Where(pair => pair.Value.finished > dateTime).Select(pair => pair.Value).OrderBy(candidate => candidate.finished).ToList();
         }
 
         async public Task<CandidateEntity> GetLastCandidateBefore(DateTime dateTime)

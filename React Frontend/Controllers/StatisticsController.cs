@@ -34,12 +34,7 @@ namespace React_Frontend.Controllers
 				ClaimsIdentity identity = (ClaimsIdentity)User.Identity;
 				time = identity.FindFirst("Time").Value;
 			}
-			DateTime givenTime;
-			try
-			{
-				givenTime = DateTime.Parse(time);
-			}
-			catch(FormatException)
+			if(!DateTime.TryParse(time, out DateTime givenTime))
 			{
 				return BadRequest(timeReceivedRequest);
 			}
