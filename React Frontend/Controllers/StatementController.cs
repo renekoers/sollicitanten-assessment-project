@@ -53,7 +53,7 @@ namespace React_Frontend.Controllers
 		async public Task<ActionResult<string>> SaveAttempt(CandidateEntity candidate, int levelNumber, Statement[] statements)
 		{
 			LevelSession levelSession = candidate.GetLevelSession(levelNumber);
-			if(levelSession == null)
+			if(levelSession == null || !levelSession.InProgress || statements == null || statements.Length == 0)
 			{
 				return BadRequest();
 			}
