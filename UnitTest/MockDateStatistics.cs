@@ -88,6 +88,13 @@ namespace UnitTest
                 })
             };
         }
+        public static Statement[] GetInfiniteLoop()
+        {
+            return new Statement[] 
+            { 
+                new While(ConditionParameter.TileCurrent, ConditionValue.Passable, true, new Statement[] { new SingleCommand(Command.RotateLeft) }) 
+            };
+        }
         public static Statement[] AddSingleCommand(Statement[] statements, SingleCommand command)
         {
             Statement[] longerArray = new Statement[statements.Length+1];
