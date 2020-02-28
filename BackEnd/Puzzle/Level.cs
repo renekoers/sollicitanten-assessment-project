@@ -56,7 +56,6 @@ namespace BackEnd
 				"....\n" +
 				"2,15"),
 			CreateFromString("" +
-				"..........\n" +
 				"...#....#.\n" +
 				".......a..\n" +
 				".....#.#..\n" +
@@ -66,7 +65,7 @@ namespace BackEnd
 				"..........\n" +
 				"..#..^....\n" +
 				"........#.\n" +
-				"3,100")
+				"3,6")
 		};
 		public static Level Get(int level)
 		{
