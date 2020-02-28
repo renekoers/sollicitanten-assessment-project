@@ -7,35 +7,98 @@ namespace UnitTest
     public class CharacterTest
     {
         [TestMethod]
-        public void RotateLeftUpdatesDirection()
+        public void MoveForwardUpdatesPositionTest()
+        {
+            Tile characterStartPosition = new Tile();
+            Tile tileInFrontOfPlayer = new Tile();
+            characterStartPosition.SetNeighbour(tileInFrontOfPlayer, Direction.North);
+            Character character = new Character(characterStartPosition, Direction.North);
+            character.ExecuteCommand(Command.MoveForward);
+            Assert.AreEqual(tileInFrontOfPlayer, character.Position);
+        }
+
+        [TestMethod]
+        public void MoveBackwardUpdatesPositionTest()
+        {
+            Tile characterStartPosition = new Tile();
+            Tile tileBehindPlayer = new Tile();
+            characterStartPosition.SetNeighbour(tileBehindPlayer, Direction.East);
+            Character character = new Character(characterStartPosition, Direction.West);
+            character.ExecuteCommand(Command.MoveBackward);
+            Assert.AreEqual(tileBehindPlayer, character.Position);
+        }
+
+        [TestMethod]
+        public void RotateLeftUpdatesDirectionTest()
         {
             Character character = new Character(new Tile(), Direction.North);
-
             character.ExecuteCommand(Command.RotateLeft);
-
             Assert.AreEqual(Direction.West, character.Direction);
         }
 
         [TestMethod]
-        public void RotateRightUpdatesDirection()
+        public void RotateRightUpdatesDirectionTest()
         {
             Character character = new Character(new Tile(), Direction.East);
-
             character.ExecuteCommand(Command.RotateRight);
-
             Assert.AreEqual(Direction.South, character.Direction);
         }
 
         [TestMethod]
-        public void RetrieveFromTile()
+        public void CanNotWalkThroughWallTest()
+        {
+            Tile characterStartPosition = new Tile();
+            Tile tileInFrontOfPlayer = new WallTile();
+            characterStartPosition.SetNeighbour(tileInFrontOfPlayer, Direction.North);
+            Character character = new Character(characterStartPosition, Direction.North);
+            character.ExecuteCommand(Command.MoveForward);
+            Assert.AreEqual(characterStartPosition, character.Position);
+        }
+
+        [TestMethod]
+        public void CanWalkThroughOpenDoorTest()
+        {
+            Tile characterStartPosition = new Tile();
+            DoorTile tileInFrontOfPlayer = new DoorTile();
+            tileInFrontOfPlayer.Open();
+            characterStartPosition.SetNeighbour(tileInFrontOfPlayer, Direction.North);
+            Character character = new Character(characterStartPosition, Direction.North);
+            character.ExecuteCommand(Command.MoveForward);
+            Assert.AreEqual(tileInFrontOfPlayer, character.Position);
+        }
+        
+        [TestMethod]
+        public void CanNotWalkThroughClosedDoorTest()
+        {
+            Tile characterStartPosition = new Tile();
+            Tile tileInFrontOfPlayer = new DoorTile();
+            characterStartPosition.SetNeighbour(tileInFrontOfPlayer, Direction.North);
+            Character character = new Character(characterStartPosition, Direction.North);
+            character.ExecuteCommand(Command.MoveForward);
+            Assert.AreEqual(characterStartPosition, character.Position);
+        }
+        
+        [TestMethod]
+        public void CanNotWalkThroughBoxTest()
+        {
+            Tile characterStartPosition = new Tile();
+            Tile tileInFrontOfPlayer = new Tile();
+            tileInFrontOfPlayer.ContainedItem = new Box();
+            characterStartPosition.SetNeighbour(tileInFrontOfPlayer, Direction.North);
+            Character character = new Character(characterStartPosition, Direction.North);
+            character.ExecuteCommand(Command.MoveForward);
+            Assert.AreEqual(characterStartPosition, character.Position);
+        }
+
+        [TestMethod]
+        public void RetrieveBoxFromTileTest()
         {
             Tile tile = new Tile();
             Tile tileNeighbour = new Tile();
-            tile.SetNeighbour(tileNeighbour, Direction.North);
             Movable item = new Box();
             tileNeighbour.ContainedItem = item;
+            tile.SetNeighbour(tileNeighbour, Direction.North);
             Character character = new Character(tile, Direction.North);
-
             character.ExecuteCommand(Command.PickUp);
 
             Assert.AreEqual(item, character.HeldItem);
@@ -44,7 +107,18 @@ namespace UnitTest
         }
 
         [TestMethod]
-        public void DropOntoTile()
+        public void RetrieveNothingWhenTileHasNoMovableTest()
+        {
+            Tile tile = new Tile();
+            Tile tileNeighbour = new Tile();
+            tile.SetNeighbour(tileNeighbour, Direction.North);
+            Character character = new Character(tile, Direction.North);
+            character.ExecuteCommand(Command.PickUp);
+            Assert.IsNull(character.HeldItem);
+        }
+
+        [TestMethod]
+        public void DropOntoTileTest()
         {
             Tile tile = new Tile();
             Tile tileNeighbour = new Tile();
@@ -61,7 +135,24 @@ namespace UnitTest
         }
 
         [TestMethod]
-        public void CannotDropOntoWall()
+        public void CanNotDropOntoBoxTest()
+        {
+            Tile tile = new Tile();
+            Tile tileNeighbour = new Tile();
+            Movable itemFront = new Box();
+            tileNeighbour.ContainedItem = itemFront;
+            tile.SetNeighbour(tileNeighbour, Direction.North);
+            Character character = new Character(tile, Direction.North);
+            Movable itemCharacter = new Box();
+            character.HeldItem = itemCharacter;
+            character.ExecuteCommand(Command.Drop);
+
+            Assert.AreEqual(itemFront, tileNeighbour.ContainedItem);
+            Assert.AreEqual(itemCharacter, character.HeldItem);
+        }
+
+        [TestMethod]
+        public void CannotDropOntoWallTest()
         {
             Tile tile = new Tile();
             Tile wall = new WallTile();
@@ -69,7 +160,6 @@ namespace UnitTest
             Movable item = new Box();
             Character character = new Character(tile, Direction.North);
             character.HeldItem = item;
-
             character.ExecuteCommand(Command.Drop);
 
             Assert.IsFalse(wall.ContainsMovable);
@@ -78,16 +168,15 @@ namespace UnitTest
         }
 
         [TestMethod]
-        public void DroppingBoxOntoButtonOpensDoor()
+        public void DroppingBoxOntoButtonOpensDoorTest()
         {
             Tile tile = new Tile();
             DoorTile door = new DoorTile();
             ButtonTile button = new ButtonTile(door);
             tile.SetNeighbour(button, Direction.North);
-            Movable item = new Box();
             Character character = new Character(tile, Direction.North);
+            Movable item = new Box();
             character.HeldItem = item;
-
             character.ExecuteCommand(Command.Drop);
 
             Assert.IsTrue(door.IsOpen);
@@ -97,16 +186,15 @@ namespace UnitTest
         }
 
         [TestMethod]
-        public void TakingItemFromButtonClosesDoor()
+        public void TakingItemFromButtonClosesDoorTest()
         {
             Tile tile = new Tile();
             DoorTile door = new DoorTile();
             ButtonTile button = new ButtonTile(door);
-            tile.SetNeighbour(button, Direction.North);
             Movable item = new Box();
             button.ContainedItem = item;
+            tile.SetNeighbour(button, Direction.North);
             Character character = new Character(tile, Direction.North);
-
             character.ExecuteCommand(Command.PickUp);
 
             Assert.IsTrue(door.IsClosed);
@@ -115,29 +203,19 @@ namespace UnitTest
         }
 
         [TestMethod]
-        public void MoveForwardUpdatesPosition()
+        public void CanNotDropOntoOpenDoorTest()
         {
-            Tile characterStartPosition = new Tile();
-            Tile tileInFronOfPlayer = new Tile();
-            characterStartPosition.SetNeighbour(tileInFronOfPlayer, Direction.North);
-            Character character = new Character(characterStartPosition, Direction.North);
+            Tile tile = new Tile();
+            DoorTile door = new DoorTile();
+            door.Open();
+            tile.SetNeighbour(door, Direction.North);
+            Character character = new Character(tile, Direction.North);
+            Movable item = new Box();
+            character.HeldItem = item;
+            character.ExecuteCommand(Command.Drop);
 
-            character.ExecuteCommand(Command.MoveForward);
-
-            Assert.AreEqual(tileInFronOfPlayer, character.Position);
-        }
-
-        [TestMethod]
-        public void MoveBackwardUpdatesPosition()
-        {
-            Tile characterStartPosition = new Tile();
-            Tile tileBehindPlayer = new Tile();
-            characterStartPosition.SetNeighbour(tileBehindPlayer, Direction.East);
-            Character character = new Character(characterStartPosition, Direction.West);
-
-            character.ExecuteCommand(Command.MoveBackward);
-
-            Assert.AreEqual(tileBehindPlayer, character.Position);
+            Assert.IsFalse(door.ContainsMovable);
+            Assert.AreEqual(item, character.HeldItem);
         }
     }
 }
