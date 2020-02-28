@@ -56,5 +56,26 @@ namespace UnitTest
             }
             Assert.AreEqual(Direction.North, dir);
         }
+        [TestMethod]
+        public void OppositeOfNorthIsSouthTest()
+        {
+            Direction dir = Direction.North;
+            Direction dirOpposite = dir.Opposite();
+            Assert.AreEqual(Direction.South, dirOpposite);
+        }
+        [TestMethod]
+        public void OppositeOfEastIsWestTest()
+        {
+            Direction dir = Direction.East;
+            Direction dirOpposite = dir.Opposite();
+            Assert.AreEqual(Direction.West, dirOpposite);
+        }
+        [TestMethod]
+        public void OppositeOfOppositeIsOriginalDirectionTest()
+        {
+            Direction dir = Direction.North;
+            Direction dirOppositeTwice = dir.Opposite().Opposite();
+            Assert.AreEqual(dir, dirOppositeTwice);
+        }
     }
 }
