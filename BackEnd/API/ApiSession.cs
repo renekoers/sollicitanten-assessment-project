@@ -6,34 +6,6 @@ namespace BackEnd
 {
 	public partial class Api
 	{
-		public static GameSession GetSession(string ID)
-		{
-			return Repository.GetSession(ID);
-		}
-        /// Level session methods.
-		async public static Task<IState> StartLevelSession(string ID, int levelNumber)
-		{
-			return (await Database.StartLevel(ID, levelNumber)) ? new State(new Puzzle(Level.Get(levelNumber))) : null;
-		}
-		async public static Task<bool> StopLevelSession(string ID, int levelNumber)
-		{
-			return await Database.StopLevel(ID, levelNumber);
-		}
-
-		[Obsolete("Remove function after mock data is fixed!!")]
-		public static void EndLevelSession(string ID, int levelNumber)
-		{
-			GameSession gameSession = GetSession(ID);
-			LevelSession levelSession = gameSession.GetSession(levelNumber);
-			levelSession.End();
-			Repository.UpdateSession(ID, gameSession);
-		}
-        /// Check property of session methods.
-		async public static Task<bool> LevelIsSolved(string ID, int levelNumber)
-		{
-			LevelSession levelSession = await Database.GetLevelSession(ID, levelNumber);
-			return levelSession != null && levelSession.Solved;
-		}
         /// Submit a solution methods.
 		public static IEnumerable<Statement> ParseStatementTreeJson(System.Text.Json.JsonElement statementTreeJson)
 	   => StatementParser.ParseStatementTreeJson(statementTreeJson);
