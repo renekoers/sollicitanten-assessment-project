@@ -16,7 +16,7 @@ namespace UnitTest
         [TestMethod]
         public void NewLevelHasLevelNumberTest()
         {
-            Level level = Level.CreateFromString("##\n..\n3,2");
+            Level level = Level.CreateFromString("##\n^!\n3,2");
             Assert.AreEqual(3, level.LevelNumber);
         }
         [TestMethod]
@@ -24,7 +24,7 @@ namespace UnitTest
         {
             Level level = Level.CreateFromString("" + 
                 "###\n" +
-                "#.#\n" +
+                "#!^\n" +
                 "###\n" +
                 "1,1");
             Assert.AreEqual(3, level.GridSize[0]);
@@ -45,7 +45,7 @@ namespace UnitTest
         [TestMethod]
         public void LevelHasParTest()
         {
-            Level level = Level.CreateFromString("#.\n.#\n3,2");
+            Level level = Level.CreateFromString("#!\n^#\n3,2");
             Assert.AreEqual(2, level.Par);
         }
 
@@ -54,7 +54,7 @@ namespace UnitTest
         {
             Level level = Level.CreateFromString("" +
 				".!.\n" +
-				"#..\n" +
+				"#^.\n" +
 				"1,8");
             CollectionAssert.AreEqual(new int[] { 1, 0 }, level.Walls[0]);
         }
@@ -64,7 +64,7 @@ namespace UnitTest
         {
             Level level = Level.CreateFromString("" +
 				"^#\n" + 
-                "##\n" + 
+                "#!\n" + 
                 "1,1");
             Assert.AreEqual(Direction.North, level.DirectionCharacter);
             CollectionAssert.AreEqual(new int[] { 0, 0 }, level.PositionCharacter);
@@ -75,7 +75,7 @@ namespace UnitTest
         {
             Level level = Level.CreateFromString("" +
 				"#>\n" + 
-                "##\n" + 
+                "!#\n" + 
                 "1,1");
             Assert.AreEqual(Direction.East, level.DirectionCharacter);
             CollectionAssert.AreEqual(new int[] { 0, 1 }, level.PositionCharacter);
@@ -85,7 +85,7 @@ namespace UnitTest
         public void CharacterDirectionSouthTest()
         {
             Level level = Level.CreateFromString("" +
-				"##\n" + 
+				"!#\n" + 
                 "_#\n" + 
                 "1,1");
             Assert.AreEqual(Direction.South, level.DirectionCharacter);
@@ -96,7 +96,7 @@ namespace UnitTest
         public void CharacterDirectionWestTest()
         {
             Level level = Level.CreateFromString("" +
-				"##\n" + 
+				"!#\n" + 
                 "#<\n" + 
                 "1,1");
             Assert.AreEqual(Direction.West, level.DirectionCharacter);
@@ -107,7 +107,7 @@ namespace UnitTest
         public void FinishIsSetOnRightPositionTest()
         {
             Level level = Level.CreateFromString(""+ 
-                "#.\n" + 
+                "#^\n" + 
                 "!.\n" + 
                 "1,1");
             CollectionAssert.AreEqual(new int[] { 1, 0 }, level.End);
@@ -119,6 +119,7 @@ namespace UnitTest
             Level level = Level.CreateFromString(""+ 
                 "ab\n" + 
                 "##\n" + 
+                "^!\n" + 
                 "1,1");
             Assert.AreEqual(2, level.Buttons.Length);
             CollectionAssert.AreEqual(new int[] { 0, 0, 0 }, level.Buttons[0]);
@@ -131,6 +132,7 @@ namespace UnitTest
             Level level = Level.CreateFromString(""+ 
                 "AB\n" + 
                 "##\n" + 
+                "^!\n" + 
                 "1,1");
             Assert.AreEqual(2, level.Doors.Length);
             CollectionAssert.AreEqual(new int[] { 0, 0, 0 }, level.Doors[0]);
@@ -143,6 +145,7 @@ namespace UnitTest
             Level level = Level.CreateFromString(""+ 
                 "a.\n" + 
                 ".A\n" + 
+                "^!\n" + 
                 "1,1");
             Assert.AreEqual(level.Doors[0][0], level.Buttons[0][0]);
         }
@@ -153,6 +156,7 @@ namespace UnitTest
             Level level = Level.CreateFromString(""+ 
                 "*#\n" + 
                 ".#\n" + 
+                "^!\n" + 
                 "1,1");
             CollectionAssert.AreEqual(new int[] { 0, 0 }, level.Boxes[0]);
         }
