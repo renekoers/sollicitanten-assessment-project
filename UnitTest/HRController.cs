@@ -16,15 +16,11 @@ namespace UnitTest {
 
         private HRController hrController = new HRController(new TestDB());
         
-        // [TestMethod]
-        // public async Task LoginTest(){
-        //     JsonElement credentials = await (JsonElement) JSON.Serialize("\"username\":\"testUsername\",\"password\":\"testPassword\"");
-        //     ActionResult<string> response = hrController.Login(credentials);
-        //     // string token = JWT.CreateToken("testUsername", "testPassword");
-        //     // ActionResult<string> msg = JSON.Serialize("Bearer " + token);
-
-        //     Assert.AreEqual(response, response);
-        // }
+        [TestMethod]
+        public async Task LoginSuccesTest(){
+            
+            
+        }
 
         [TestMethod]
         public async Task AddCandidateSuccess() {
