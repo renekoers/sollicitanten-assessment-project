@@ -11,12 +11,11 @@ namespace React_Frontend.Controllers
 	[Route("api/statement")]
 	public class StatementController : Controller
 	{
-		[HttpPost("{levelId}")]
-		async public Task<ActionResult<string>> PostStatements(int levelId, [FromBody] JsonElement statementTreeJson)
+		[HttpPost("{levelNumber}")]
+		async public Task<ActionResult<string>> PostStatements([FromHeader(Name="Authorization")] string sessionID, int levelNumber, [FromBody] JsonElement statementTreeJson)
 		{
-			string sessionID = Request.Headers["Authorization"];
 			IEnumerable<Statement> statements = Api.ParseStatementTreeJson(statementTreeJson);
-			LevelSolution solution = await Api.SubmitSolution(sessionID, levelId, statements.ToArray());
+			LevelSolution solution = await Api.SubmitSolution(sessionID, levelNumber, statements.ToArray());
 			if(solution != null)
 			{
 				return JSON.Serialize(solution);
