@@ -36,10 +36,9 @@ namespace BackEnd
 			}
 			if (Command != null)
 			{
-				if (int.TryParse(Command, out int number))
+				if (uint.TryParse(Command, out uint number))
 				{
-					uint repeatingTimes = (uint)number;
-					inputForConstructor.Add(repeatingTimes);
+					inputForConstructor.Add(number);
 				}
 				else
 				{

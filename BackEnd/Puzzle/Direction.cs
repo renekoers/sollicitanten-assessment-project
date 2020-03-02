@@ -42,7 +42,7 @@ namespace BackEnd
                 case Direction.East:
                     return (row, col + 1);
                 default:
-                    return (row, col);
+                    throw new System.Exception("This direction is not implemented.");
             }
         }
     }
