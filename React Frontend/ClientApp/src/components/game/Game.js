@@ -105,7 +105,7 @@ export const Game = props => {
 	const onReceiveStatementTree = async statementTree => {
 		setAreStatementsRunning(true);
 		const sessionId = localStorage.getItem("sessionID");
-		const levelSolutionResponse = await fetch(
+		await fetch(
 			"api/statement/" + levelNumber,
 			{
 				method: "POST",
@@ -115,9 +115,10 @@ export const Game = props => {
 				},
 				body: JSON.stringify(statementTree)
 			}
-		);
-		const levelSolution = await levelSolutionResponse.json();
-		updateGridFromLevelSolution(levelSolution);
+		)
+		.then(status)
+		.then(updateGridFromLevelSolution)
+		.catch(() => setAreStatementsRunning(false));
 	};
 
 	/**

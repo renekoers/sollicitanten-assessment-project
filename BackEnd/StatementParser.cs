@@ -10,28 +10,33 @@ namespace BackEnd
 		private const string STATEMENT_TYPE_PROP = "type";
 		private const string STATEMENT_ACTION_PROP = "action";
 
-		public static IEnumerable<Statement> ParseStatementTreeJson(JsonElement statementTreeJson)
-			=> ParseStatementArrayJson(statementTreeJson);
+		public static bool TryParseStatementTreeJson(JsonElement statementTreeJson, out IEnumerable<Statement> statements)
+		{
+			try
+			{
+				statements = ParseStatementArrayJson(statementTreeJson);
+				return true;
+			}
+			catch
+			{
+				statements = null;
+				return false;
+			}
+		}
 
 		public static Statement ParseStatementJson(JsonElement statementElement)
 		{
 			string statementType = statementElement.GetProperty(STATEMENT_TYPE_PROP).GetString();
 			string statementAction = statementElement.GetProperty(STATEMENT_ACTION_PROP).GetString();
-			Statement statement = null;
-
 			switch (statementType)
 			{
 				case "command":
-					statement = ParseCommandStatementJson(statementAction, statementElement);
-					break;
+					return ParseCommandStatementJson(statementAction, statementElement);
 				case "flow":
-					statement = ParseFlowStatementJson(statementAction, statementElement);
-					break;
+					return ParseFlowStatementJson(statementAction, statementElement);
 				default:
 					throw new JsonException($"Invalid statementType \"{statementType}\".");
 			}
-
-			return statement;
 		}
 
 		private static IEnumerable<Statement> ParseStatementArrayJson(JsonElement statementArray)
