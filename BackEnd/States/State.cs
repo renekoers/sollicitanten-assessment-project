@@ -98,11 +98,11 @@ namespace BackEnd
 
             return (this.PuzzleWidth << 0)
                 + (this.PuzzleHeight << 1)
-                * (this.PuzzleLevel << 2)
-                ^ (
+                * ((this.PuzzleLevel << 2)+1)
+                ^ ((
                     (this.Character.GetHashCode() << 4)
                     + (puzzleTileListHashCode + (2 << 16))
-                  );
+                  )+1);
         }
     }
 }

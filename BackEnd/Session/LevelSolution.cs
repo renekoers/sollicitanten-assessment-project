@@ -22,16 +22,16 @@ namespace BackEnd
         public List<IState> States { get; private set; }
         [Ignore]
         public int NumberOfStates;
-
-        public LevelSolution(int number, Statement[] statements)
-            : this(number, statements, 0){}
-        public LevelSolution(int number, Statement[] statements, long duration)
+        public LevelSolution(int number, Statement[] statements, long duration=0)
+            : this(new Puzzle(Level.Get(number)), statements, duration)
         {
             LevelNumber = number;
+        }
+        public LevelSolution(Puzzle puzzle, Statement[] statements, long duration=0)
+        {
             CodeBlock = new StatementBlock(statements);
             Code = statements;
             Duration = duration;
-            Puzzle puzzle = new Puzzle(Level.Get(number));
             States = new List<IState>();
             States.Add(new State(puzzle));
             States.AddRange(CodeBlock.ExecuteCommand(puzzle));

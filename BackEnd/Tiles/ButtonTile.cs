@@ -3,7 +3,7 @@ namespace BackEnd
 {
     public class ButtonTile : Tile
     {
-        internal DoorTile door { get; }
+        public DoorTile door { get; }
 
         public ButtonTile(DoorTile door) : base()
         {
