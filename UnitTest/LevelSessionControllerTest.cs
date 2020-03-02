@@ -19,6 +19,7 @@ namespace UnitTest
             ActionResult<string> result = await controller.StartLevel(id,"1");
             Assert.AreNotEqual(((StatusCodeResult) result.Result).StatusCode, 200);
         }
+
         [TestMethod]
         public async Task StartLevelSessionAfterStartingGameSessionResolvesTest()
         {
@@ -30,6 +31,7 @@ namespace UnitTest
             ActionResult<string> result = await controller.StartLevel(id,"1");
             Assert.IsTrue(result.Result == null || ((StatusCodeResult) result.Result).StatusCode == 200);
         }
+
         [TestMethod]
         public async Task StartLevelSessionSetsLevelSessionInProgressTest()
         {
@@ -45,6 +47,7 @@ namespace UnitTest
             LevelSession levelSession = candidate.GetLevelSession(levelNumber);
             Assert.IsTrue(levelSession.InProgress);
         }
+
         [TestMethod]
         public async Task StartLevelSessionOfLevelThatIsNaNTest()
         {
@@ -58,6 +61,7 @@ namespace UnitTest
             ActionResult<string> result = await controller.StartLevel(id, levelNumberNaN);
             Assert.AreNotEqual(((StatusCodeResult) result.Result).StatusCode, 200);
         }
+
         [TestMethod]
         public async Task StartLevelSessionWithInvalidLevelNumberTest()
         {
@@ -71,6 +75,7 @@ namespace UnitTest
             ActionResult<string> result = await controller.StartLevel(id, levelNumberNaN);
             Assert.AreNotEqual(((StatusCodeResult) result.Result).StatusCode, 200);
         }
+
         [TestMethod]
         public async Task StopLevelSessionWithoutStartingGameSessionRejectsTest()
         {
@@ -80,6 +85,7 @@ namespace UnitTest
             ActionResult<string> result = await controller.StopLevel(id,"1");
             Assert.AreNotEqual(((StatusCodeResult) result.Result).StatusCode, 200);
         }
+
         [TestMethod]
         public async Task StopLevelSessionSetsLevelSessionNotInProgressTest()
         {
@@ -95,6 +101,18 @@ namespace UnitTest
             CandidateEntity candidate = await repo.GetCandidate(id);
             LevelSession levelSession = candidate.GetLevelSession(levelNumber);
             Assert.IsFalse(levelSession.InProgress);
+        }
+
+        [TestMethod]
+        public async Task IsSolvedRejectIfIdIsInvalidTest()
+        {
+            IRepository repo = new TestDB();
+            LevelSessionController controller = new LevelSessionController(repo);
+            GameSessionController gameController = new GameSessionController(repo);
+            string id = await repo.AddCandidate("Test");
+            await gameController.StartSession(id);
+            ActionResult<bool> result = await controller.IsSolved(id + "NOT","1");
+            Assert.AreNotEqual(((ObjectResult) result.Result).StatusCode, 200);
         }
     }
 }
