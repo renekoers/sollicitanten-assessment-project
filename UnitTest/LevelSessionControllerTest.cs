@@ -112,7 +112,102 @@ namespace UnitTest
             string id = await repo.AddCandidate("Test");
             await gameController.StartSession(id);
             ActionResult<bool> result = await controller.IsSolved(id + "NOT","1");
-            Assert.AreNotEqual(((ObjectResult) result.Result).StatusCode, 200);
+            Assert.AreNotEqual(((StatusCodeResult) result.Result).StatusCode, 200);
+        }
+
+        [TestMethod]
+        public async Task IsSolvedRejectsIfLevelNumberIsNaNTest()
+        {
+            IRepository repo = new TestDB();
+            LevelSessionController controller = new LevelSessionController(repo);
+            GameSessionController gameController = new GameSessionController(repo);
+            string id = await repo.AddCandidate("Test");
+            await gameController.StartSession(id);
+            ActionResult<bool> result = await controller.IsSolved(id, "NOT A NUMBER");
+            Assert.AreNotEqual(((StatusCodeResult) result.Result).StatusCode, 200);
+        }
+
+        [TestMethod]
+        public async Task IsSolvedRejectsIfLevelNumberIsIncorrectTest()
+        {
+            IRepository repo = new TestDB();
+            LevelSessionController controller = new LevelSessionController(repo);
+            GameSessionController gameController = new GameSessionController(repo);
+            string id = await repo.AddCandidate("Test");
+            await gameController.StartSession(id);
+            ActionResult<bool> result = await controller.IsSolved(id, "-1");
+            Assert.AreNotEqual(((StatusCodeResult) result.Result).StatusCode, 200);
+        }
+
+        [TestMethod]
+        public async Task IsSolvedRejectsIfCandidateIsNotStartedTest()
+        {
+            IRepository repo = new TestDB();
+            LevelSessionController controller = new LevelSessionController(repo);
+            string id = await repo.AddCandidate("Test");
+            ActionResult<bool> result = await controller.IsSolved(id, "1");
+            Assert.AreNotEqual(((StatusCodeResult) result.Result).StatusCode, 200);
+        }
+
+        [TestMethod]
+        public async Task IsSolvedReturnsFalseIfNoAttemptIsDoneForThatLevelTest()
+        {
+            IRepository repo = new TestDB();
+            LevelSessionController controller = new LevelSessionController(repo);
+            GameSessionController gameController = new GameSessionController(repo);
+            string id = await repo.AddCandidate("Test");
+            await gameController.StartSession(id);
+            ActionResult<bool> result = await controller.IsSolved(id, "1");
+            Assert.IsFalse(result.Value);
+        }
+
+        [TestMethod]
+        public async Task IsSolvedReturnsFalseIfTheLevelIsNotSolvedTest()
+        {
+            int levelNumber = 1;
+            IRepository repo = new TestDB();
+            LevelSessionController controller = new LevelSessionController(repo);
+            GameSessionController gameController = new GameSessionController(repo);
+            StatementController statementController = new StatementController(repo);
+            string id = await repo.AddCandidate("Test");
+            await gameController.StartSession(id);
+            await controller.StartLevel(id, levelNumber.ToString());
+            await statementController.SaveAttempt(id, levelNumber, new Statement[]{new SingleCommand(Command.RotateLeft)});
+            ActionResult<bool> result = await controller.IsSolved(id, levelNumber.ToString());
+            Assert.IsFalse(result.Value);
+        }
+
+        [TestMethod]
+        public async Task IsSolvedReturnsTrueIfTheLevelIsSolvedTest()
+        {
+            int levelNumber = 1;
+            IRepository repo = new TestDB();
+            LevelSessionController controller = new LevelSessionController(repo);
+            GameSessionController gameController = new GameSessionController(repo);
+            StatementController statementController = new StatementController(repo);
+            string id = await repo.AddCandidate("Test");
+            await gameController.StartSession(id);
+            await controller.StartLevel(id, levelNumber.ToString());
+            await statementController.SaveAttempt(id, levelNumber, MockDataStatistics.GetAnswerLevel1HardCoded());
+            ActionResult<bool> result = await controller.IsSolved(id, levelNumber.ToString());
+            Assert.IsTrue(result.Value);
+        }
+
+        [TestMethod]
+        public async Task IsSolvedReturnsTrueIfCandidateFailedAnAttemptAfterSolvingLevelTest()
+        {
+            int levelNumber = 1;
+            IRepository repo = new TestDB();
+            LevelSessionController controller = new LevelSessionController(repo);
+            GameSessionController gameController = new GameSessionController(repo);
+            StatementController statementController = new StatementController(repo);
+            string id = await repo.AddCandidate("Test");
+            await gameController.StartSession(id);
+            await controller.StartLevel(id, levelNumber.ToString());
+            await statementController.SaveAttempt(id, levelNumber, MockDataStatistics.GetAnswerLevel1HardCoded());
+            await statementController.SaveAttempt(id, levelNumber, new Statement[]{new SingleCommand(Command.RotateLeft)});
+            ActionResult<bool> result = await controller.IsSolved(id, levelNumber.ToString());
+            Assert.IsTrue(result.Value);
         }
     }
 }
