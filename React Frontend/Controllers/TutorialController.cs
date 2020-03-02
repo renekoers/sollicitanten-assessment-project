@@ -30,8 +30,13 @@ namespace React_Frontend.Controllers
 			string sessionID = Request.Headers["Authorization"];
 			if (sessionID=="tutorialSylveon")
 			{
-                IEnumerable<Statement> statements = StatementParser.ParseStatementTreeJson(statementTreeJson);
-                return JSON.Serialize(Api.SubmitSolutionTutorial(statements.ToArray()));
+				if(StatementParser.TryParseStatementTreeJson(statementTreeJson, out IEnumerable<Statement> statements))
+				{
+                	return JSON.Serialize(Api.SubmitSolutionTutorial(statements.ToArray()));
+				} else 
+				{
+					return BadRequest();
+				}
 			}
 			else
 			{

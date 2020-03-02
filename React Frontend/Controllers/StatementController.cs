@@ -26,6 +26,17 @@ namespace React_Frontend.Controllers
 		[HttpPost("{levelNumber}")]
 		async public Task<ActionResult<string>> PostStatements([FromHeader(Name="Authorization")] string sessionID, int levelNumber, [FromBody] JsonElement statementTreeJson)
 		{
+			if(!StatementParser.TryParseStatementTreeJson(statementTreeJson, out IEnumerable<Statement> statementsEnumarble))
+			{
+				return BadRequest();
+			}
+			Statement[] statements = statementsEnumarble.ToArray();
+			return await SaveAttempt(sessionID, levelNumber, statements);
+		}
+
+		
+		async public Task<ActionResult<string>> SaveAttempt([FromHeader(Name="Authorization")] string sessionID, int levelNumber, [FromBody] Statement[] statements)
+		{
             CandidateEntity candidate = await _repo.GetCandidate(sessionID);
 			if(candidate == null){
 				return BadRequest();
@@ -38,8 +49,6 @@ namespace React_Frontend.Controllers
 				await gameSessionController.EndSession(sessionID);
                 return new StatusCodeResult(410);
             }
-			IEnumerable<Statement> statementsEnumarble = StatementParser.ParseStatementTreeJson(statementTreeJson);
-			Statement[] statements = statementsEnumarble.ToArray();
 			LevelSession levelSession = candidate.GetLevelSession(levelNumber);
 			if(levelSession == null || !levelSession.InProgress || statements == null || statements.Length == 0)
 			{
@@ -56,6 +65,7 @@ namespace React_Frontend.Controllers
 			{
 				return BadRequest();
 			}
+		
 		}
 	}
 }

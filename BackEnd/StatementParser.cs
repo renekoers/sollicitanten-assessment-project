@@ -10,8 +10,19 @@ namespace BackEnd
 		private const string STATEMENT_TYPE_PROP = "type";
 		private const string STATEMENT_ACTION_PROP = "action";
 
-		public static IEnumerable<Statement> ParseStatementTreeJson(JsonElement statementTreeJson)
-			=> ParseStatementArrayJson(statementTreeJson);
+		public static bool TryParseStatementTreeJson(JsonElement statementTreeJson, out IEnumerable<Statement> statements)
+		{
+			try
+			{
+				statements = ParseStatementArrayJson(statementTreeJson);
+				return true;
+			}
+			catch
+			{
+				statements = null;
+				return false;
+			}
+		}
 
 		public static Statement ParseStatementJson(JsonElement statementElement)
 		{
