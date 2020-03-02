@@ -20,13 +20,13 @@ namespace React_Frontend.Controllers
         /// Adds a solution from a candidate to the database.
         /// </summary>
         /// <returns> Returns a list of all occuring states.
-		/// Returns Bad Request if the ID is invalid or the levelNumber is invalid.
+		/// Returns Bad Request if the ID is invalid, the levelNumber is invalid, the statementTreeJson can not be converted or the converted array is empty.
         /// Returns Gone if there is no time left (i.e. time is up or session is over).
 		/// Returns Server Error if there went something wrong with saving the candidate.</returns>
 		[HttpPost("{levelNumber}")]
 		async public Task<ActionResult<string>> PostStatements([FromHeader(Name="Authorization")] string sessionID, int levelNumber, [FromBody] JsonElement statementTreeJson)
 		{
-			if(!StatementParser.TryParseStatementTreeJson(statementTreeJson, out IEnumerable<Statement> statementsEnumarble))
+			if(!StatementParser.TryParseStatementTreeJson(statementTreeJson, out IEnumerable<Statement> statementsEnumarble) || statementsEnumarble.Count() == 0)
 			{
 				return BadRequest();
 			}
