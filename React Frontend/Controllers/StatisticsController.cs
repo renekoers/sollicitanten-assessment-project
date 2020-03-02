@@ -200,7 +200,7 @@ namespace React_Frontend.Controllers
         {
             Dictionary<string,Func<LevelSession,int>> statisticsFunctions = new Dictionary<string,Func<LevelSession, int>>();
             statisticsFunctions.Add("Regels code kortste oplossing", LevelSession.GetLines);
-            statisticsFunctions.Add("Tijd tot korste oplossing", LevelSession.GetDuration);
+            statisticsFunctions.Add("Tijd tot korste oplossing", LevelSession.GetDurationPerPeriod(30));
             statisticsFunctions.Add("Pogingen tot korste oplossing", session => session.NumberOfAttemptsForFirstSolved);
             return statisticsFunctions;
         }

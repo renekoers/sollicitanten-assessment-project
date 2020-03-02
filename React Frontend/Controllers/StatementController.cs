@@ -20,11 +20,22 @@ namespace React_Frontend.Controllers
         /// Adds a solution from a candidate to the database.
         /// </summary>
         /// <returns> Returns a list of all occuring states.
-		/// Returns Bad Request if the ID is invalid or the levelNumber is invalid.
+		/// Returns Bad Request if the ID is invalid, the levelNumber is invalid, the statementTreeJson can not be converted or the converted array is empty.
         /// Returns Gone if there is no time left (i.e. time is up or session is over).
 		/// Returns Server Error if there went something wrong with saving the candidate.</returns>
 		[HttpPost("{levelNumber}")]
 		async public Task<ActionResult<string>> PostStatements([FromHeader(Name="Authorization")] string sessionID, int levelNumber, [FromBody] JsonElement statementTreeJson)
+		{
+			if(!StatementParser.TryParseStatementTreeJson(statementTreeJson, out IEnumerable<Statement> statementsEnumarble))
+			{
+				return BadRequest();
+			}
+			Statement[] statements = statementsEnumarble.ToArray();
+			return await SaveAttempt(sessionID, levelNumber, statements);
+		}
+
+		
+		async public Task<ActionResult<string>> SaveAttempt([FromHeader(Name="Authorization")] string sessionID, int levelNumber, [FromBody] Statement[] statements)
 		{
             CandidateEntity candidate = await _repo.GetCandidate(sessionID);
 			if(candidate == null){
@@ -38,10 +49,8 @@ namespace React_Frontend.Controllers
 				await gameSessionController.EndSession(sessionID);
                 return new StatusCodeResult(410);
             }
-			IEnumerable<Statement> statementsEnumarble = Api.ParseStatementTreeJson(statementTreeJson);
-			Statement[] statements = statementsEnumarble.ToArray();
 			LevelSession levelSession = candidate.GetLevelSession(levelNumber);
-			if(levelSession == null)
+			if(levelSession == null || !levelSession.InProgress || statements == null || statements.Length == 0)
 			{
 				return BadRequest();
 			}
@@ -56,6 +65,7 @@ namespace React_Frontend.Controllers
 			{
 				return BadRequest();
 			}
+		
 		}
 	}
 }
