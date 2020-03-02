@@ -1,13 +1,12 @@
 using React_Frontend.Controllers;
 using Microsoft.AspNetCore.Mvc;
-using System.Text.Json;
-using JSonWebToken;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
-using System.Threading.Tasks;
-using System.Collections.Generic;
-using Microsoft.AspNetCore.Authorization;
 using BackEnd;
+using System;
+using System.Text.Json;
+using System.Threading.Tasks;
+
+
 
 namespace UnitTest {
 
@@ -17,9 +16,36 @@ namespace UnitTest {
         private HRController hrController = new HRController(new TestDB());
         
         [TestMethod]
-        public async Task LoginSuccesTest(){
+        public void LoginSuccesTest(){            
             
+            string creds = "{\"username\":\"testUsername\",\"password\":\"testPassword\"}";
+            JsonDocument jdoc = JsonDocument.Parse(creds);
+            JsonElement credentials = jdoc.RootElement;
+            ActionResult<string> response = hrController.Login((JsonElement) credentials);
+
+            Assert.IsInstanceOfType(response.Result, typeof(OkObjectResult));
+        }
+
+        [TestMethod]
+        public void LoginNoUsernameTest(){            
             
+            string creds = "{\"username\":\"\",\"password\":\"testPassword\"}";
+            JsonDocument jdoc = JsonDocument.Parse(creds);
+            JsonElement credentials = jdoc.RootElement;
+            ActionResult<string> response = hrController.Login((JsonElement) credentials);
+
+            Assert.IsInstanceOfType(response.Result, typeof(BadRequestResult));
+        }
+
+        [TestMethod]
+        public void LoginNoPasswordTest(){            
+            
+            string creds = "{\"username\":\"testUsername\",\"password\":\"\"}";
+            JsonDocument jdoc = JsonDocument.Parse(creds);
+            JsonElement credentials = jdoc.RootElement;
+            ActionResult<string> response = hrController.Login((JsonElement) credentials);
+
+            Assert.IsInstanceOfType(response.Result, typeof(BadRequestResult));
         }
 
         [TestMethod]
