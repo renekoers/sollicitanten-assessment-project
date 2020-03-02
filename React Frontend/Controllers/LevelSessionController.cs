@@ -33,7 +33,7 @@ namespace React_Frontend.Controllers
 			}
             if(!candidate.HasTimeLeft())
             {
-				GameSessionController controller = new GameSessionController();
+				GameSessionController controller = new GameSessionController(_repo);
 				await StopLevel(sessionID, level);
 				await controller.EndSession(sessionID);
                 return new StatusCodeResult(410);
@@ -68,7 +68,7 @@ namespace React_Frontend.Controllers
                 return BadRequest();
             }
 			CandidateEntity candidate = await _repo.GetCandidate(sessionID);
-			if(candidate == null || candidate.GameResults == null){
+			if(candidate == null || !candidate.IsStarted()){
 				return BadRequest();
 			}
 			LevelSession levelSession = candidate.GetLevelSession(level);
@@ -100,7 +100,7 @@ namespace React_Frontend.Controllers
                 return BadRequest();
             }
 			CandidateEntity candidate = await _repo.GetCandidate(sessionID);
-			if(candidate == null || candidate.GameResults == null){
+			if(candidate == null || !candidate.IsStarted()){
 				return BadRequest();
 			}
 			LevelSession levelSession = candidate.GetLevelSession(level);

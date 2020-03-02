@@ -26,6 +26,38 @@ namespace BackEnd
 		[JsonConstructor]
 		private Level(int level, int[] gridSize, int par, int[][] walls, int[] positionCharacter, Direction directionCharacter, int[] end, int[][] buttons, int[][] doors, int[][] boxes)
 		{
+			if(gridSize == null || walls == null || positionCharacter == null || end == null || buttons == null || doors == null || boxes == null)
+			{
+				throw new ArgumentNullException("Can not set any variables on null.");
+			}
+			if(level<1 || par <1)
+			{
+				throw new ArgumentException("All given integers must be positive.");
+			}
+			if(gridSize.Length != 2)
+			{
+				throw new ArgumentException("Size must have length and heigth.");
+			}
+			List<int[]> positions = new List<int[]>{positionCharacter, end};
+			positions.AddRange(walls);
+			positions.AddRange(boxes);
+			foreach(int[] position in positions)
+			{
+				if(position.Length != 2 || position[0]<0 || position[0]>=gridSize[0] || position[1]<0 || position[1]>=gridSize[1])
+				{
+					throw new ArgumentException("Positions must have length 2.");
+				}
+			}
+			List<int[]> doorsAndButtons = new List<int[]>();
+			doorsAndButtons.AddRange(buttons);
+			doorsAndButtons.AddRange(doors);
+			foreach(int[] position in doorsAndButtons)
+			{
+				if(position.Length != 3 || position[1]<0 || position[1]>=gridSize[0] || position[2]<0 || position[2]>=gridSize[1])
+				{
+					throw new ArgumentException("Positions must have length 2.");
+				}
+			}
 			this.LevelNumber = level;
 			this.GridSize = gridSize;
 			this.Par = par;
@@ -56,9 +88,8 @@ namespace BackEnd
 				"....\n" +
 				"2,15"),
 			CreateFromString("" +
-				"..........\n" +
 				"...#....#.\n" +
-				".......a..\n" +
+				"..........\n" +
 				".....#.#..\n" +
 				".!.......#\n" +
 				"..........\n" +
@@ -66,7 +97,7 @@ namespace BackEnd
 				"..........\n" +
 				"..#..^....\n" +
 				"........#.\n" +
-				"3,100")
+				"3,6")
 		};
 		public static Level Get(int level)
 		{
