@@ -38,20 +38,8 @@ namespace React_Frontend.Controllers
 				await gameSessionController.EndSession(sessionID);
                 return new StatusCodeResult(410);
             }
-			IEnumerable<Statement> statementsEnumarble = Api.ParseStatementTreeJson(statementTreeJson);
+			IEnumerable<Statement> statementsEnumarble = StatementParser.ParseStatementTreeJson(statementTreeJson);
 			Statement[] statements = statementsEnumarble.ToArray();
-			return await SaveAttempt(candidate, levelNumber, statements); // Made a new function so we can test that part.
-		}
-		
-		/// <summary>
-		/// Submit a new solution attempt
-		/// </summary>
-		/// <param name="candidate"></param>
-		/// <param name="levelNumber"></param>
-		/// <param name="statements"></param>
-		/// <returns>A LevelSolution object which contains amongst other things a list of IState objects and whether the level was solved or not</returns>
-		async public Task<ActionResult<string>> SaveAttempt(CandidateEntity candidate, int levelNumber, Statement[] statements)
-		{
 			LevelSession levelSession = candidate.GetLevelSession(levelNumber);
 			if(levelSession == null || !levelSession.InProgress || statements == null || statements.Length == 0)
 			{
