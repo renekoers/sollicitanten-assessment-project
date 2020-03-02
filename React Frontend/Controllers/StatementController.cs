@@ -26,7 +26,7 @@ namespace React_Frontend.Controllers
 		[HttpPost("{levelNumber}")]
 		async public Task<ActionResult<string>> PostStatements([FromHeader(Name="Authorization")] string sessionID, int levelNumber, [FromBody] JsonElement statementTreeJson)
 		{
-			if(!StatementParser.TryParseStatementTreeJson(statementTreeJson, out IEnumerable<Statement> statementsEnumarble) || statementsEnumarble.Count() == 0)
+			if(!StatementParser.TryParseStatementTreeJson(statementTreeJson, out IEnumerable<Statement> statementsEnumarble))
 			{
 				return BadRequest();
 			}
