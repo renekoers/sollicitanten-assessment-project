@@ -76,7 +76,7 @@ namespace BackEnd
         }
         public static int GetLines(LevelSession session) => session.GetLeastLinesOfCodeSolution().Lines;
         public static Func<LevelSession,int> GetDurationPerPeriod(int period) => (session => GetDuration(session)/period*period);
-        public static int GetDuration(LevelSession session) => (int)session.GetLeastLinesOfCodeSolution().Duration/1000;
+        public static int GetDuration(LevelSession session) => (int)session.GetLeastLinesOfCodeSolution().Duration;
 
         /// Old stuff, needs to check what is needed!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
