@@ -50,9 +50,12 @@ namespace UnitTest
             StatisticsController controller = new StatisticsController(repo);
             GameSessionController gameSessionController = new GameSessionController(repo);
             LevelSessionController levelSessionController = new LevelSessionController(repo);
+            StatementController statementController = new StatementController(repo);
             string id = await repo.AddCandidate("Test");
             await gameSessionController.StartSession(id);
-            // WIP!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+            await levelSessionController.StartLevel(id,"1");
+            await statementController.SaveAttempt(id, 1, MockDataStatistics.GetAnswerLevel1HardCoded());
+            await levelSessionController.StopLevel(id, "1");
             await gameSessionController.EndSession(id);
         }
     }
