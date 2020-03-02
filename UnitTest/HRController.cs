@@ -34,7 +34,7 @@ namespace UnitTest {
             JsonElement credentials = jdoc.RootElement;
             ActionResult<string> response = hrController.Login((JsonElement) credentials);
 
-            Assert.IsInstanceOfType(response.Result, typeof(BadRequestResult));
+            Assert.AreEqual(((StatusCodeResult) response.Result).StatusCode, 400);
         }
 
         [TestMethod]
@@ -45,7 +45,7 @@ namespace UnitTest {
             JsonElement credentials = jdoc.RootElement;
             ActionResult<string> response = hrController.Login((JsonElement) credentials);
 
-            Assert.IsInstanceOfType(response.Result, typeof(BadRequestResult));
+            Assert.AreEqual(((StatusCodeResult) response.Result).StatusCode, 400);
         }
 
         [TestMethod]
