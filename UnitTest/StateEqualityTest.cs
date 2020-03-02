@@ -91,16 +91,16 @@ namespace UnitTest
         [TestMethod]
         public void DoorTileStatesAreEqualTest()
         {
-            DoorTileState tile1 = new DoorTileState(0,StateOfTile.Empty, true);
-            DoorTileState tile2 = new DoorTileState(0,StateOfTile.Empty, true);
+            TileState tile1 = new DoorTileState(0,StateOfTile.Empty, true);
+            TileState tile2 = new DoorTileState(0,StateOfTile.Empty, true);
             Assert.AreEqual(tile1,tile2);
         }
         
         [TestMethod]
         public void DoorTileStatesOpenAndClosedAreNotEqualTest()
         {
-            DoorTileState tile1 = new DoorTileState(0,StateOfTile.Empty, true);
-            DoorTileState tile2 = new DoorTileState(0,StateOfTile.Empty, false);
+            TileState tile1 = new DoorTileState(0,StateOfTile.Empty, true);
+            TileState tile2 = new DoorTileState(0,StateOfTile.Empty, false);
             Assert.AreNotEqual(tile1,tile2);
         }
         
@@ -111,9 +111,9 @@ namespace UnitTest
 				"!A*a#\n" +
 				"#...<\n" +
 				"2,15");
-            ButtonTileState tile1 = (ButtonTileState) (new State(new Puzzle(level))).PuzzleTiles[3];
+            TileState tile1 = new State(new Puzzle(level)).PuzzleTiles[3];
             Puzzle puzzle2 = new Puzzle(level);
-            ButtonTileState tile2 = (ButtonTileState) (new State(new Puzzle(level))).PuzzleTiles[3];
+            TileState tile2 = new State(new Puzzle(level)).PuzzleTiles[3];
             Assert.AreEqual(tile1,tile2);
         }
         
@@ -124,10 +124,10 @@ namespace UnitTest
 				"!A*a#\n" +
 				"#...<\n" +
 				"2,15");
-            ButtonTileState tile1 = (ButtonTileState) (new State(new Puzzle(level))).PuzzleTiles[3];
+            TileState tile1 = new State(new Puzzle(level)).PuzzleTiles[3];
             Puzzle puzzle2 = new Puzzle(level);
             ((DoorTile) puzzle2.AllTiles[0,1]).Open();
-            ButtonTileState tile2 = (ButtonTileState) (new State(puzzle2)).PuzzleTiles[3];
+            TileState tile2 = new State(puzzle2).PuzzleTiles[3];
             Assert.AreNotEqual(tile1,tile2);
         }
 

@@ -26,9 +26,7 @@ namespace BackEnd
 
         public override int GetHashCode()
         {
-            return ID << 2
-                ^ (State.GetHashCode()+1)
-                * ((Movable.GetHashCode() << 4)+1);
+            return ID*100 + State.GetHashCode()*10 + Movable.GetHashCode();
         }
     }
 }
