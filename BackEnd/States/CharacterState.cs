@@ -22,9 +22,7 @@ namespace BackEnd
 
         public override int GetHashCode()
         {
-            return (DirectionCharacter.GetHashCode() +1 << 8 )
-                + DirectionCharacterString.GetHashCode()
-                ^ (Tile.GetHashCode() << 4);
+            return DirectionCharacter.GetHashCode() + Tile.GetHashCode()*10;
         }
     }
 }
