@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 using MongoDB.Entities;
 using MongoDB.Entities.Core;
@@ -74,8 +75,20 @@ namespace BackEnd
             }
             return solution;
         }
+        public LevelSolution GetFirstSolution()
+        {
+            if(Solved)
+            {
+                return Solutions.First(s => s.Solved);
+            }
+            return null;
+        }
         public static int GetLines(LevelSession session) => session.GetLeastLinesOfCodeSolution().Lines;
         public static Func<LevelSession,int> GetDurationPerPeriod(int period) => (session => GetDuration(session)/period*period);
         public static int GetDuration(LevelSession session) => (int)session.GetLeastLinesOfCodeSolution().Duration;
+        public static int AmountOfInifiniteLoops(LevelSession session) => session.Solutions.Count(solution => solution.IsInfiteLoop);
+        public static int NumberOfAttemptsForBestSolution(LevelSession session) => session.Solutions.FindIndex(solution => solution.Equals(session.GetLeastLinesOfCodeSolution())) + 1;
+        public static int GetAmountHardCodedAttempts(LevelSession session) => session.Solutions.Count(solution => solution.IsHardCoded());
+        public static int GetAmountHardCodedSolutions(LevelSession session) => session.Solutions.Count(solution => solution.Solved && solution.IsHardCoded());
     }
 }

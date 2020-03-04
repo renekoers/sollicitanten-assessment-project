@@ -177,6 +177,48 @@ namespace React_Frontend.Controllers
 		}
 		
         /// <summary>
+        /// Creates a dictionary consisting of all statistics of a candidate.
+        /// </summary>
+        /// <returns>Dictionary with for every level has a dictionary of name of the statistic and the data.
+		/// Returns Bad Request if the ID is invalid or the candidate is not finished.</returns>
+		[HttpGet("scores")]
+		async public Task<ActionResult<string>> GetScores(string ID)
+		{
+			CandidateEntity candidate = await _repo.GetCandidate(ID);
+			if(candidate == null || !candidate.IsFinished())
+			{
+				return BadRequest();
+			}
+			List<CandidateEntity> allFinishedCandidates = await _repo.GetFinishedCandidates();
+			int totalScores = allFinishedCandidates.Count;
+            Dictionary<string,ScoreFunc> scoreFunctions = GetScoreFunctions();
+            Dictionary<int,Dictionary<string,int>> scoresCandidate = new Dictionary<int,Dictionary<string,int>>();
+            for (int levelNumber=1; levelNumber<=Level.TotalLevels;levelNumber++)
+            {
+                LevelSession levelSession = candidate.GetLevelSession(levelNumber);
+                Dictionary<string,int> dataSingleLevel = new Dictionary<string, int>();
+                foreach(KeyValuePair<string,ScoreFunc> pairStringAndScoreFunc in scoreFunctions){
+					if(!pairStringAndScoreFunc.Value.SatisfiesCondition(levelSession))
+					{
+						dataSingleLevel.Add(pairStringAndScoreFunc.Key,0);
+					}
+					else
+					{
+						int dataCandidate = pairStringAndScoreFunc.Value.getScore(levelSession);
+						int amountCandidatesWithBetterScore = allFinishedCandidates
+							.Count(candidate => pairStringAndScoreFunc.Value.SatisfiesCondition(candidate.GetLevelSession(levelNumber))
+								&& pairStringAndScoreFunc.Value.getScore(candidate.GetLevelSession(levelNumber)) < dataCandidate);
+						int score = (int)Math.Round(100-(double)amountCandidatesWithBetterScore*100/totalScores);
+                    	dataSingleLevel.Add(pairStringAndScoreFunc.Key, score);
+					}
+                }
+                scoresCandidate.Add(levelNumber,dataSingleLevel);
+                
+            }
+			return JSON.Serialize(scoresCandidate);
+		}
+		
+        /// <summary>
         /// This method creates a dictionary consisting of the number of candidates that did not solve a certain level.
         /// </summary>
         /// <returns></returns>
@@ -191,6 +233,7 @@ namespace React_Frontend.Controllers
 			return JSON.Serialize(amountUnsolved);
 		}
 
+
         /// <summary>
         /// Creates a list of functions that maps a levelSession to an int. This function are used in constructing dictionaries that represents the statistics.
         /// Add here extra functions in order to add extra statistics.
@@ -201,8 +244,35 @@ namespace React_Frontend.Controllers
             Dictionary<string,Func<LevelSession,int>> statisticsFunctions = new Dictionary<string,Func<LevelSession, int>>();
             statisticsFunctions.Add("Regels code kortste oplossing", LevelSession.GetLines);
             statisticsFunctions.Add("Tijd tot korste oplossing", LevelSession.GetDurationPerPeriod(30));
-            statisticsFunctions.Add("Pogingen tot korste oplossing", session => session.NumberOfAttemptsForFirstSolved);
+            statisticsFunctions.Add("Pogingen tot eerste oplossing", session => session.NumberOfAttemptsForFirstSolved);
             return statisticsFunctions;
         }
+		private static Dictionary<string, ScoreFunc> GetScoreFunctions()
+		{
+			Dictionary<string, ScoreFunc> scoreFunctions = new Dictionary<string, ScoreFunc>();
+            scoreFunctions.Add("Regels code kortste oplossing", new ScoreFunc(LevelSession.GetLines, levelsession => levelsession.Solved));
+            scoreFunctions.Add("Tijd tot korste oplossing", new ScoreFunc(LevelSession.GetDuration, levelsession => levelsession.Solved));
+			scoreFunctions.Add("Tijd na eerste oplossing", new ScoreFunc(session => (int)(session.TotalDuration - session.GetFirstSolution().Duration), GameSessionController => GameSessionController.Solved));
+            scoreFunctions.Add("Pogingen tot eerste oplossing", new ScoreFunc(session => session.NumberOfAttemptsForFirstSolved, levelsession => levelsession.Solved));
+            scoreFunctions.Add("Pogingen tot beste oplossing", new ScoreFunc(LevelSession.NumberOfAttemptsForBestSolution, levelsession => levelsession.Solved));
+			scoreFunctions.Add("Pogingen na eerste oplossing", new ScoreFunc(session => session.Solutions.Count - session.NumberOfAttemptsForFirstSolved, levelsession => levelsession.Solved));
+			scoreFunctions.Add("Pogingen van eerste tot beste oplossing", new ScoreFunc(session => LevelSession.NumberOfAttemptsForBestSolution(session) - session.NumberOfAttemptsForFirstSolved, levelsession => levelsession.Solved));
+			scoreFunctions.Add("Aantal infinite loops", new ScoreFunc(LevelSession.AmountOfInifiniteLoops));
+			//scoreFunctions.Add("Aantal hard-coded pogingen", new ScoreFunc(LevelSession.GetAmountHardCodedAttempts));
+			//scoreFunctions.Add("Aantal hard-coded oplossingen", new ScoreFunc(LevelSession.GetAmountHardCodedSolutions, levelsession => levelsession.Solved));
+			return scoreFunctions;
+		}
+		class ScoreFunc{
+			Func<LevelSession, int> _scoreFunction;
+			Func<LevelSession, bool> _requirement;
+			internal ScoreFunc(Func<LevelSession, int> scoreFunction) : this(scoreFunction, levelSession => true){}
+			internal ScoreFunc(Func<LevelSession, int> scoreFunction, Func<LevelSession, bool> requirement)
+			{
+				_scoreFunction = scoreFunction;
+				_requirement = requirement;
+			}
+			internal bool SatisfiesCondition(LevelSession levelSession) => _requirement(levelSession);
+			internal int getScore(LevelSession levelSession) => _scoreFunction(levelSession);
+		}
 	}
 }

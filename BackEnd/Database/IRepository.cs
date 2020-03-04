@@ -25,6 +25,8 @@ namespace BackEnd
 
         Task<List<CandidateEntity>> GetListOfCandidatesWithScores(int LevelNumber);
 
+        Task<List<CandidateEntity>> GetFinishedCandidates();
+
         Task<int> GetAmountUnsolved(int levelNumber);
     }
 }

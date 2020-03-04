@@ -94,6 +94,16 @@ namespace BackEnd {
 					.CountAsync(candidate => candidate.finished > new DateTime() && !candidate.GameResults[levelNumber-1].Solved);
         }
 
+        /// <summary>
+        /// Creates a dictionary consisting of all statistics of all candidates.
+        /// </summary>
+        /// <returns>Dictionary with for every level has a dictionary of name of the statistic and the combination of data and number of candidates.</returns>
+        async public Task<List<CandidateEntity>> GetFinishedCandidates(){
+            return await MongoDB.Collection<CandidateEntity>().AsQueryable()
+                .Where(candidate => candidate.finished > new DateTime())
+                .ToListAsync();
+        }
+
         private Task emptyTask(){
             return Task.Factory.StartNew(() => {});
         }

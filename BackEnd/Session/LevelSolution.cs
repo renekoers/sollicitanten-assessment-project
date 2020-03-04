@@ -52,5 +52,16 @@ namespace BackEnd
                 CodeBlock = new StatementBlock(codeAsList.ToArray());
             }
         }
+        internal bool IsHardCoded() // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        {
+            foreach(Statement statement in Code)
+            {
+                if(!statement.StatementType.Equals(typeof(SingleCommand).ToString()))
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
     }
 }

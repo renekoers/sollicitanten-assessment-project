@@ -28,6 +28,10 @@ export const Statistics = props => {
 		setComponents([]); //Reset current data prior to getting new data.
 		let unsolved = null;
 		let dataEveryone = null;
+		await fetchStatistics("scores?id=" + id)
+		.then(data => {
+			console.log(data)
+		});
 		await fetchStatistics("unsolved").then(data => (unsolved = data));
 		await fetchStatistics("tally").then(data => (dataEveryone = data));
 		await fetchStatistics("candidate?id=" + id).then(dataCandidate => {

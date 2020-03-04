@@ -76,6 +76,11 @@ namespace BackEnd {
             await emptyTask();
             return TestRepo.Where(pair => pair.Value.finished > new DateTime() && pair.Value.GameResults[levelNumber-1].Solved).Select(pair => pair.Value).ToList();
         }
+        async public Task<List<CandidateEntity>> GetFinishedCandidates()
+        {
+            await emptyTask();
+            return TestRepo.Where(pair => pair.Value.finished > new DateTime()).Select(pair => pair.Value).ToList();
+        }
         async public Task<int> GetAmountUnsolved(int levelNumber)
         {
             await emptyTask();
