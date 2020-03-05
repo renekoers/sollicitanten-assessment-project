@@ -141,7 +141,7 @@ namespace UnitTest
 			Assert.AreNotEqual(((StatusCodeResult) result.Result).StatusCode, 200);
 		}
 		[TestMethod]
-		public async Task GetPreviousIDAfterLastCandidateIsNullTest()
+		public async Task GetNextIDAfterLastCandidateIsNullTest()
 		{
             IRepository repo = new TestDB();
             StatisticsController controller = new StatisticsController(repo);
