@@ -49,5 +49,25 @@ namespace UnitTest
             CandidateEntity candidate = JSON.Deserialize<CandidateEntity>(result.Value);
             Assert.AreEqual(id, candidate.ID);
         }
+
+        [TestMethod]
+        async public Task CannotGetStatusOfAnNonExistingCandidateTest()
+        {
+            IRepository _repo = new TestDB();
+            CandidateController controller = new CandidateController(_repo);
+            string id = await _repo.AddCandidate("Test");
+            ActionResult<string> result = await controller.getStatus(id + "NOT");
+            Assert.AreNotEqual(200, ((StatusCodeResult) result.Result).StatusCode);
+        }
+
+        [TestMethod]
+        async public Task StatusNotStartedCandidateTest()
+        {
+            IRepository _repo = new TestDB();
+            CandidateController controller = new CandidateController(_repo);
+            string id = await _repo.AddCandidate("Test");
+            ActionResult<string> result = await controller.getStatus(id);
+            
+        }
     }
 }
