@@ -206,6 +206,66 @@ namespace UnitTest
             Assert.AreEqual(1, dataFirstStatistic.GetValueOrDefault(10));
         }
 
+        [TestMethod]
+        public async Task GetAmountUnsolvedGivesDataForEveryLevel()
+        {
+            IRepository repo = new TestDB();
+            StatisticsController controller = new StatisticsController(repo);
+            GameSessionController gameSessionController = new GameSessionController(repo);
+            LevelSessionController levelSessionController = new LevelSessionController(repo);
+            StatementController statementController = new StatementController(repo);
+            string id = await repo.AddCandidate("Test");
+            await gameSessionController.StartSession(id);
+            await gameSessionController.EndSession(id);
+            ActionResult<string> result = await controller.GetAmountUnsolvedPerLevel();
+            Dictionary<int,int> statistics = JSON.Deserialize<Dictionary<int,int>>(result.Value);
+            Assert.AreEqual(Level.TotalLevels, statistics.Count);
+            Assert.IsTrue(statistics.ContainsKey(Level.TotalLevels));
+        }
+
+        [TestMethod]
+        public async Task GetAmountUnsolvedOnlyAnalysesCandidatesThatAreFinished()
+        {
+            IRepository repo = new TestDB();
+            StatisticsController controller = new StatisticsController(repo);
+            GameSessionController gameSessionController = new GameSessionController(repo);
+            LevelSessionController levelSessionController = new LevelSessionController(repo);
+            StatementController statementController = new StatementController(repo);
+            string id = await repo.AddCandidate("Test");
+            await gameSessionController.StartSession(id);
+            await InsertAttempt(levelSessionController, statementController, id, 1, MockDataStatistics.GetAnswerLevel1HardCoded());
+            await gameSessionController.EndSession(id);
+            string idNotFinished = await repo.AddCandidate("Test not finished");
+            await gameSessionController.StartSession(idNotFinished);
+            await InsertAttempt(levelSessionController, statementController, idNotFinished, 1, MockDataStatistics.GetAnswerLevel1HardCoded());
+            ActionResult<string> result = await controller.GetAmountUnsolvedPerLevel();
+            Dictionary<int,int> statistics = JSON.Deserialize<Dictionary<int,int>>(result.Value);
+            int amountUnsolved = statistics.GetValueOrDefault(2);
+            Assert.AreEqual(1, amountUnsolved);
+        }
+
+        [TestMethod]
+        public async Task GetAmountUnsolvedOnlyCountsCandidatesThatDidnotsolvedTheLevel()
+        {
+            IRepository repo = new TestDB();
+            StatisticsController controller = new StatisticsController(repo);
+            GameSessionController gameSessionController = new GameSessionController(repo);
+            LevelSessionController levelSessionController = new LevelSessionController(repo);
+            StatementController statementController = new StatementController(repo);
+            string id = await repo.AddCandidate("Test");
+            await gameSessionController.StartSession(id);
+            await InsertAttempt(levelSessionController, statementController, id, 1, MockDataStatistics.GetAnswerLevel1HardCoded());
+            await gameSessionController.EndSession(id);
+            string id2 = await repo.AddCandidate("Test 2");
+            await gameSessionController.StartSession(id2);
+            await InsertAttempt(levelSessionController, statementController, id2, 1, new Statement[]{new SingleCommand(Command.RotateLeft)});
+            await gameSessionController.EndSession(id);
+            ActionResult<string> result = await controller.GetAmountUnsolvedPerLevel();
+            Dictionary<int,int> statistics = JSON.Deserialize<Dictionary<int,int>>(result.Value);
+            int amountUnsolved = statistics.GetValueOrDefault(1);
+            Assert.AreEqual(1, amountUnsolved);
+        }
+
         private async Task InsertAttempt(LevelSessionController levelSessionController, StatementController statementController, string id, int levelNumber, Statement[] statements)
         {
             await levelSessionController.StartLevel(id,levelNumber.ToString());
