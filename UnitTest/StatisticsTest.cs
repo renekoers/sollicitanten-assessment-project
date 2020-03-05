@@ -259,7 +259,7 @@ namespace UnitTest
             string id2 = await repo.AddCandidate("Test 2");
             await gameSessionController.StartSession(id2);
             await InsertAttempt(levelSessionController, statementController, id2, 1, new Statement[]{new SingleCommand(Command.RotateLeft)});
-            await gameSessionController.EndSession(id);
+            await gameSessionController.EndSession(id2);
             ActionResult<string> result = await controller.GetAmountUnsolvedPerLevel();
             Dictionary<int,int> statistics = JSON.Deserialize<Dictionary<int,int>>(result.Value);
             int amountUnsolved = statistics.GetValueOrDefault(1);
