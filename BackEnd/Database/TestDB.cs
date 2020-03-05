@@ -42,7 +42,7 @@ namespace BackEnd {
         async public Task<CandidateEntity> GetCandidate(string ID)
         {
             await emptyTask();
-            if (TestRepo.TryGetValue(ID, out CandidateEntity candidate))
+            if (ID != null && TestRepo.TryGetValue(ID, out CandidateEntity candidate))
             {
                 return candidate;
             } 
