@@ -39,37 +39,20 @@ export const StartingPage = () => {
 				}
 			});
 		};
-
-		const isCandidateStillActive = async () => {
-			let isStillActive;
-			await fetch("api/candidate/isActive", {
+		const checkStatusCandidate = async () => {
+			let candidateStatus;
+			await fetch("api/candidate/status", {
 				method: "GET",
 				headers: {
 					"Content-Type": "application/json",
 					Authorization: localStorage.getItem("sessionID")
 				}
 			})
-				.then(response => response.json())
-				.then(data => {
-					isStillActive = data;
-				});
-			return isStillActive;
-		};
-
-		const hasCandidateNotYetStarted = async () => {
-			let hasNotYetStarted;
-			await fetch("api/candidate/hasNotYetStarted", {
-				method: "GET",
-				headers: {
-					"Content-Type": "application/json",
-					Authorization: localStorage.getItem("sessionID")
-				}
-			})
-				.then(response => response.json())
-				.then(data => {
-					hasNotYetStarted = data;
-				});
-			return hasNotYetStarted;
+			.then(checkStatus)
+			.then(data => {
+				candidateStatus = data
+			});
+			return candidateStatus;
 		};
 
 		const getCandidateName = async () => {
@@ -83,21 +66,16 @@ export const StartingPage = () => {
 		};
 
 		const sessionIDHandling = async () => {
-			if (isSessionIdAvailable()) {
-				if (await isCandidateStillActive(sessionID)) {
+			var candidateStatus = checkStatusCandidate()
+			if (isSessionIdAvailable() && candidateStatus && !candidateStatus.finished) {
+				if (candidateStatus.started) {
 					setSessionStatus(true);
-				} else if (await hasCandidateNotYetStarted(sessionID)) {
+				} else {
 					setName(await getCandidateName(sessionID));
 					setRenderWelcomePage(true);
-				} else {
-					localStorage.removeItem("sessionID");
-					if (isHRTokenAvailable()) {
-						setRenderCandidateSelectionPage(true);
-					} else {
-						setIsNoTokenAvailable(true);
-					}
 				}
 			} else {
+				localStorage.removeItem("sessionID");
 				if (isHRTokenAvailable()) {
 					setRenderCandidateSelectionPage(true);
 				} else {

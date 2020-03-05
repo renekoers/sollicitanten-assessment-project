@@ -102,63 +102,7 @@ export const Tutorial = () => {
 		return levelGrid;
 	};
 
-	const IsSessionIdAvailable = () => {
-		const id = localStorage.getItem("sessionID");
-		if (id === null) {
-			return false;
-		} else {
-			return true;
-		}
-	};
-
-	const isSessionIDValid = async () => {
-		let sessionExists;
-		await fetch("api/candidate/sessionIDValidation", {
-			method: "GET",
-			headers: {
-				"Content-Type": "application/json",
-				Authorization: localStorage.getItem("sessionID")
-			}
-		})
-			.then(response => response.json())
-			.then(data => {
-				sessionExists = data;
-			});
-		return sessionExists;
-	};
-
 	const startLiveSession = async () => {
-		if (!IsSessionIdAvailable()) {
-			await makeNewSession();
-		} else if (!(await isSessionIDValid())) {
-			await makeNewSession();
-		}
-		await startSession();
-	};
-
-	const makeNewSession = async () => {
-		await getNewCandidate();
-	};
-
-	const getNewCandidate = async () => {
-		await fetch("api/candidate/get")
-			.then(checkStatus)
-			.then(data => {
-				localStorage.setItem("sessionID", data.id);
-			});
-	};
-
-	const checkStatus = response => {
-		return new Promise(function(resolve, reject) {
-			if (response.status === 200) {
-				resolve(response.json());
-			} else {
-				reject(response);
-			}
-		});
-	};
-
-	const startSession = async () => {
 		await fetch("api/session/startsession", {
 			method: "GET",
 			headers: {

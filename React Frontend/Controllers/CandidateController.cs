@@ -10,24 +10,21 @@ namespace React_Frontend.Controllers
     [Route("api/candidate")]
     public class CandidateController : Controller
     {
-        [HttpGet("get")]
-        async public Task<ActionResult<string>> getCandidate()
-        {
-            CandidateEntity candidate = await Api.GetCandidate();
-            if (candidate == null)
-            {
-                return NotFound();
-            }
-            else
-            {
-                return JSON.Serialize(candidate);
-            }
-
-        }
+        private IRepository _repo;
+		public CandidateController(IRepository repo = null) : base()
+		{
+			_repo = repo == null ? new MongoDataBase() : repo;
+		}
+        
+        /// <summary>
+        /// Finds the candidate that belongs to the id.
+        /// </summary>
+        /// <returns> Returns the candidate entity.
+		/// Returns Not Found if the ID is invalid.</returns>
         [HttpGet("{id}")]
         async public Task<ActionResult<string>> getCandidateName(string id)
         {
-            CandidateEntity candidate = await Api.GetCandidate(id);
+            CandidateEntity candidate = await _repo.GetCandidate(id);
             if (candidate == null)
             {
                 return NotFound();
@@ -38,35 +35,31 @@ namespace React_Frontend.Controllers
             }
 
         }
+        
+        /// <summary>
+        /// Returns the status of the candidate.
+        /// </summary>
+        /// <returns> Returns a JSON with fields started and finished.
+		/// Returns Not Found if the ID is invalid.</returns>
+        [HttpGet("status")]
+        async public Task<ActionResult<string>> getStatus([FromHeader(Name="Authorization")] string sessionID)
+        {
+            CandidateEntity candidate = await _repo.GetCandidate(sessionID);
+            if(candidate == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                return JSON.Serialize(new {started = candidate.IsStarted(), finished = candidate.IsFinished()});
+            }
+        }
+
+        /// NEEDS TO BE MOVED TO HR CONTROLLER
         [HttpGet("getUnstartedCandidates"), Authorize]
         async public Task<IEnumerable<CandidateEntity>> GetAllUnstartedCandidates()
         {
             return await Api.GetAllUnstartedCandidate();
-        }
-
-        [HttpGet("sessionIDValidation")]
-        async public Task<bool> IsSessionValid()
-        {
-            string sessionID = Request.Headers["Authorization"];
-            return await Api.IsUnstarted(sessionID);
-        }
-        [HttpGet("isStarted")]
-        async public Task<bool> isStarted()
-        {
-            string sessionID = Request.Headers["Authorization"];
-            return await Api.IsStarted(sessionID);
-        }
-        [HttpGet("hasNotYetStarted")]
-        async public Task<bool> IsEligible()
-        {
-            string sessionID = Request.Headers["Authorization"];
-            return await Api.HasCandidateNotYetStarted(sessionID);
-        }
-        [HttpGet("isActive")]
-        async public Task<bool> IsActive()
-        {
-            string sessionID = Request.Headers["Authorization"];
-            return await Api.IsCandidateStillActive(sessionID);
         }
     }
 }
