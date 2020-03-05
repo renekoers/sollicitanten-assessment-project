@@ -4,7 +4,6 @@ namespace BackEnd
 {
     public class IfElse : ConditionalStatement
     {
-        private  StatementBlock _statementsTrue;
         private  StatementBlock _statementsFalse;
         public IfElse(ConditionParameter parameter, ConditionValue value, bool isTrue, Statement[] statementsTrue)
             : this(parameter, value, isTrue, statementsTrue, new Statement[0]) { }
@@ -21,7 +20,7 @@ namespace BackEnd
                 statementsTrueToList.RemoveAt(statementsTrueToList.Count-1);
                 statementsTrue = new StatementBlock(statementsTrueToList.ToArray());
             }
-            this._statementsTrue = statementsTrue;
+            this._statements = statementsTrue;
             this._statementsFalse = statementsFalse;
             List<Statement> totalStatements = new List<Statement>(statementsTrue._statements);
             totalStatements.Add(new Else(statementsFalse));
@@ -32,8 +31,8 @@ namespace BackEnd
             List<State> states = null;
             if (puzzle.Character.CheckCondition(_parameter, _value) == _isTrue)
             {
-                states = _statementsTrue.ExecuteCommand(puzzle);
-                if(_statementsTrue.IsInfiniteLoop)
+                states = _statements.ExecuteCommand(puzzle);
+                if(_statements.IsInfiniteLoop)
                 {
                     this.IsInfiniteLoop = true;
                 }
@@ -51,9 +50,28 @@ namespace BackEnd
 
         internal override int GetLines()
         {
-            return 1 + _statementsTrue.GetLines() + _statementsFalse.GetLines();
+            return 1 + _statements.GetLines() + _statementsFalse.GetLines();
         }
-
+        internal override void CompleteProperties()
+        {
+            if(_statements == null || _statements._statements.Length == 0)
+            {
+                Statement lastStatement = Code[Code.Length-1];
+                List<Statement> statementsTrueToList = new List<Statement>(Code);
+                this._statementsFalse = new StatementBlock(lastStatement.Code);
+                statementsTrueToList.RemoveAt(statementsTrueToList.Count-1);
+                this._statements = new StatementBlock(statementsTrueToList.ToArray());
+                setConditions();
+                foreach(Statement statement in _statements._statements)
+                {
+                    statement.CompleteProperties();
+                }
+                foreach(Statement statement in _statementsFalse._statements)
+                {
+                    statement.CompleteProperties();
+                }
+            }
+        }
     }
     public class Else : Statement
     {

@@ -66,7 +66,7 @@ namespace BackEnd
             if(solution != null)
             {
                 try{
-                    solution.ConvertCodeToOriginalTypes();
+                    solution.CompleteAllProperties();
                 }
                 catch(Exception)
                 {

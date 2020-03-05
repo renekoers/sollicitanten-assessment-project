@@ -40,16 +40,15 @@ namespace BackEnd
             Lines = CodeBlock.GetLines();
             IsInfiteLoop = CodeBlock.IsInfiniteLoop;
         }
-        public void ConvertCodeToOriginalTypes()
+        public void CompleteAllProperties()
         {
             if(CodeBlock==null)
             {
-                List<Statement> codeAsList = new List<Statement>();
                 foreach(Statement statement in Code)
                 {
-                    codeAsList.Add(statement.GetStatementAsOriginalType());
+                    statement.CompleteProperties();
                 }
-                CodeBlock = new StatementBlock(codeAsList.ToArray());
+                CodeBlock = new StatementBlock(Code);
             }
         }
     }
