@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using MongoDB.Bson.Serialization.Attributes;
 using MongoDB.Entities;
 using MongoDB.Entities.Core;
 
 namespace BackEnd
 {
+	[BsonKnownTypes(typeof(DoWhile), typeof(IfElse), typeof(Else), typeof(Repeat), typeof(While), typeof(SingleCommand))]
 	public class Statement : Entity
 	{
 		[Ignore]
