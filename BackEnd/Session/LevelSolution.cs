@@ -19,7 +19,7 @@ namespace BackEnd
         public int Lines;
         public bool IsInfiteLoop;
         [Ignore]
-        public List<IState> States { get; private set; }
+        public List<IState> States;
         [Ignore]
         public int NumberOfStates;
         public LevelSolution(int number, Statement[] statements, long duration=0)
@@ -32,10 +32,7 @@ namespace BackEnd
             CodeBlock = new StatementBlock(statements);
             Code = statements;
             Duration = duration;
-            States = new List<IState>();
-            States.Add(new State(puzzle));
-            States.AddRange(CodeBlock.ExecuteCommand(puzzle));
-            NumberOfStates = States.Count-1; // -1 because the original state is automaticly added.
+            Execute(puzzle);
             Solved = puzzle.Finished;
             Lines = CodeBlock.GetLines();
             IsInfiteLoop = CodeBlock.IsInfiniteLoop;
@@ -50,6 +47,13 @@ namespace BackEnd
                 }
                 CodeBlock = new StatementBlock(Code);
             }
+        }
+        public void Execute(Puzzle puzzle)
+        {
+            States = new List<IState>();
+            States.Add(new State(puzzle));
+            States.AddRange(CodeBlock.ExecuteCommand(puzzle));
+            NumberOfStates = States.Count-1; // -1 because the original state is automaticly added.
         }
     }
 }

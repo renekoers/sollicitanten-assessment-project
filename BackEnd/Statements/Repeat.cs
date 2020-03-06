@@ -4,8 +4,8 @@ namespace BackEnd
 {
     public class Repeat : Statement
     {
-        private readonly uint _amount;
-        private readonly StatementBlock _statements;
+        private uint _amount;
+        private StatementBlock _statements;
         public Repeat(uint amount, Statement[] statements)
             : this(amount, new StatementBlock(statements)) { }
 
@@ -33,6 +33,21 @@ namespace BackEnd
         internal override int GetLines()
         {
             return 1 + _statements.GetLines();
+        }
+        internal override void CompleteProperties()
+        {
+            if(_amount == 0 || _statements == null || _statements._statements.Length == 0) // If the statementblock is not set correctly.
+            {
+                if(uint.TryParse(Command, out uint amount))
+                {
+                    _amount = amount;
+                }
+                foreach(Statement statement in Code)
+                {
+                    statement.CompleteProperties();
+                }
+                _statements = new StatementBlock(Code);
+            }
         }
     }
 }

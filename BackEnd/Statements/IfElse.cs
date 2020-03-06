@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace BackEnd
 {
@@ -12,8 +13,8 @@ namespace BackEnd
 
         public IfElse(ConditionParameter parameter, ConditionValue value, bool isTrue, StatementBlock statementsTrue, StatementBlock statementsFalse) : base(parameter, value, isTrue)
         {
-            Statement lastStatement = statementsTrue._statements[statementsTrue._statements.Length-1];
-            if(lastStatement.GetType() == typeof(Else))
+            Statement lastStatement = statementsTrue._statements.LastOrDefault();
+            if(lastStatement != null && lastStatement.GetType() == typeof(Else))
             {
                 List<Statement> statementsTrueToList = new List<Statement>(statementsTrue._statements);
                 statementsFalse = new StatementBlock(lastStatement.Code);
